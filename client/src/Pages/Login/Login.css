@@ -1,0 +1,119 @@
+.login{
+    width: 100vw;
+    min-height: 100vh;
+    background-image: url("../../../public/lsb.jpg");
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+.login_header{
+
+    height: 50px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding-top: 4rem;
+}
+.login_header h1{
+    font-size: 35px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login_body{
+    width: 26rem;
+    height: 20rem;
+    border-radius: .5rem;
+    background-color: rgb(72 91 181 / 55%);
+    padding: 2rem;
+}
+/* .loign_from{
+   
+} */
+.loign_from_np{
+    margin-top: 1.09rem;
+}
+.login_lable{
+    font-size: 16px;
+    font-family: arial;
+    color: rgb(255, 255, 255);
+}
+.Loign_from_input_container{
+    margin-top: .30rem;
+}
+.login_input{
+    width:95%;
+    height: 2rem;
+    border-radius: .5rem;
+    font-size: 1.11rem;
+    padding-top: .2rem;
+    padding-left:.8rem;
+    border: none;
+}
+.login_input::-webkit-inner-spin-button{
+    -webkit-appearance: none; 
+}
+.login_input:focus{
+    outline: none;
+    border: 2px solid rgba(115, 255, 0, 0.473)
+}
+
+.loign_from_link{
+    margin-top: 1.09rem;
+    font-size: 16px;
+    font-family: arial;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+.loign_button{
+    width: 100%;
+    border-radius: .5rem;
+    height: 2.55rem;
+    margin-top: 1rem;
+    background-color: rgba(21, 247, 0, 0.959);
+    color: white;
+    border: none;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    
+}
+
+@media(max-width:768px){
+
+    .login_header{
+    height: 50px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    }
+    .login_header h1{
+    font-size: 30px;
+    font-family: 'Roboto', sans-serif;
+   }
+    .login_body{
+    width: 78%;
+    height: 60%;
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(72 91 181 / 55%);
+  }
+  .login_lable{
+    font-size: 14px;
+    font-family: arial;
+    color: rgb(255, 255, 255);
+  }
+  .login_input{
+    font-size: 1rem;
+}
+  .loign_from_link{
+    margin-top: 1.09rem;
+    font-size: 14px;
+    font-family: arial;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+.loign_button{
+    font-size: 17px;
+    font-weight: 400;
+  }
+  }
