@@ -1,14 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+
 import './Singup.css'
 
-import OTPVerify from '../../Components/OTPVerify/OTPVerify'
+
 
 function Singup() {
     return (
         <div className="singup">
-            <OTPVerify trgger={false}/>
             <div className='singup_header'>
                 <h1>Sing Up</h1>
             </div>
@@ -35,7 +35,7 @@ function Singup() {
                     <div className="loign_from_np">
                         <label className="login_lable" >Confirm Password</label>
                         <div className='Loign_from_input_container'>
-                            <input className='login_input' type='password' placeholder='' />
+                            <input className='login_input' type='password' />
                         </div>
                     </div>
                     <div className="singup_from_np">

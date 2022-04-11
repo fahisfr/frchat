@@ -1,0 +1,321 @@
+.home{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    background-color: var(--ls-color);
+    
+}
+.home_left{
+    width:24.5rem;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction:column;
+    /* box-shadow: var(--main_box-shadow); */
+    border-right: 1px solid #f3eeee;
+}
+.home_left_header{
+    display: flex;
+    flex : none;
+    align-items: center;
+    height:60px;
+    padding-left: 1rem;
+    background-color:var(--ld_bg);
+    border-right:1px solid rgba(104, 97, 97, 0.116);
+    box-shadow: var(--main_box-shadow)
+    
+
+}
+.home_whychat {
+    color: rgb(124, 124, 228);
+    font-family: "Prata",serif;
+    font-size: 1.9em;
+    font-weight: medium;
+    margin-left:0.7rem;
+   
+}
+.home_search{
+    width: 100%;
+    flex: none;
+    height:60px;
+    background-color: var(--white);
+    text-align: center;
+    box-shadow: var(--main_box-shadow);
+    
+    
+
+}
+.home_search_bar{
+    margin-top:10px;
+    width:  21.5rem;
+    height: 40px;
+    background-color: var(--ld_bg);
+    border-radius: 25rem  0px 0px 25rem ;
+    border: none;
+
+}
+.home_search_button{
+    height: 45px;
+    border: none;
+    background-color:var(--ld_bg);
+    border-radius:   0px 25rem  25rem 0px   ;
+}
+
+
+
+                                     /* left body contact :Start  */
+
+.home_contacts{
+
+    flex-grow:1 ;
+    background-color:var(--white);
+    overflow: scroll;
+    overflow-y: auto;
+    margin-bottom: 1px;
+    box-shadow: var(--main_box-shadow);
+  
+}  
+
+.home_contacts::-webkit-scrollbar {
+    display: none;
+}
+.contact{
+    width: 100%;
+    height: 4.8rem;
+    display: flex;
+    border-bottom: 2px solid rgba(104, 97, 97, 0.116);
+}
+.contact_info_img{
+    width:5rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-shrink: 0;
+}
+
+.contact_image{
+    width: 3.5rem;
+    height: 3.4rem;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: var(--main_box-shadow);
+}
+.contact_info_ndl{
+  
+    flex-grow: 1;
+}
+.contact_info_n-d{
+    height: 50%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+.contact_name{
+   font-size: 1.1rem;
+}
+.contact_date{
+    font-size:12px;
+    color: #667781;
+    margin-right: 5px;
+}
+.contact_info_l{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+  
+}
+.contact_info_message{
+    width: 60%;
+    height: 50%;
+    overflow: hidden;
+    
+}
+.contact_message{
+    width: 50%;
+    font-size: .9rem;
+    color: var(--ld_color);
+    margin-right: 5px;
+   
+}
+.contact_online_n-o{
+    flex-grow: 1;
+    
+}
+    
+                                     /* left body contact s :End  */
+
+.home_right{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+                                           /*right header :Start  */
+
+.home_right_header{
+    width: 100%;
+    height: 60px;
+    flex-shrink: 0;
+   background-color: var(--ld_bg);
+   display: flex;
+   align-items: center;
+}
+.home_r-h_back{
+    display:none;
+    width: 3rem;
+    text-align: center;
+}
+.home_r-h_back_button{
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    
+}
+.home_r-h_contact_info{
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    
+    height: 100%;
+}
+.home_r-h_contact_photo{
+    width: 5rem;
+    height:100%;
+    display: flex;
+    margin-left: 3px;
+    justify-content: center;
+    align-items: center;
+}
+.home_r-h_contact_image{
+     width: 3.1rem;
+    height: 3rem;
+    
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: var(--main_box-shadow);
+}
+.home_r-h_contact_n-s{
+    flex-grow: 2;
+}
+.home_r-h_contact_name{
+    font-size: 1.150rem;
+    white-space: nowrap;
+}
+.home_r-h_contact_status{
+
+    margin-top: 6px;
+}
+.home_r-h_status{
+    font-size: 1rem;
+    color: var(--ld_color);
+}
+.home_r-h_m{
+    width: 3rem;
+    height: 3rem;
+    text-align: center;
+    
+}
+.home_r-h_m_div{
+    padding: 4px 1rem;
+}
+
+.home_r-h_menu{
+   width: 4px;
+  height: 5px;
+  background-color: black;
+  margin: 6px 0;
+}
+
+                                      /*right header :End  */
+
+
+
+
+                                   /* home_chats :Start */
+.home_chats{
+    flex-grow: 1;
+    overflow: scroll;
+    
+}
+.home_chats::-webkit-scrollbar {
+    display: none;
+}
+.home_c_message-end{
+    width: 100%;
+    min-height: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background-color: rgb(255, 255, 255);
+}
+
+.home_c_message-start{
+    width: 100%;
+    min-height: 5rem;
+    background-color: rgb(255, 255, 255);
+}
+.home_c-message_box{
+    margin-top: 15px;
+    margin-right: 6px;
+    margin-left: 6px;
+    padding: 0.5rem;
+   max-width: 30rem;
+  min-height: 2rem;
+  background-color: var(--ld_bg);
+  text-align: center;
+}
+.h_m_date{
+    font-size: 13px;
+    color: #667781;
+    
+}
+
+
+                                   /* home_chats :End */
+
+
+                                 /* home right bottom :Start */
+
+.home_right_bottom{
+    height: 60px;
+    width: 100%;
+    background-color: var(--ld_bg);
+    box-shadow: var(--main_box-shadow);
+ 
+}
+.home_message_form{
+    display: flex;
+    
+}
+.home_r-b_message{
+    flex-grow: 1;
+    padding-left: 10px ;
+    padding-top: 6px;
+    padding-right: 5px; 
+}
+.home_message_input{
+    width: 100%;
+    height: 45px;
+    font-size: 15px;
+    box-shadow: var(--main_box-shadow);
+    border: none;
+    background-color: var(--white);
+}
+.home_message_input:focus{
+    outline: none;
+}
+.home_r-b_button{
+    width: 7rem;
+      padding-top: 6px;
+      padding-left: 6px;
+}
+.home_message_send_button{
+    width: 5rem;
+    height: 45px;
+ 
+    border: none;
+    background-color: var(--button_green_bg);
+    border-radius: 0px 25rem  25rem 0px   ;
+    font-size: 19px;
+    color: var(--white);
+}

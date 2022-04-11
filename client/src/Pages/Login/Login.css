@@ -23,7 +23,7 @@
     width: 26rem;
     height: 20rem;
     border-radius: .5rem;
-    background-color: rgb(72 91 181 / 55%);
+    background-color: var(--ls_body_bg);
     padding: 2rem;
 }
 /* .loign_from{
@@ -69,7 +69,7 @@
     border-radius: .5rem;
     height: 2.55rem;
     margin-top: 1rem;
-    background-color: rgba(21, 247, 0, 0.959);
+    background-color: var(--button_green_bg);
     color: white;
     border: none;
     font-size: 20px;

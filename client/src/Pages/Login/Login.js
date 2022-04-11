@@ -1,13 +1,13 @@
-import React from 'react'
+import React,{useState} from 'react'
 import './Login.css'
 import { Link } from 'react-router-dom'
 
-import OTPVerify from '../../Components/OTPVerify/OTPVerify'
+
 
 function Login() {
   return (
     <div className="login">
-        {/* <OTPVerify trgger={false}/> */}
+   
       <div className='login_header'>
         <h1>Sign In WhyChat</h1>
       </div>
@@ -16,13 +16,13 @@ function Login() {
           <div className="loign_from_np">
             <label className="login_lable" >Phone Number</label>
             <div className='Loign_from_input_container'>
-              <input className='login_input' type='number' placeholder='' />
+              <input className='login_input' type='number' required  />
             </div>
           </div>
           <div className="loign_from_np">
             <label className="login_lable" >Password</label>
             <div className='Loign_from_input_container'>
-              <input className='login_input' type='password' placeholder='' />
+              <input className='login_input' type='password' required  />
             </div>
           </div>
           <div className="loign_from_np">
@@ -30,7 +30,9 @@ function Login() {
           </div>
           <button className="loign_button">Login</button>
         </form>
-      </div>
+            </div>
+        
+      
     </div>
   )
 }

@@ -1,13 +1,22 @@
 .otp{
+    width: 100vw;
+    min-height: 100vh;
+    background-image: url("../../../public/lsb.jpg");
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+.otp_body{
     width: 26rem;
     height: 20rem;
     margin-top: 5.4rem;
     border-radius: .5rem;
-    background-color: rgb(72 91 181 / 55%);
+    background-color: var(--ls_body_bg);
     padding: 2rem;
 }
 .otp_form_np{
-    margin-top:1.8rem;
+    margin-top:1.9rem;
 }
 .otp_title {
     color: rgb(255, 255, 255);
@@ -27,15 +36,16 @@
     color: rgb(255, 255, 255);
 }
 .otp_input_container{
-    margin-top: 0.4rem;
+    margin-top: 0.5rem;
+    margin-left: 1.1rem;
 }
 .otp_input{
-    width:95%;
-    height: 2rem;
+    width:13%;
+    height: 2.3rem;
     border-radius: .5rem;
-    font-size: 1.11rem;
-    padding-top: .2rem;
-    padding-left:.8rem;
+    font-size: 1.2rem;;
+    text-align: center;
+    margin-left: 8px;
     border: none;
 }
 .otp_input::-webkit-inner-spin-button{
@@ -43,23 +53,26 @@
 }
 .otp_input:focus{
     outline: none;
-    border: 2px solid rgba(115, 255, 0, 0.473)
+    /* border: 2px solid rgba(115, 255, 0, 0.473) */
 }
 .otp_nonotp{
     color: rgba(177, 177, 177, 0.733);
-    font-size: .9rem;
+    font-size: .8rem;
+    font-family: arial;
 }
 .opt_resend{
     color: rgba(255, 255, 255, 0.856);
-    border-bottom:2px solid rgba(146, 145, 145, 0.658);
+    border-bottom:0px solid rgba(146, 145, 145, 0.671);
     cursor: pointer;
+    font-size: 13px;
+    font-family: arial;
 }
 .otp_button{
      width: 100%;
     border-radius: .5rem;
     height: 2.55rem;
     margin-top: .5rem;
-    background-color: rgba(21, 247, 0, 0.959);
+    background-color: var(--button_green_bg);
     color: white;
     border: none;
     font-size: 20px;
@@ -68,7 +81,7 @@
 
 
 @media(max-width:768px){
-    .otp{
+    .otp_body{
     width: 78%;
     height: 60%;
     margin-top: 5.4rem;
@@ -86,7 +99,17 @@
     font-weight: 400;
   }
 .otp_input_container{
-    margin-top: 0.3rem;
+    margin-top: 0.4rem;
+    margin-left: .0rem;
+}
+.otp_input{
+    width:13%;
+    height: 2.3rem;
+    border-radius: .5rem;
+    font-size: 1.2rem;;
+    text-align: center;
+    margin-left: 6px;
+    border: none;
 }
 .otp_nonotp{
     color: rgba(177, 177, 177, 0.733);
