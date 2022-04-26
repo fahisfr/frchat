@@ -12,6 +12,7 @@
     flex-direction:column;
     /* box-shadow: var(--main_box-shadow); */
     border-right: 1px solid #f3eeee;
+    position: relative;
 }
 .home_left_header{
     display: flex;
@@ -142,6 +143,22 @@
     flex-grow: 1;
     
 }
+
+.add_contact_icon{
+     --b:4px; /* the thickness */
+  width:29px; /* the size */
+  aspect-ratio:1/1;
+  border:10px solid var(--button_green_bg); /* the outer space */
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),var(--button_green_bg) 90deg,rgb(255, 255, 255) 0) 
+    calc(100% + var(--b)/2) calc(100% + var(--b)/2)/
+    calc(50%  + var(--b))   calc(50%  + var(--b));
+  display:inline-block;
+    position: absolute;
+    bottom:1rem;
+    right:1rem;
+    border-radius: 50%;
+}
     
                                      /* left body contact s :End  */
 
@@ -234,7 +251,9 @@
                                    /* home_chats :Start */
 .home_chats{
     flex-grow: 1;
+  
     overflow: scroll;
+    
     
 }
 .home_chats::-webkit-scrollbar {
@@ -250,7 +269,9 @@
 }
 
 .home_c_message-start{
-    width: 100%;
+     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     min-height: 5rem;
     background-color: rgb(255, 255, 255);
 }
@@ -258,9 +279,9 @@
     margin-top: 15px;
     margin-right: 6px;
     margin-left: 6px;
-    padding: 0.5rem;
-   max-width: 30rem;
-  min-height: 2rem;
+   min-width: 3rem;
+   padding: .5rem;
+  min-height: 0rem;
   background-color: var(--ld_bg);
   text-align: center;
 }
@@ -276,7 +297,8 @@
 
                                  /* home right bottom :Start */
 
-.home_right_bottom{
+.home_right_footer{
+    flex-shrink: 0;
     height: 60px;
     width: 100%;
     background-color: var(--ld_bg);

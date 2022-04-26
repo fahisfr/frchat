@@ -1,18 +1,20 @@
 .login{
     width: 100vw;
     min-height: 100vh;
-    background-image: url("../../../public/lsb.jpg");
+    background-image: url(../../../public/images/fr.jpg);
     display: flex;
     align-items: center;
     flex-direction: column;
     overflow: hidden;
+
 }
 .login_header{
 
     height: 50px;
     color: rgb(255, 255, 255);
     text-align: center;
-    padding-top: 4rem;
+    margin-top: 7rem;
+    
 }
 .login_header h1{
     font-size: 35px;
@@ -20,8 +22,8 @@
 }
 
 .login_body{
-    width: 26rem;
-    height: 20rem;
+    width: 27rem;
+    height: 13rem;
     border-radius: .5rem;
     background-color: var(--ls_body_bg);
     padding: 2rem;
@@ -41,8 +43,8 @@
     margin-top: .30rem;
 }
 .login_input{
-    width:95%;
-    height: 2rem;
+    width:96%;
+    height: 2.5rem;
     border-radius: .5rem;
     font-size: 1.11rem;
     padding-top: .2rem;
@@ -54,7 +56,8 @@
 }
 .login_input:focus{
     outline: none;
-    border: 2px solid rgba(115, 255, 0, 0.473)
+    
+    transition: all .3s ;
 }
 
 .loign_from_link{
@@ -68,6 +71,7 @@
     width: 100%;
     border-radius: .5rem;
     height: 2.55rem;
+    margin-left: 0rem;
     margin-top: 1rem;
     background-color: var(--button_green_bg);
     color: white;

@@ -1,7 +1,7 @@
 .singup{
     width: 100vw;
     min-height: 100vh;
-    background-image: url("../../../public/lsb.jpg");
+        background-image: url(../../../public/images/fr.jpg);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -11,7 +11,8 @@
     height: 50px;
     color: rgb(255, 255, 255);
     text-align: center;
-    padding-top: 4rem;
+    margin-top: 6.5rem;
+
 }
 .singup_header h1{
     font-size: 35px;
@@ -20,7 +21,7 @@
 
 .singup_body{
     width: 26rem;
-    height: 25rem;
+    height: 18rem;
     border-radius: .5rem;
     background-color: var(--ls_body_bg);
     padding: 2rem;

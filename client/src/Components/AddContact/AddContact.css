@@ -1,0 +1,87 @@
+.add_contact_container{
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding-top: 9rem;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.add_contact{
+    width: 30rem;
+    height: 22rem;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: var(--main_box-shadow);
+
+}
+.add_contact_header{
+    width: 100%;
+    height: 7rem;
+    
+}
+.add_contact_title{
+    height: 4rem;
+    text-align: center;
+   
+}
+.add_contact_title h1{
+     padding-top: 1rem;
+     color: var(--ld_color);
+}
+
+.add_contact_message{
+    text-align: center;
+}
+
+.add_contact_message span{
+    font-size: 1rem;
+    color: var(--ld_color);
+   
+}
+
+.add_contact_body{
+    width: 100%;
+    margin-left: 4.9rem;
+}
+
+.add_contact_from_child{
+    width: 100%;
+    height: 4.5rem;
+}
+.add_contact_label{
+    font-size: 1.1rem;
+    color: var(--ld_color);
+}
+
+.add_contact_input input{
+    width: 21rem;
+    height: 2.3rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--ld_color);
+    padding-left: 0.5rem;
+}
+.add_contact_input input:focus{
+    outline: none;
+}
+
+.add_contact_button{
+    width: 11rem;
+    height: 2.5rem;
+
+    margin-top: 1.7rem;
+    margin-left: 5rem;
+    border:none;
+    color: var(--white);
+    background-color: var(--button_green_bg);
+    
+}
+.add_contact_button span{
+    font-size: 1rem;
+    color: var(--white);
+    transition: all 0.2s;
+   
+}
