@@ -66,14 +66,12 @@
                                      /* left body contact :Start  */
 
 .home_contacts{
-
     flex-grow:1 ;
     background-color:var(--white);
     overflow: scroll;
     overflow-y: auto;
     margin-bottom: 1px;
     box-shadow: var(--main_box-shadow);
-  
 }  
 
 .home_contacts::-webkit-scrollbar {
@@ -84,6 +82,13 @@
     height: 4.8rem;
     display: flex;
     border-bottom: 2px solid rgba(104, 97, 97, 0.116);
+     transition:0.2s;
+    
+}
+.contact:hover{
+    background-color: var(--ld_bg);
+    cursor: pointer;
+  
 }
 .contact_info_img{
     width:5rem;
@@ -240,14 +245,16 @@
     
 }
 .home_r-h_m_div{
-    padding: 4px 1rem;
+    padding:0.4rem 1rem;
+    cursor: pointer;
 }
+
 
 .home_r-h_menu{
    width: 4px;
-  height: 5px;
+  height: 4px;
   background-color: black;
-  margin: 6px 0;
+  margin: 5px 0;
 }
 
                                       /*right header :End  */

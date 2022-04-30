@@ -35,7 +35,6 @@ export const userSlice = createSlice({
         },
         contact: (state, action) => {
             state.userInfo.contacts = action.payload
-            console.log(state.userInfo.contacts)
         },
         ContactsMessages: (state, action) => {
             state.userInfo.contacts.forEach(contact => {
@@ -52,7 +51,8 @@ export const userSlice = createSlice({
                 }
             })
 
-        }
+        },
+        
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
             state.loading = false;

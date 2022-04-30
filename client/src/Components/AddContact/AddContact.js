@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './AddContact.css'
 import Axios from "../../Axios"
-function AddContact({ trigger, settrigger }) {
+function AddContact({ trigger, setTrigger }) {
     const [number, setNumber] = useState("")
     const [name, setName] = useState("")
     const [Err, setErr] = useState({
@@ -15,7 +15,7 @@ function AddContact({ trigger, settrigger }) {
         try {
             const response = await Axios.post("/contact", { number, name })
             if (response.data.success) {
-                settrigger(false)
+                setTrigger(false)
                 return
             }
             setErr({ status: true, message: response.data.message })
@@ -27,6 +27,12 @@ function AddContact({ trigger, settrigger }) {
         <div className="add_contact_container">
             <div className="add_contact">
                 <div className="add_contact_header">
+                    <div className="add_contact_exit">
+                        <button
+                            className='add_contact_exit_button'
+                            onClick={() => setTrigger(false)}
+                        >X</button>
+                    </div>
                     <div className="add_contact_title">
                         <span> </span>
                         <h1>Add Contact</h1>
@@ -35,7 +41,7 @@ function AddContact({ trigger, settrigger }) {
 
                         {
                             Err.status ? <span style={{ color: "red" }}>{Err.message}</span> :
-                                <span>Add a contact to start chatting</span>
+                                <span>Only WhyChat Rigster User Number</span>
                         }
 
                     </div>

@@ -22,6 +22,16 @@
     height: 6.5rem;
     
 }
+.add_contact_exit{
+    height: 1rem;
+}
+.add_contact_exit_button{
+    float: right;
+    font-size: 1.4rem;
+    background-color: var(--white);
+    border : none;
+    cursor: pointer;
+}
 .add_contact_title{
     height: 4rem;
     text-align: center;
@@ -77,6 +87,7 @@
     border:none;
     color: var(--white);
     background-color: var(--button_green_bg);
+    cursor: pointer;
     
 }
 .add_contact_button span{

@@ -19,7 +19,7 @@ const UserOfline = (UserWs) => {
         AllClients.find(x => {
             if (x._user.number == res.number) {
                 x.send(JSON.stringify({
-                    type: "user_online_status",
+                    event: "user_online_status",
                     status: false,
                     number: UserWs._user.number
                 }))

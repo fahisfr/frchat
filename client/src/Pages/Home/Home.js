@@ -2,7 +2,9 @@ import React, { useEffect, useState, useRef } from 'react'
 import './Home.css'
 import { faker } from '@faker-js/faker'
 import AddContact from '../../Components/AddContact/AddContact';
-import { contact, ChangeUserStatus, ContactsMessages,GetUserInfo } from "../../Features/User"
+import ContactMenu from '../../Components/ContactMenu/ContactMenu';
+import Profile from '../../Components/Profile/Profile';
+import { contact, ChangeUserStatus, ContactsMessages, GetUserInfo } from "../../Features/User"
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
@@ -10,14 +12,17 @@ import { useSelector, useDispatch } from 'react-redux'
 
 
 function Home() {
+  const divRef = useRef(null);
   const dispatch = useDispatch()
   const [server, setSever] = useState(null)
   const { contacts, ...info } = useSelector(GetUserInfo)
   const [SlectedContact, setSlectedContact] = useState(null)
-  const divRref = useRef(null);
-  const [addContact, setAddContact] = useState(false);
   const [mymessage, setMyMessage] = useState('')
-  const [Typing, setTyping] = useState(false)
+
+  const [ProfileTrigger, setProfileTrigger] = useState(false)
+  const [AddContactTrigger, setAddContactTrigger] = useState(false);
+  const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
+ 
   useEffect(() => {
     let server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
     setSever(server)
@@ -29,6 +34,7 @@ function Home() {
           break;
         case "message":
           dispatch(ContactsMessages(response))
+          divRef.current.scrollIntoView({ behavior: 'smooth' });
           break;
         case "user_online_status":
           dispatch(ChangeUserStatus(response))
@@ -38,8 +44,9 @@ function Home() {
     return () => {
       server.close()
     }
+
   }, [dispatch])
-  
+
   const SendMessgae = e => {
     e.preventDefault()
     dispatch(ContactsMessages({
@@ -60,17 +67,22 @@ function Home() {
       }
     }))
     setMyMessage('')
-  
+    
+    
   }
 
- 
-  
+
+
   return (
     <div className="home">
-      <AddContact trigger={addContact} settrigger={setAddContact} />
+      <Profile trigger={ProfileTrigger} setTrigger={setProfileTrigger} />
+      <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger} />
       <div className="home_left">
         <header className="home_left_header">
-          <FiAlignLeft size={37} />
+          <FiAlignLeft
+            size={37}
+            onClick={()=>setProfileTrigger(true)}
+          />
         </header>
         <div className="home_search">
           <input className="home_search_bar" type="text" placeholder="search.." />
@@ -112,7 +124,7 @@ function Home() {
               )
             })
           }
-          <div className="add_contact_icon" onClick={() => setAddContact(!addContact)} >
+          <div className="add_contact_icon" onClick={() => setAddContactTrigger(!AddContactTrigger)} >
           </div>
         </div>
       </div>
@@ -144,14 +156,15 @@ function Home() {
                 </div>
               </div>
               <div className="home_r-h_m">
-                <div className="home_r-h_m_div">
+                <div className="home_r-h_m_div" onClick={()=>setContactMenuTrigger(!ContactMenuTrigger)} >
                   <div className="home_r-h_menu"></div>
                   <div className="home_r-h_menu"></div>
                   <div className="home_r-h_menu"></div>
                 </div>
               </div>
             </header>
-            <div className="home_chats">
+            <div className="home_chats" >
+              <ContactMenu trigger={ContactMenuTrigger}SlectedContact={SlectedContact}/>
               {
                 contacts.find(contact => contact.number === SlectedContact.number).messages.map((message, index) => {
                   return (
@@ -166,6 +179,7 @@ function Home() {
                   )
                 })
               }
+              <div ref={divRef} />
             </div>
             <footer className="home_right_footer">
               <form onSubmit={SendMessgae} className="home_message_form">
@@ -173,7 +187,7 @@ function Home() {
                   <input
                     type='text'
                     value={mymessage}
-                    onChange={(e)=>setMyMessage(e.target.value)}
+                    onChange={(e) => setMyMessage(e.target.value)}
                     className="home_message_input"
                     required
                   />
