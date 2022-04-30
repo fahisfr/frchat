@@ -4,12 +4,12 @@ import './OTPVerify.css'
 import Axios from "../../Axios"
 
 import { useDispatch } from "react-redux"
-import {login} from "../../Features/User"
+import { login } from "../../Features/User"
 
 function OTPVerify({ Info }) {
     const dispatch = useDispatch()
     const [otp, setOtp] = useState(new Array(6).fill(""));
-    const [err,setError] = useState(false)
+    const [err, setError] = useState(false)
     const handleChange = (element, index) => {
         setOtp([...otp.map((value, arryindex) => {
             if (arryindex === index) {
@@ -31,28 +31,28 @@ function OTPVerify({ Info }) {
                 number: Info.number,
                 name: Info?.names
             })
-            if(response.data.success){
-                dispatch(login({name:Info.name,number:Info.number}))
-                localStorage.setItem("auccesstoken", response.data.auccesstoken)
+            if (response.data.success) {
+                dispatch(login({ name: Info.name, number: Info.number }))
+                localStorage.setItem("accesstoken", response.data.accesstoken)
             }
             setError(true)
         } catch (error) {
-            console.log(error)
             alert(error)
         }
     }
     const Re_sendOTP = async (e) => {
         e.preventDefault()
         try {
-            const response = await Axios.post(`/${Info.url}`,{number:Info.number})
+            const response = await Axios.post(`/${Info.url}`, { number: Info.number })
+            setOtp(new Array(6).fill(""))
             response.data.success ? setError(false) : alert(response.data.message)
         } catch (err) {
             alert(err)
         }
     }
-   
 
-    return Info.status? (
+
+    return Info.status ? (
         <div className="otp_body">
             <form onSubmit={VefifyOTP} className="otp_form">
                 <div className="">
@@ -60,11 +60,11 @@ function OTPVerify({ Info }) {
                 </div>
                 <div className="otp_form_np" >
                     {
-                        err ? <h3 className="otp_title_contact" style={{ color: 'red' }}>Invalid OTP</h3> :
-                            
-                            <h3 className="otp_title_contact">Please Enter The Verification Code Send To 91+{Info.number}</h3>
+                        err ? <h3 className="otp_title_contact" style={{ color: 'red' }}>Invalid OTP</h3>:
+                            <h3 className="otp_title_contact">
+                                Please Enter The Verification Code Send To 91+{Info.number}
+                            </h3>
                     }
-                   
                 </div>
                 <div className="otp_form_np">
                     <label className="otp_label" >Enter OTP</label>
@@ -83,23 +83,19 @@ function OTPVerify({ Info }) {
                                         required
                                     />
                                 )
-                            }
-                            )
+                            })
                         }
                     </div>
                 </div >
                 <div className="">
                     <h4 className="otp_nonotp">Didn't receive the code
-                        <span className="opt_resend" onClick={(e)=>Re_sendOTP(e)} >Resend OTP?</span>
+                        <span className="opt_resend" onClick={(e) => Re_sendOTP(e)} >Resend OTP?</span>
                     </h4>
                 </div>
                 <button type="submit" className="otp_button">Verify</button>
             </form>
         </div>
-
-
-    ):null
-
+    ) : null
 }
 
 export default OTPVerify

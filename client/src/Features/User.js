@@ -32,11 +32,30 @@ export const userSlice = createSlice({
                 number: '',
                 isAuth: false,
             }
+        },
+        contact: (state, action) => {
+            state.userInfo.contacts = action.payload
+            console.log(state.userInfo.contacts)
+        },
+        ContactsMessages: (state, action) => {
+            state.userInfo.contacts.forEach(contact => {
+                if (contact.number === action.payload.from) {
+                    contact.messages.push(action.payload.message)
+                }
+            })
+
+        },
+        ChangeUserStatus: (state, action) => {
+            state.userInfo.contacts.forEach(contact => {
+                if (contact.number === action.payload.number) {
+                    contact.online = action.payload.status
+                }
+            })
+
         }
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
             state.loading = false;
-            console.log(action.payload.UserInfo)
             if (action.payload.success) {
                 state.userInfo = action.payload.UserInfo
             }
@@ -52,6 +71,9 @@ export const userSlice = createSlice({
     }
 })
 
-export const { login, logout,Setinfo } = userSlice.actions;
+export const isAuth = state => state.user.userInfo.isAuth
+export const GetUserInfo = state => state.user.userInfo
+
+export const { login, logout, Setinfo, contact,ContactsMessages,ChangeUserStatus } = userSlice.actions;
 
 export default userSlice.reducer;

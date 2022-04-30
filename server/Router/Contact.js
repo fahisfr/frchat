@@ -1,10 +1,9 @@
 const router = require("express").Router();
+const Contact = require("../Controller/Contact");
 
 
-
-router.get("/",)
-      .post("/",)
-      .delete("/",)
+router.post("/",Contact.AddContact)
+      .delete("/",Contact.RemoveContact)
 
 
 

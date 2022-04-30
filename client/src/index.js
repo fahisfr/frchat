@@ -6,20 +6,23 @@ import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import user from "./Features/User";
+import { fetchUser } from "./Features/User";
 
 const store = configureStore({
   reducer: {
-    user:user
+    user,
   },
 });
 
+store.dispatch(fetchUser());
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+
+  <Provider store={store}>
+    <App />
+  </Provider>
+
 );
 
 reportWebVitals();

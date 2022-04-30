@@ -12,15 +12,11 @@ const singup = async (req, res, next) => {
     if (user) return res.json({ success: false, message: "this number already login" });
     OTP.create(number)
       .then(response => res.json({ success: true, message: "otp send successfully" }))
-   
-      .catch(error => {
-        console.log(error)
-        res.json({ success: false, message: "send otp faild" })
-      
-      } )
-       
+      .catch(error => res.json({ success: false, message: "faild to send OTP" }))
     
-  } catch (error) {next(error);}
+  } catch (error) {
+    next(error)
+  }
 }
 
 
@@ -35,12 +31,12 @@ const verify = async (req, res, next) => {
     
       if (OTPVerify.valid) {
         const createNewUser = await db.get().collection("users").insertOne({ number, name,contacts:[] })
-        const auccesstoken = Jwt.sign({ number, name }, process.env.ACCESS_TOKEN_SECRET)
+        const accesstoken = Jwt.sign({ number, name }, process.env.ACCESS_TOKEN_SECRET)
         const refreshtoken = Jwt.sign({ _id: createNewUser._id, number: createNewUser.number }, process.env.REFRESH_TOKEN_SECRET)
         createNewUser.refreshtoken = refreshtoken
         res.cookie('refreshtoken', refreshtoken, { maxAge: 806400000, httpOnly: false, });
         console.log("workd")
-        return res.json({ success: true, message: "otp verified successfully", auccesstoken:auccesstoken });
+        return res.json({ success: true, message: "otp verified successfully", accesstoken });
       
       } 
     res.json({ success: false, message: "otp is wrong" });

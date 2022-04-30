@@ -127,7 +127,7 @@
   
 }
 .contact_info_message{
-    width: 60%;
+    width: 83%;
     height: 50%;
     overflow: hidden;
     
@@ -139,9 +139,16 @@
     margin-right: 5px;
    
 }
-.contact_online_n-o{
+.contact_online_status{
     flex-grow: 1;
-    
+}
+.contact_online_status_true{
+    color: rgb(0, 140, 255);
+    font-size: .9rem;
+}
+.contact_online_status_false{
+    color: rgb(180, 157, 157);
+    font-size: .9rem;
 }
 
 .add_contact_icon{
