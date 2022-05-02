@@ -19,7 +19,8 @@
     flex : none;
     align-items: center;
     height:60px;
-    padding-left: 1rem;
+    padding-left: 0.7rem;
+    justify-content: space-between;
     background-color:var(--ld_bg);
     border-right:1px solid rgba(104, 97, 97, 0.116);
     box-shadow: var(--main_box-shadow)
@@ -244,13 +245,13 @@
     text-align: center;
     
 }
-.home_r-h_m_div{
+.home_m_div{
     padding:0.4rem 1rem;
     cursor: pointer;
 }
 
 
-.home_r-h_menu{
+.home_menu{
    width: 4px;
   height: 4px;
   background-color: black;

@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
         const decoded = jwt.verify(accesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
             if (err) return next(ApiError.Forbidden());
             req.user = result;
+            console.log(result)
             next();
         });
     } catch (error) {

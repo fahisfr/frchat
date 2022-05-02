@@ -7,14 +7,11 @@ const Authentication = (req, res, next) => {
         if (!auccesstoken) return res.json({ success: false, message: "authorization token is required" });
         const decoded = jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
             if (err) return res.json({ success: false, message: "authorization token is invalid" });
-
-            const User = await db.get().collection("users").findOne({ number: parseInt(result.number) });
+            const {_id,...userInfo} = await db.get().collection("users").findOne({ number: parseInt(result.number) });
             res.json({
                 success: true,
                 UserInfo: {
-                    name: User.name,
-                    number: User.number,
-                    contacts: User.contacts,
+                    ...userInfo,
                     isAuth: true,
                 }
             });

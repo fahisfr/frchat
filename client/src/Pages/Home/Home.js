@@ -33,7 +33,7 @@ function Home() {
           dispatch(contact(response.contacts))
           break;
         case "message":
-          dispatch(ContactsMessages(response))
+          dispatch(ContactsMessages({...response,position: 'start'}))
           divRef.current.scrollIntoView({ behavior: 'smooth' });
           break;
         case "user_online_status":
@@ -83,6 +83,13 @@ function Home() {
             size={37}
             onClick={()=>setProfileTrigger(true)}
           />
+          <div className="home_r-h_m">
+            <div className="home_m_div" >
+              <div className="home_menu"></div>
+              <div className="home_menu"></div>
+              <div className="home_menu"></div>
+            </div>
+          </div>
         </header>
         <div className="home_search">
           <input className="home_search_bar" type="text" placeholder="search.." />
@@ -156,10 +163,10 @@ function Home() {
                 </div>
               </div>
               <div className="home_r-h_m">
-                <div className="home_r-h_m_div" onClick={()=>setContactMenuTrigger(!ContactMenuTrigger)} >
-                  <div className="home_r-h_menu"></div>
-                  <div className="home_r-h_menu"></div>
-                  <div className="home_r-h_menu"></div>
+                <div className="home_m_div" onClick={()=>setContactMenuTrigger(!ContactMenuTrigger)} >
+                  <div className="home_menu"></div>
+                  <div className="home_menu"></div>
+                  <div className="home_menu"></div>
                 </div>
               </div>
             </header>
