@@ -1,4 +1,4 @@
-const db = require("../Config/DBconn");
+const db = require("../config/dbConn");
 const jwt = require("jsonwebtoken");
 
 const Authentication = (req, res, next) => {

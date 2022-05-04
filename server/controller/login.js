@@ -1,7 +1,7 @@
-
-const db = require("../Config/DBconn");
-const OTP = require("./Otp")
+const db = require("../config/dbConn");
+const OTP = require("./otp")
 const jwt = require("jsonwebtoken");
+
 const login = async (req, res, next) => {
     try {
         const { number } = req.body;

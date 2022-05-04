@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Contact = require("../Controller/Contact");
+const Contact = require("../controller/contact");
 
 
 router.post("/",Contact.AddContact)

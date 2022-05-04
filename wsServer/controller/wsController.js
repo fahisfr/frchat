@@ -1,7 +1,7 @@
 
 
 const ContactsInfo = (clients, userWs) => {
-    
+
     console.log(userWs._user.number, "Connected")
     userWs._user.contacts?.map(contact => {
         contact.messages = []
@@ -10,8 +10,10 @@ const ContactsInfo = (clients, userWs) => {
                 contact.online = true
                 client.send(JSON.stringify({
                     event: "user_online_status",
-                    status: true,
-                    number: userWs._user.number
+                    data: {
+                        status: true,
+                        number: userWs._user.number
+                    }
                 }))
                 return contact
             }
@@ -20,20 +22,37 @@ const ContactsInfo = (clients, userWs) => {
     })
     userWs.send(JSON.stringify({
         event: "contactsinfo",
-        contacts: userWs._user.contacts,
-        date: new Date()
+        data: {
+            contacts: userWs._user.contacts,
+            date: new Date()
+        }
+
     }))
 }
 
-const sendMessage = (clients, message) => {
-    const user = clients.find(user => user._user.number == message.to)
-    user?.send(JSON.stringify(
-        {
-            event: "message",
-            from: message.from,
-            message: message.message,
+const sendMessage = (clients, data) => {
+    
+    const user = clients.find(user => user._user.number == data.to)
+
+    user?.send(JSON.stringify({
+        event: "message",
+        data: {
+            from: data.from,
+            message: data.message,
         }
-    ))
+    }))
+}
+
+const typing = (clients, data) => {
+    const user = clients.find(user => user._user.number == data.to)
+
+    user?.send(JSON.stringify({
+        event: "typing",
+        data: {
+            from: data.from,
+            status: data.status
+        }
+    }))
 }
 
 
@@ -43,8 +62,10 @@ const userOfline = (clients, userWs) => {
             if (x._user.number == res.number) {
                 x.send(JSON.stringify({
                     event: "user_online_status",
+                    data: {
                     status: false,
-                    number: userWs._user.number
+                        number: userWs._user.number
+                    }
                 }))
             }
 
@@ -56,5 +77,6 @@ module.exports = {
     userOfline,
     sendMessage,
     ContactsInfo,
-   
+    typing
+
 }

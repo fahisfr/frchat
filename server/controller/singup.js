@@ -1,7 +1,7 @@
 const express = require("express");
-const db = require("../Config/DBconn")
+const db = require("../config/dbConn")
 const Jwt = require("jsonwebtoken")
-const OTP = require("./Otp");
+const OTP = require("./otp");
 
 
 

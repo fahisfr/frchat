@@ -23,15 +23,26 @@ wss.on("connection", (client) => {
     clients.push(client)
     wsController.ContactsInfo(clients, client)
 
-    client.on("message",  (message) => {
-        wsController.sendMessage(clients, message)
+    client.on("message", (message) => {
+        const { event, data } = JSON.parse(message)
+        switch (event) {
+            case "message":
+                wsController.sendMessage(clients, data)
+                break;
+            case "typing":
+                wsController.typing(clients, data)
+                break
+            
+            
+        }
     })
-        
-    client.on("close",  (ws) => {
+
+    client.on("close", (ws) => {
         clients.splice(clients.indexOf(client), 1)
-        wsController.userOfline(clients,client)
-        
+        wsController.userOfline(clients, client)
+
     })
+
 })
 
 server.on('upgrade', function upgrade(request, socket, head) {
@@ -46,14 +57,14 @@ server.on('upgrade', function upgrade(request, socket, head) {
                     ws._user = decoded
                     wss.emit('connection', ws, request)
                 })
-                
+
             }
             wss.handleUpgrade(request, socket, head, function done(ws) {
                 ws._user = result
                 wss.emit('connection', ws, request)
 
             })
-            
+
         }).catch(err => socket.end('oops something went wrong'))
 
     })

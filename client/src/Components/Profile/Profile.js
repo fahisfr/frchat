@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react'
+import React, { useState, useRef } from 'react'
 import './Profile.css'
 import { useSelector } from 'react-redux'
 import Axios from '../../Axios'
@@ -8,8 +8,10 @@ function Profile({ trigger, setTrigger }) {
 
     const User = useSelector(state => state.user.userInfo)
     const fileInputRef = useRef(null)
+    const [err, setErr] = useState({ status: false, message: "" })
     const [name, setName] = useState(User.name)
     const [photo, setPhoto] = useState(User.photo)
+
 
     const UpdateProfile = async (e) => {
         e.preventDefault()
@@ -20,33 +22,43 @@ function Profile({ trigger, setTrigger }) {
             const response = await Axios.post('/user/update', formData)
             if (response.data.success) {
                 setTrigger(false)
+            } else {
+                setErr({ status: true, message: response.message })
             }
-           
-        }catch(err){
+
+        } catch (err) {
             console.log(err)
         }
     }
 
-    
-    return trigger? (
+
+    return trigger ? (
         <div className="profile_container">
+
             <div className="profile">
+
                 <div className="user_profile_photo">
                     <img
                         id="user_photo"
                         src={photo}
                         alt="profile_pho"
-                        onClick={() => {fileInputRef.current.click()}}
+                        onClick={() => { fileInputRef.current.click() }}
                     />
                     <input
                         id="user_photo_input"
                         type="file"
                         ref={fileInputRef}
                         accept="image/*"
-                        onChange={(e) =>setPhoto(e.target.files[0])}
+                        onChange={(e) => setPhoto(e.target.files[0])}
                     />
                 </div>
                 <div className="user_info">
+                    <div id="profile_err">
+                        {
+                            
+                            <span id="profile_err_message" >{err.status ? err.message:"a"}</span>
+                        }
+                    </div>
                     <form id="profile_from" >
                         <label className="profile_label" >Name</label>
                         <div className="user_info_np">
@@ -82,7 +94,7 @@ function Profile({ trigger, setTrigger }) {
 
         </div>
 
-    ):null
+    ) : null
 }
 
 export default Profile

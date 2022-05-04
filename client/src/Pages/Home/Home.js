@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import './Home.css'
-import { faker } from '@faker-js/faker'
 import AddContact from '../../Components/AddContact/AddContact';
 import ContactMenu from '../../Components/ContactMenu/ContactMenu';
 import Profile from '../../Components/Profile/Profile';
-import { contact, ChangeUserStatus, ContactsMessages, GetUserInfo } from "../../Features/User"
+import { contact, ChangeUserStatus, ContactsMessages, GetUserInfo, typing } from "../../Features/User"
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
@@ -12,33 +11,43 @@ import { useSelector, useDispatch } from 'react-redux'
 
 
 function Home() {
+
   const divRef = useRef(null);
   const dispatch = useDispatch()
   const [server, setSever] = useState(null)
   const { contacts, ...info } = useSelector(GetUserInfo)
-  const [SlectedContact, setSlectedContact] = useState(null)
-  const [mymessage, setMyMessage] = useState('')
+  const [SlectedContactIndex, setSlectedContactIndex] = useState(null)
+  const [myMessage, setMyMessage] = useState('')
 
+  const [typingStatus, setTypingStatus] = useState(false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
   const [AddContactTrigger, setAddContactTrigger] = useState(false);
   const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
- 
+
+  const SlectedContact = contacts[SlectedContactIndex]
+
   useEffect(() => {
+    WebSocket.prototype.emit = function (event, data) {
+      this.send(JSON.stringify({ event, data }));
+    }
     let server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
     setSever(server)
     server.onmessage = (e) => {
-      const response = JSON.parse(e.data)
-      switch (response.event) {
+      const { event, data } = JSON.parse(e.data)
+
+      switch (event) {
         case "contactsinfo":
-          dispatch(contact(response.contacts))
+          dispatch(contact(data.contacts))
           break;
         case "message":
-          dispatch(ContactsMessages({...response,position: 'start'}))
+          dispatch(ContactsMessages({ ...data, position: 'start' }))
           divRef.current.scrollIntoView({ behavior: 'smooth' });
           break;
         case "user_online_status":
-          dispatch(ChangeUserStatus(response))
+          dispatch(ChangeUserStatus(data))
           break;
+        case "typing":
+          dispatch(typing(data))
       }
     }
     return () => {
@@ -51,27 +60,54 @@ function Home() {
     e.preventDefault()
     dispatch(ContactsMessages({
       from: SlectedContact.number, message: {
-        message: mymessage,
+        message: myMessage,
         date: new Date().toLocaleTimeString(),
         position: 'end'
       }
     }))
-    server.send(JSON.stringify({
-      type: "sendmessage",
+    server.emit('message', {
       from: info.number,
       to: SlectedContact.number,
       message: {
-        message: mymessage,
+        message: myMessage,
         date: new Date().toLocaleTimeString(),
         position: 'start'
       }
-    }))
+    })
     setMyMessage('')
-    
-    
+    setTypingStatus(false)
+
+
+  }
+  const sendTypingStatus = (status) => {
+    server.emit('typing', {
+      from: info.number,
+      to: SlectedContact.number,
+      status
+    })
+    setTypingStatus(status)
+  }
+
+  const ChangeMessge = e => {
+    setMyMessage(e.target.value)
+    if (e.target.value.length > 0 && !typingStatus) {
+      return sendTypingStatus(true)
+    }else if (e.target.value.length === 0 && typingStatus) {
+      sendTypingStatus(false)
+    }
   }
 
 
+  const messageOnFocusOut = () => {
+    if (typingStatus) {
+      server.emit('typing', {
+        from: info.number,
+        to: SlectedContact.number,
+        status: false
+      })
+      setTypingStatus(false)
+    }
+  }
 
   return (
     <div className="home">
@@ -81,7 +117,7 @@ function Home() {
         <header className="home_left_header">
           <FiAlignLeft
             size={37}
-            onClick={()=>setProfileTrigger(true)}
+            onClick={() => setProfileTrigger(true)}
           />
           <div className="home_r-h_m">
             <div className="home_m_div" >
@@ -98,8 +134,9 @@ function Home() {
         <div className="home_contacts">
           {
             contacts.map((contact, index) => {
+
               return (
-                <div className="contact " key={index} onClick={() => setSlectedContact(contact)} >
+                <div className="contact " key={index} onClick={() => setSlectedContactIndex(index)} >
                   <div className='contact_info_img'>
                     <img className="contact_image" src={contact.photo} alt="loding" />
                   </div>
@@ -114,9 +151,19 @@ function Home() {
                     </div>
                     <div className="contact_info_l">
                       <div className="contact_info_message">
-                        <span className="contact_message">{
-                          contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : 'no message'
-                        }</span>
+                        {
+                          contact?.typing ?
+                            <span className="contact_typing">
+                              Typing...
+                            </span> :
+                            <span className="contact_message" >
+                              {contact?.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no message"}
+                            </span>
+                        }
+
+
+
+
                       </div>
                       <div className="contact_online_status">
                         {
@@ -155,15 +202,19 @@ function Home() {
                   </div>
                   <div className="home_r-h_contact_status">
                     {
-                      SlectedContact.online ?
-                        <span className="contact_online_status_true">Online</span> :
-                        <span className="contact_online_status_false">Offline</span>
+                      SlectedContact?.typing ?
+                        <span className="contact_typing">
+                          Typing...
+                        </span> :
+                        SlectedContact.online ?
+                          <span className="contact_online_status_true">Online</span> :
+                          <span className="contact_online_status_false">Offline</span>
                     }
                   </div>
                 </div>
               </div>
               <div className="home_r-h_m">
-                <div className="home_m_div" onClick={()=>setContactMenuTrigger(!ContactMenuTrigger)} >
+                <div className="home_m_div" onClick={() => setContactMenuTrigger(!ContactMenuTrigger)} >
                   <div className="home_menu"></div>
                   <div className="home_menu"></div>
                   <div className="home_menu"></div>
@@ -171,7 +222,7 @@ function Home() {
               </div>
             </header>
             <div className="home_chats" >
-              <ContactMenu trigger={ContactMenuTrigger}SlectedContact={SlectedContact}/>
+              <ContactMenu trigger={ContactMenuTrigger} SlectedContact={SlectedContact} />
               {
                 contacts.find(contact => contact.number === SlectedContact.number).messages.map((message, index) => {
                   return (
@@ -193,8 +244,11 @@ function Home() {
                 <div className="home_r-b_message">
                   <input
                     type='text'
-                    value={mymessage}
-                    onChange={(e) => setMyMessage(e.target.value)}
+                    value={myMessage}
+                    onChange={ChangeMessge}
+                    onBlur={messageOnFocusOut}
+
+                    placeholder="Type a message"
                     className="home_message_input"
                     required
                   />
@@ -203,7 +257,7 @@ function Home() {
                   <button
                     type="submit"
                     className="home_message_send_button"
-                    disabled={!mymessage}
+
                   >Send</button>
                 </div>
               </form>
@@ -214,7 +268,7 @@ function Home() {
 
 
 
-    </div>
+    </div >
   )
 }
 

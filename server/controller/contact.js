@@ -1,4 +1,4 @@
-const db = require("../Config/DBconn");
+const db = require("../config/dbConn");
 
 const AddContact = async (req, res, next) => {
     try {

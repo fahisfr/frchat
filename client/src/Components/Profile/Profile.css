@@ -49,11 +49,22 @@
 #user_photo_input{
     display: none;
 }
-
 .user_info{
     width: 100%;
-    padding: 2.3rem 1rem ;
+    padding: 0rem 1rem ;
 }
+#profile_err{
+    height: 1.5rem;
+   text-align: center;
+   padding-top: 1rem;
+}
+#profile_err_message{
+    color: red;
+    font-size: 0.950rem;
+
+
+}
+
 
 .profile_label{
     font-size: 1rem;
@@ -84,6 +95,7 @@
     cursor: pointer;
 
 }
+
 
 .user_info_input:focus{
     outline: none;

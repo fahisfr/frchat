@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const SingupController = require("../Controller/Singup");
+const SingupController = require("../controller/singup");
 
 
 router.post("/", SingupController.singup);
