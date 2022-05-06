@@ -4,22 +4,25 @@ const AddContact = async (req, res, next) => {
     try {
         const UserNumber = req.user.number;
         const { number: ContactNumber, name } = req.body;
+        console.log(UserNumber, ContactNumber)
+        if (ContactNumber === UserNumber) return res.json({ success: false, message: "you can't add yourself" })
         const User = await db.get().collection("users").findOne({ number: parseInt(ContactNumber) });
         if (!User) return res.json({ success: false, message: "user not found" });
         const Contact = await db.get().collection("users").findOne({ number: parseInt(UserNumber) });
-        console.log(Contact)
         const AlReadyExist = Contact?.contacts.find(contact => contact.number === ContactNumber);
         if (AlReadyExist) return res.json({ success: false, message: "contact already exists" });
-        db.get().collection("users").updateOne({ number: parseInt(UserNumber) }, {
+        const {value:{_id,...contactInfo}} = await db.get().collection("users").findOneAndUpdate({ number:UserNumber }, {
             $push: {
                 contacts: {
                     id: User._id,
-                    number: ContactNumber, name
-
+                    name: name,
+                    number: ContactNumber
+                  
                 }
             }
-        }).then(() => res.json({ success: true, message: "contact added successfully" }))
-          .catch(err => res.json({ success: false, message: "failed to add contact" }))
+        })
+        res.json({ success: true, message: "contact added successfully" })
+
 
     } catch (error) {
         next(error);
@@ -27,13 +30,14 @@ const AddContact = async (req, res, next) => {
 
 }
 
-const RemoveContact = (req, res, next) => {
+const RemoveContact = async (req, res, next) => {
     try {
-        const { number, name } = req.body;
-        db.get().collection("users").updateOne({ number }, {
+        const { number } = req.body;
+        console.log(number, req.user.number)
+        db.get().collection("users").updateOne({ number:req.user.number }, {
             $pull: {
                 contacts: {
-                    name, number,
+                    number:number
                 }
             }
         })

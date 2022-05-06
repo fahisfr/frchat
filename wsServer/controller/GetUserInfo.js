@@ -22,11 +22,11 @@ const getUserInfo = (user) => {
                     _id: 1,
                     number: 1,
                     name: 1,
-                    photo: 1,
                     _contacts: {
-                        name: 1,
+                        name: "$contacts.name",
                         photo: 1,
-                        number: 1
+                        number: 1,
+                        messages:"$contacts.messages"
                     }
                 }
             },
@@ -40,12 +40,8 @@ const getUserInfo = (user) => {
             },
         ]).toArray()
             .then(result => {
-                if (result.length == 0) {
-                    resolve(result)
-                    
-                }
+                if (result.length == 0) resolve(result)
                 result[0].contacts = result[0].contacts.map(contact => contact[0])
-                
                 resolve(result[0])
             })
            .catch(err => reject(err))

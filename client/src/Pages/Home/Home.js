@@ -1,28 +1,38 @@
 import React, { useEffect, useState, useRef } from 'react'
 import './Home.css'
+import Axios from '../../Axios'
 import AddContact from '../../Components/AddContact/AddContact';
-import ContactMenu from '../../Components/ContactMenu/ContactMenu';
+
 import Profile from '../../Components/Profile/Profile';
-import { contact, ChangeUserStatus, ContactsMessages, GetUserInfo, typing } from "../../Features/User"
+import ContactProfile from '../../Components/ContactProfile/ContactProfile';
+import {
+  contact, ChangeUserStatus,
+  ContactsMessages,typing,
+  GetUserInfo, removeContact
+  
+}
+  from "../../Features/User"
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
 import { useSelector, useDispatch } from 'react-redux'
 
 
-function Home() {
 
+function Home() {
+  const default_photo = "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
   const divRef = useRef(null);
   const dispatch = useDispatch()
   const [server, setSever] = useState(null)
+  const [myMessage, setMyMessage] = useState('')
   const { contacts, ...info } = useSelector(GetUserInfo)
   const [SlectedContactIndex, setSlectedContactIndex] = useState(null)
-  const [myMessage, setMyMessage] = useState('')
 
   const [typingStatus, setTypingStatus] = useState(false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
-  const [AddContactTrigger, setAddContactTrigger] = useState(false);
+  const [AddContactTrigger, setAddContactTrigger] = useState(false)
   const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
+  const [ContactProfileTrigger, setContactProfileTrigger] = useState(false)
 
   const SlectedContact = contacts[SlectedContactIndex]
 
@@ -32,6 +42,8 @@ function Home() {
     }
     let server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
     setSever(server)
+
+
     server.onmessage = (e) => {
       const { event, data } = JSON.parse(e.data)
 
@@ -48,21 +60,24 @@ function Home() {
           break;
         case "typing":
           dispatch(typing(data))
+          break;
+        default:
+          break;
       }
     }
-    return () => {
-      server.close()
-    }
+    return () => server.close()
+
 
   }, [dispatch])
 
   const SendMessgae = e => {
     e.preventDefault()
     dispatch(ContactsMessages({
-      from: SlectedContact.number, message: {
+      from: SlectedContact.number,
+      message: {
         message: myMessage,
-        date: new Date().toLocaleTimeString(),
-        position: 'end'
+        date: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        from: "me"
       }
     }))
     server.emit('message', {
@@ -70,15 +85,14 @@ function Home() {
       to: SlectedContact.number,
       message: {
         message: myMessage,
-        date: new Date().toLocaleTimeString(),
-        position: 'start'
+        date: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       }
     })
     setMyMessage('')
     setTypingStatus(false)
 
-
   }
+
   const sendTypingStatus = (status) => {
     server.emit('typing', {
       from: info.number,
@@ -88,15 +102,16 @@ function Home() {
     setTypingStatus(status)
   }
 
+
+
   const ChangeMessge = e => {
     setMyMessage(e.target.value)
     if (e.target.value.length > 0 && !typingStatus) {
       return sendTypingStatus(true)
-    }else if (e.target.value.length === 0 && typingStatus) {
+    } else if (e.target.value.length === 0 && typingStatus) {
       sendTypingStatus(false)
     }
   }
-
 
   const messageOnFocusOut = () => {
     if (typingStatus) {
@@ -108,18 +123,26 @@ function Home() {
       setTypingStatus(false)
     }
   }
+  const removeContactNow = (number) => {
+    Axios.put('/contact', { number }).then(res => {
+      if (res.data.success) {
+        dispatch(removeContact(number))
+      }
+    })
+  }
 
   return (
     <div className="home">
       <Profile trigger={ProfileTrigger} setTrigger={setProfileTrigger} />
-      <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger} />
+      <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger}/>
+      <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} contact={SlectedContact}/>
       <div className="home_left">
         <header className="home_left_header">
           <FiAlignLeft
             size={37}
             onClick={() => setProfileTrigger(true)}
           />
-          <div className="home_r-h_m">
+          <div className="home_r-h_m" >
             <div className="home_m_div" >
               <div className="home_menu"></div>
               <div className="home_menu"></div>
@@ -133,26 +156,29 @@ function Home() {
         </div>
         <div className="home_contacts">
           {
-            contacts.map((contact, index) => {
-
+            contacts?.map((contact, index) => {
               return (
                 <div className="contact " key={index} onClick={() => setSlectedContactIndex(index)} >
                   <div className='contact_info_img'>
-                    <img className="contact_image" src={contact.photo} alt="loding" />
+                    <img className="contact_image" src={contact.photo??default_photo} alt="profil" />
                   </div>
                   <div className="contact_info_ndl">
                     <div className="contact_info_n-d">
                       <div className="contact_info_name">
-                        <span className="contact_name">{contact.name}</span>
+                        <span className="contact_name">{contact.name??contact.number}</span>
                       </div>
                       <div className="contact_info_date">
-                        <span className="contact_date">{contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].date : ""}</span>
+                        <span className="contact_date">
+                          {
+                            contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].date : ""
+                          }
+                        </span>
                       </div>
                     </div>
                     <div className="contact_info_l">
                       <div className="contact_info_message">
                         {
-                          contact?.typing ?
+                          contact.online && contact?.typing ?
                             <span className="contact_typing">
                               Typing...
                             </span> :
@@ -160,9 +186,6 @@ function Home() {
                               {contact?.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no message"}
                             </span>
                         }
-
-
-
 
                       </div>
                       <div className="contact_online_status">
@@ -222,16 +245,33 @@ function Home() {
               </div>
             </header>
             <div className="home_chats" >
-              <ContactMenu trigger={ContactMenuTrigger} SlectedContact={SlectedContact} />
               {
-                contacts.find(contact => contact.number === SlectedContact.number).messages.map((message, index) => {
+                ContactMenuTrigger?<div className="contact_menu">
+                  <div
+                    className="contact_menu_options"
+                    onClick={() => setContactProfileTrigger(true)}
+                  >
+                    <span className="contact_menu_option">Edite Contact info</span>
+                  </div>
+                  <div
+                    className="contact_menu_options"
+                    onClick={() => removeContactNow(SlectedContact.number)}
+                  >
+                    <span className="contact_menu_option-r" 
+                    >Remove Contact</span>
+                  </div>
+                </div>:null
+              }
+                
+              {
+                SlectedContact.messages.map((data, index) => {
                   return (
-                    <div className={`home_c_message-${message.position}`} key={index}  >
+                    <div className={`home_c_message-${data.from ?? "contact"}`} key={index}  >
                       <div className="home_c-message_box" >
-                        <span className="h_message">{message.message}</span>
+                        <span className="h_message">{data.message}</span>
                       </div>
                       <div>
-                        <span className="h_m_date">{message.date}</span>
+                        <span className="h_m_date">{data.date}</span>
                       </div>
                     </div>
                   )
@@ -257,7 +297,6 @@ function Home() {
                   <button
                     type="submit"
                     className="home_message_send_button"
-
                   >Send</button>
                 </div>
               </form>

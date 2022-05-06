@@ -106,6 +106,7 @@
     overflow: hidden;
     border-radius: 50%;
     box-shadow: var(--main_box-shadow);
+  
 }
 .contact_info_ndl{
   
@@ -269,9 +270,43 @@
                                       /*right header :End  */
 
 
-
+                                        /*contactMenu  :Start  */
+                                        .contact_menu{
+    position: fixed;
+    right: 20px;
+    width: 15rem;
+    height: auto;
+    background-color:var(--ld_bg);
+    box-shadow: var(--main_box-shadow);
+   
+}
+.contact_menu_options{
+    /* width: 100%; */
+    height: auto;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--ld_border);
+    border-top: 0.1px solid rgba(113, 114, 106, 0.973);;
+    transition:0.2s;
+}
+.contact_menu_options:hover{
+    transform: translate(1px, -1px);
+    cursor: pointer;
+    background-color: var(--white);
+    
+    
+}
+.contact_menu_option-r{
+    color: rgba(252, 0, 0, 0.705);
+}
+.contact_menu_option{
+    color: rgba(114, 106, 106, 0.973);
+}
+                                   /* contactMenu :End */
 
                                    /* home_chats :Start */
+                                   
+
+
 .home_chats{
     flex-grow: 1;
   
@@ -282,7 +317,7 @@
 .home_chats::-webkit-scrollbar {
     display: none;
 }
-.home_c_message-end{
+.home_c_message-me{
     width: 100%;
     min-height: 5rem;
     display: flex;
@@ -291,7 +326,7 @@
     background-color: rgb(255, 255, 255);
 }
 
-.home_c_message-start{
+.home_c_message-contact{
      display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -364,3 +399,7 @@
     font-size: 19px;
     color: var(--white);
 }
+
+
+                                    /* home right bottom :End */
+

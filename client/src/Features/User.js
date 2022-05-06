@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+
 import Axios from '../Axios'
 
 
@@ -15,6 +16,7 @@ export const userSlice = createSlice({
             contacts: [],
             isAuth: false,
         },
+        newMessges: [],
         error: '',
         loading: false,
     },
@@ -35,17 +37,59 @@ export const userSlice = createSlice({
         },
         contact: (state, action) => {
             state.userInfo.contacts = action.payload
+            if (localStorage.getItem("chats")) {
+                const chats = JSON.parse(localStorage.getItem("chats"))
+                state.userInfo.contacts.forEach(contact => {
+                    chats.forEach(chat => {
+                        if (contact.number === chat.number) {
+                            contact.messages = chat.messages
+                        }
+                    })
+                })
+
+            } else {
+                localStorage.setItem("chats", JSON.stringify(state.userInfo.contacts))
+            }
         },
-        ContactsMessages: (state, action) => {
+        ContactsMessages:  (state, action) => {
+            // var contactIn = false
             state.userInfo.contacts.forEach(contact => {
                 if (contact.number === action.payload.from) {
                     contact.typing = false
+                    // contactIn = true
                     contact.messages.push(action.payload.message)
+                    const oldchats = localStorage.getItem('chats')
+                    const chats = JSON.parse(oldchats)
+                    chats.forEach(chat => {
+                        if (chat.number === action.payload.from) {
+                            chat.messages.push(action.payload.message)
+                            localStorage.setItem('chats', JSON.stringify(chats))
+                        }
+                    })
+                } 
 
-                }
             })
+            // if (!contactIn) {
+            //     state.userInfo.contacts.push({
+            //         number: action.payload.from,
+            //         messages: [action.payload.message],
+            //     })
+            // }
+
 
         },
+        // addContact: (state, action) => {
+        //     state.userInfo.contacts.push({ ...action.payload, messages: [] })
+        //     const chat = localStorage.getItem('chats')
+        //     const chats = JSON.parse(chat)
+        //     chats.push({
+        //         number: action.payload.number,
+        //         messages: [],
+        //     })
+        //     localStorage.setItem('chats', JSON.stringify(chats))
+
+            
+        // },
         ChangeUserStatus: (state, action) => {
             state.userInfo.contacts.forEach(contact => {
                 if (contact.number === action.payload.number) {
@@ -60,14 +104,25 @@ export const userSlice = createSlice({
                     contact.typing = action.payload.status
                 }
             })
-
+        },
+        removeContact: (state, action) => {
+            state.userInfo.contacts = state.userInfo.contacts.filter(contact => contact.number !== action.payload)
+            const chats = JSON.parse(localStorage.getItem('chats'))
+            chats.forEach(chat => {
+                if (chat.number === action.payload) {
+                    chats.splice(chats.indexOf(chat), 1)
+                    localStorage.setItem('chats', JSON.stringify(chats))
+                }
+            })
         }
-        
+
+
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
             state.loading = false;
             if (action.payload.success) {
                 state.userInfo = action.payload.UserInfo
+
             }
         },
         [fetchUser.pending]: (state, action) => {
@@ -84,6 +139,10 @@ export const userSlice = createSlice({
 export const isAuth = state => state.user.userInfo.isAuth
 export const GetUserInfo = state => state.user.userInfo
 
-export const { login, logout, Setinfo, contact,ContactsMessages,ChangeUserStatus,typing } = userSlice.actions;
+export const {
+    login, logout, Setinfo, contact,
+    ContactsMessages, ChangeUserStatus, typing,
+
+} = userSlice.actions;
 
 export default userSlice.reducer;

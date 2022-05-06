@@ -71,6 +71,7 @@ const userOfline = (clients, userWs) => {
 
         })
     });
+    console.log(userWs._user.number, "Disconnected")
 }
 
 module.exports = {

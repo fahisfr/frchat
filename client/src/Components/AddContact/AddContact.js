@@ -1,28 +1,31 @@
 import React, { useState } from 'react'
 import './AddContact.css'
 import Axios from "../../Axios"
+import { useDispatch } from "react-redux"
+import {addContact } from "../../Features/User"
 function AddContact({ trigger, setTrigger }) {
-    const [number, setNumber] = useState("")
+    const dispatch = useDispatch()
+    const [number, setNumber] = useState(9847871724)
     const [name, setName] = useState("")
     const [Err, setErr] = useState({
         status: false,
         message: ""
     })
 
-
-    const AddContactNow = async (e) => {
-        e.preventDefault()
-        try {
-            const response = await Axios.post("/contact", { number, name })
-            if (response.data.success) {
-                setTrigger(false)
-                return
-            }
-            setErr({ status: true, message: response.data.message })
-        } catch (error) {
-
-        }
-    }
+    // const AddContactNow = async (e) => {
+    //     e.preventDefault()
+    //     try {
+    //         const response = await Axios.post("/contact", { number: parseInt(number), name })
+    //         if (response.data.success) {
+    //             dispatch(addContact(response.data.contact))
+    //             setTrigger(false)
+    //             return
+    //         }
+    //         setErr({ status: true, message: response.data.message })
+    //     } catch (error) {
+    //         alert("something went wrong")
+    //     }
+    // }
     return trigger ? (
         <div className="add_contact_container">
             <div className="add_contact">
@@ -48,7 +51,7 @@ function AddContact({ trigger, setTrigger }) {
                 </div>
 
                 <div className="add_contact_body">
-                    <from onSubmit={AddContactNow} className="add_contact_form">
+                    <from  className="add_contact_form">
                         <div className="add_contact_from_child">
                             <label className="add_contact_label">Name</label>
                             <div className="add_contact_input">
@@ -73,7 +76,7 @@ function AddContact({ trigger, setTrigger }) {
                         </div>
                         <button
                             type="submit"
-                            onClick={(e) => AddContactNow(e)}
+                            // onClick={(e) => AddContactNow(e)}
                             className="add_contact_button"
                         >Add Contact</button>
                     </from>

@@ -17,8 +17,16 @@
     display: flex;
      background-color: var(--white);
     
-    
 
+}
+.contactprofile{
+    width: 32rem;
+    height: 14rem;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: var(--main_box-shadow);
+    display: flex;
+     background-color: var(--white);
 }
 
 .profile_exit_button{
@@ -38,7 +46,7 @@
 
    
 }
-#user_photo{
+.user_photo{
     width: 8rem;
     height: 8rem;
     margin: 2.2rem 1rem;
@@ -46,19 +54,19 @@
     box-shadow: var(--main_box-shadow);
     
 }
-#user_photo_input{
+.user_photo_input{
     display: none;
 }
 .user_info{
     width: 100%;
     padding: 0rem 1rem ;
 }
-#profile_err{
+.profile_err{
     height: 1.5rem;
    text-align: center;
    padding-top: 1rem;
 }
-#profile_err_message{
+.profile_err_message{
     color: red;
     font-size: 0.950rem;
 
@@ -86,7 +94,9 @@
     float: right;
     width: 6rem;
     height: 2.3rem;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 500;
+    
     border-radius: 5px;
     margin-top: 1rem;
     background-color: var(--button_green_bg);

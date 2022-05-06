@@ -39,13 +39,13 @@ function Profile({ trigger, setTrigger }) {
 
                 <div className="user_profile_photo">
                     <img
-                        id="user_photo"
+                        className="user_photo"
                         src={photo}
                         alt="profile_pho"
                         onClick={() => { fileInputRef.current.click() }}
                     />
                     <input
-                        id="user_photo_input"
+                        className="user_photo_input"
                         type="file"
                         ref={fileInputRef}
                         accept="image/*"
@@ -53,10 +53,9 @@ function Profile({ trigger, setTrigger }) {
                     />
                 </div>
                 <div className="user_info">
-                    <div id="profile_err">
+                    <div className="profile_err">
                         {
-                            
-                            <span id="profile_err_message" >{err.status ? err.message:"a"}</span>
+                            err.status&& <span className="profile_err_message" >{err.message}</span>
                         }
                     </div>
                     <form id="profile_from" >
