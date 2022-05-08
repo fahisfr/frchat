@@ -239,7 +239,9 @@
 .home_r-h_contact_name{
     font-size: 1.150rem;
     white-space: nowrap;
+    
 }
+
 .home_r-h_contact_status{
 
     margin-top: 6px;
@@ -270,38 +272,7 @@
                                       /*right header :End  */
 
 
-                                        /*contactMenu  :Start  */
-                                        .contact_menu{
-    position: fixed;
-    right: 20px;
-    width: 15rem;
-    height: auto;
-    background-color:var(--ld_bg);
-    box-shadow: var(--main_box-shadow);
-   
-}
-.contact_menu_options{
-    /* width: 100%; */
-    height: auto;
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--ld_border);
-    border-top: 0.1px solid rgba(113, 114, 106, 0.973);;
-    transition:0.2s;
-}
-.contact_menu_options:hover{
-    transform: translate(1px, -1px);
-    cursor: pointer;
-    background-color: var(--white);
-    
-    
-}
-.contact_menu_option-r{
-    color: rgba(252, 0, 0, 0.705);
-}
-.contact_menu_option{
-    color: rgba(114, 106, 106, 0.973);
-}
-                                   /* contactMenu :End */
+                               
 
                                    /* home_chats :Start */
                                    
@@ -309,10 +280,11 @@
 
 .home_chats{
     flex-grow: 1;
-  
-    overflow: scroll;
+    overflow:scroll;
+    overflow-x: hidden;
     
     
+
 }
 .home_chats::-webkit-scrollbar {
     display: none;
@@ -332,6 +304,10 @@
     align-items: flex-start;
     min-height: 5rem;
     background-color: rgb(255, 255, 255);
+}
+#div_ref{
+    
+    height:0.5rem;
 }
 .home_c-message_box{
     margin-top: 15px;

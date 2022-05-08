@@ -32,8 +32,8 @@ wss.on("connection", (client) => {
             case "typing":
                 wsController.typing(clients, data)
                 break
-            
-            
+
+
         }
     })
 
@@ -54,9 +54,14 @@ server.on('upgrade', function upgrade(request, socket, head) {
         getUserInfo(decoded).then(result => {
             if (result.length == 0) {
                 wss.handleUpgrade(request, socket, head, function done(ws) {
-                    ws._user = decoded
+                    ws._user = {
+                        number: decoded.number,
+                        name: decoded.name,
+                        contacts: []
+                    }
                     wss.emit('connection', ws, request)
                 })
+
 
             }
             wss.handleUpgrade(request, socket, head, function done(ws) {

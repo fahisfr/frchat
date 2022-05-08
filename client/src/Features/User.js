@@ -16,6 +16,7 @@ export const userSlice = createSlice({
             contacts: [],
             isAuth: false,
         },
+        selectedContact: '',
         newMessges: [],
         error: '',
         loading: false,
@@ -35,7 +36,7 @@ export const userSlice = createSlice({
                 isAuth: false,
             }
         },
-        contact: (state, action) => {
+        addContactInfo: (state, action) => {
             state.userInfo.contacts = action.payload
             if (localStorage.getItem("chats")) {
                 const chats = JSON.parse(localStorage.getItem("chats"))
@@ -43,6 +44,8 @@ export const userSlice = createSlice({
                     chats.forEach(chat => {
                         if (contact.number === chat.number) {
                             contact.messages = chat.messages
+                        } else {
+                            state.userInfo.contacts.push(chat)
                         }
                     })
                 })
@@ -51,69 +54,75 @@ export const userSlice = createSlice({
                 localStorage.setItem("chats", JSON.stringify(state.userInfo.contacts))
             }
         },
-        ContactsMessages:  (state, action) => {
-            // var contactIn = false
-            state.userInfo.contacts.forEach(contact => {
+        addContactMessage: (state, action) => {
+            let contactIn = false
+            const contacts = state.userInfo.contacts
+            for (let contact of contacts) {
+                console.log(contact.number, action.payload.from)
                 if (contact.number === action.payload.from) {
                     contact.typing = false
-                    // contactIn = true
+                    contactIn = true
                     contact.messages.push(action.payload.message)
-                    const oldchats = localStorage.getItem('chats')
-                    const chats = JSON.parse(oldchats)
-                    chats.forEach(chat => {
+                    const chats = JSON.parse(localStorage.getItem('chats'))
+                    for (let chat of chats) {
                         if (chat.number === action.payload.from) {
                             chat.messages.push(action.payload.message)
                             localStorage.setItem('chats', JSON.stringify(chats))
+                            break;
                         }
-                    })
-                } 
+                    }
+                    break;
+                }
 
-            })
-            // if (!contactIn) {
-            //     state.userInfo.contacts.push({
-            //         number: action.payload.from,
-            //         messages: [action.payload.message],
-            //     })
-            // }
+            }
+            if (!contactIn) {
+                state.userInfo.contacts.push({
+                    number: action.payload.from,
+                    messages: [action.payload.message],
+                    online: true,
+                    notSaved: true
+                })
+                const chats = JSON.parse(localStorage.getItem('chats'))
+                chats.push({
+                    number: action.payload.from,
+                    notSaved: true,
+                    messages: [action.payload.message],
+                })
+                localStorage.setItem('chats', JSON.stringify(chats))
+            }
 
 
         },
-        // addContact: (state, action) => {
-        //     state.userInfo.contacts.push({ ...action.payload, messages: [] })
-        //     const chat = localStorage.getItem('chats')
-        //     const chats = JSON.parse(chat)
-        //     chats.push({
-        //         number: action.payload.number,
-        //         messages: [],
-        //     })
-        //     localStorage.setItem('chats', JSON.stringify(chats))
+        addContact: (state, action) => {
 
-            
-        // },
-        ChangeUserStatus: (state, action) => {
-            state.userInfo.contacts.forEach(contact => {
-                if (contact.number === action.payload.number) {
-                    contact.online = action.payload.status
-                }
-            })
+            state.userInfo.contacts.push({ ...action.payload, messages: [] })
+            const chats = JSON.parse(localStorage.getItem('chats'))
+            chats.push({ number: action.payload.number, messages: [], })
+            localStorage.setItem('chats', JSON.stringify(chats))
+
 
         },
-        typing: (state, action) => {
-            state.userInfo.contacts.forEach(contact => {
-                if (contact.number === action.payload.from) {
-                    contact.typing = action.payload.status
-                }
-            })
+        changeContactStatus: (state, action) => {
+            const { number, status } = action.payload
+            state.userInfo.contacts.find(contact => contact.number === number).online = status
+
+        },
+        changeTypingStatus: (state, action) => {
+            const { from, status } = action.payload
+            state.userInfo.contacts.find(contact => contact.number === from).typing = status
         },
         removeContact: (state, action) => {
-            state.userInfo.contacts = state.userInfo.contacts.filter(contact => contact.number !== action.payload)
+
+            const conIndex = state.userInfo.contacts.findIndex(contact => contact.number === action.payload)
+            state.userInfo.contacts.splice(conIndex, 1)
+
             const chats = JSON.parse(localStorage.getItem('chats'))
-            chats.forEach(chat => {
-                if (chat.number === action.payload) {
-                    chats.splice(chats.indexOf(chat), 1)
-                    localStorage.setItem('chats', JSON.stringify(chats))
-                }
-            })
+            const chIndex = chats.findIndex(chat => chat.number === action.payload)
+            chats.splice(chIndex, 1)
+            localStorage.setItem('chats', JSON.stringify(chats))
+
+        }, selectContact: (state, action) => {
+            state.selectedContact = action.payload
         }
 
 
@@ -138,10 +147,12 @@ export const userSlice = createSlice({
 
 export const isAuth = state => state.user.userInfo.isAuth
 export const GetUserInfo = state => state.user.userInfo
+export const getSelectedContact = state => state.user.userInfo?.contacts.find(contact => contact.number === state.user.selectedContact)
 
 export const {
-    login, logout, Setinfo, contact,
-    ContactsMessages, ChangeUserStatus, typing,
+    login, logout, addContactInfo, addContact,
+    addContactMessage, changeContactStatus,
+    changeTypingStatus, removeContact, selectContact
 
 } = userSlice.actions;
 

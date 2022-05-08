@@ -2,7 +2,7 @@ const db = require("../config/dbConn");
 
 const AddContact = async (req, res, next) => {
     try {
-        const UserNumber = req.user.number;
+        const UserNumber = parseInt(req.user.number);
         const { number: ContactNumber, name } = req.body;
         console.log(UserNumber, ContactNumber)
         if (ContactNumber === UserNumber) return res.json({ success: false, message: "you can't add yourself" })
@@ -11,18 +11,18 @@ const AddContact = async (req, res, next) => {
         const Contact = await db.get().collection("users").findOne({ number: parseInt(UserNumber) });
         const AlReadyExist = Contact?.contacts.find(contact => contact.number === ContactNumber);
         if (AlReadyExist) return res.json({ success: false, message: "contact already exists" });
-        const {value:{_id,...contactInfo}} = await db.get().collection("users").findOneAndUpdate({ number:UserNumber }, {
+        const { value: { _id, ...contactInfo } } = await db.get().collection("users").findOneAndUpdate({ number: UserNumber }, {
             $push: {
                 contacts: {
                     id: User._id,
                     name: name,
                     number: ContactNumber
-                  
+
                 }
             }
         })
-        res.json({ success: true, message: "contact added successfully" })
 
+        res.json({ success: true, contact: contactInfo, message: "contact added successfully" })
 
     } catch (error) {
         next(error);
@@ -33,16 +33,16 @@ const AddContact = async (req, res, next) => {
 const RemoveContact = async (req, res, next) => {
     try {
         const { number } = req.body;
-        console.log(number, req.user.number)
-        db.get().collection("users").updateOne({ number:req.user.number }, {
+
+        const response = await db.get().collection("users").updateOne({ number: parseInt(req.user.number) }, {
             $pull: {
                 contacts: {
-                    number:number
+                    number: parseInt(number)
                 }
             }
         })
-            .then(() => res.json({ success: true, message: "contact deleted successfully" }))
-            .catch(err => res.json({ success: false, message: "something went wrong" }))
+        
+        res.json({ success: true, message: "contact removed successfully" })
     } catch (error) {
         next(error);
     }
