@@ -6,11 +6,11 @@
     
 }
 .home_left{
-    width:24.5rem;
-    flex-shrink: 1;
+    width:24rem;
+    flex-shrink: 0;
     display: flex;
     flex-direction:column;
-    /* box-shadow: var(--main_box-shadow); */
+    box-shadow: var(--main_box-shadow);
     border-right: 1px solid #f3eeee;
     position: relative;
 }
@@ -37,7 +37,6 @@
 }
 .home_search{
     width: 100%;
-    flex: none;
     height:60px;
     background-color: var(--white);
     text-align: center;
@@ -47,17 +46,23 @@
 
 }
 .home_search_bar{
-    margin-top:10px;
+    margin-top:7px;
     width:  21.5rem;
-    height: 40px;
+    height: 43px;
     background-color: var(--ld_bg);
     border-radius: 25rem  0px 0px 25rem ;
+  
     border: none;
 
+}
+.home_search_bar:focus{
+    outline: none;
 }
 .home_search_button{
     height: 45px;
     border: none;
+    font-size: 17px;
+    color: var(--ld_color);
     background-color:var(--ld_bg);
     border-radius:   0px 25rem  25rem 0px   ;
 }
@@ -72,7 +77,7 @@
     overflow: scroll;
     overflow-y: auto;
     margin-bottom: 1px;
-    box-shadow: var(--main_box-shadow);
+     box-shadow: var(--main_box-shadow);
 }  
 
 .home_contacts::-webkit-scrollbar {
@@ -199,6 +204,17 @@
    display: flex;
    align-items: center;
 }
+.home_right_logo{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hoem_right_logo_img{
+    width:400px;
+    height:400px;
+}
 .home_r-h_back{
     display:none;
     width: 3rem;
@@ -305,19 +321,35 @@
     min-height: 5rem;
     background-color: rgb(255, 255, 255);
 }
+
 #div_ref{
-    
     height:0.5rem;
 }
-.home_c-message_box{
+.home_c-message_box-me{
+    margin-top: 15px;
+    margin-right: 6px;
+    margin-left: 6px;
+   max-width: 47%;
+  padding: 0.540rem;
+  border-radius: 10px 0px 17px 5px;
+  min-height: 0rem;
+  background-color: var(--defult_blue);
+  text-align: center;
+}
+.home_c-message_box-contact{
     margin-top: 15px;
     margin-right: 6px;
     margin-left: 6px;
    min-width: 3rem;
-   padding: .5rem;
+  padding: 0.540rem;
   min-height: 0rem;
-  background-color: var(--ld_bg);
+     max-width: 47%;
+   border-radius: 0px 10px 5px 17px;
+  background-color: var(--defult_blue);
   text-align: center;
+}
+.message{
+    color: white;
 }
 .h_m_date{
     font-size: 13px;
@@ -378,4 +410,5 @@
 
 
                                     /* home right bottom :End */
+
 

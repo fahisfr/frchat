@@ -86,7 +86,7 @@
     margin-left: 5rem;
     border:none;
     color: var(--white);
-    background-color: var(--button_green_bg);
+    background-color: var(--defult_blue);
     cursor: pointer;
     
 }

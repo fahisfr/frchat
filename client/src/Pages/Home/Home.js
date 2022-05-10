@@ -4,10 +4,11 @@ import AddContact from '../../Components/AddContact/AddContact';
 import Profile from '../../Components/Profile/Profile';
 import ContactProfile from '../../Components/ContactProfile/ContactProfile';
 import ContactMenu from '../../Components/ContactMenu/ContactMenu';
+import Loading from '../../Components/HomePageLoading/HomeLoading';
 import {
   addContactInfo, GetUserInfo,
   addContactMessage, changeContactStatus,
-  changeTypingStatus,  selectContact, getSelectedContact,
+  changeTypingStatus, selectContact, getSelectedContact,
 }
   from "../../Features/User"
 import { FiAlignLeft, } from "react-icons/fi";
@@ -16,32 +17,40 @@ import { BiSearch } from "react-icons/bi";
 import { useSelector, useDispatch } from 'react-redux'
 
 
+WebSocket.prototype.emit = function (event, data) {
+  this.send(JSON.stringify({ event, data }));
+}
+
 function Home() {
   const default_photo = "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
   const divRef = useRef(null);
   const dispatch = useDispatch()
   const [server, setSever] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [myMessage, setMyMessage] = useState('')
+  const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
-  
-  
 
   const [typingStatus, setTypingStatus] = useState(false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
   const [AddContactTrigger, setAddContactTrigger] = useState(false)
   const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
   const [ContactProfileTrigger, setContactProfileTrigger] = useState(false)
-
   const selectedContact = useSelector(getSelectedContact)
 
+  
 
+ const playMessagePopAudio = () => {
+      const onwMessage = new Audio('./audios/onmessage.mp3')
+      onwMessage.volume = 0.1
+      onwMessage.play()
+  }
   useEffect(() => {
-    WebSocket.prototype.emit = function (event, data) {
-      this.send(JSON.stringify({ event, data }));
+    const server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
+    server.onopen = () => {
+      setLoading(false)
+      setSever(server)
     }
-    let server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
-    setSever(server)
-
     server.onmessage = (e) => {
       const { event, data } = JSON.parse(e.data)
 
@@ -52,6 +61,7 @@ function Home() {
         case "message":
           dispatch(addContactMessage({ ...data, position: 'start' }))
           divRef.current.scrollIntoView({ behavior: 'smooth' });
+          playMessagePopAudio()
           break;
         case "onlineStatus":
           dispatch(changeContactStatus(data))
@@ -64,12 +74,19 @@ function Home() {
       }
     }
     return () => server.close()
-
-
   }, [dispatch])
 
+ 
+
+
+  const conSearchFilter = () => {
+    return conSearch.length > 0 ?
+      contacts.filter(contact => contact.name?.toLowerCase().includes(conSearch.toLowerCase()))
+      : contacts
+  }
 
   const sendTypingStatus = (status) => {
+  
     server.emit('typing', {
       from: userInfo.number,
       to: selectedContact.number,
@@ -87,30 +104,27 @@ function Home() {
     }
   }
 
- 
-
   const onFouceOutMessage = (e) => {
     sendTypingStatus(false)
   }
 
-  const SendMessgaeNow = e => {
-    e.preventDefault()
-    dispatch(addContactMessage({
-      from: selectedContact.number,
+  const setMessageObj = (from,to) => {
+    const info = {
+      from,
       message: {
         message: myMessage,
         date: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        from: "me"
       }
-    }))
-    server.emit('message', {
-      from: userInfo.number,
-      to: selectedContact.number,
-      message: {
-        message: myMessage,
-        date: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      }
-    })
+    }
+    to ? info.to = to : info.message.from = 'me'
+    return info
+  }
+
+  const SendMessgaeNow = e => {
+    playMessagePopAudio()
+    e.preventDefault()
+    dispatch(addContactMessage(setMessageObj(selectedContact.number)))
+    server.emit('message',setMessageObj(userInfo.number, selectedContact.number))
     setMyMessage('')
     setTypingStatus(false)
     divRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -118,6 +132,7 @@ function Home() {
 
   return (
     <div className="home">
+      <Loading loading={loading} />
       <Profile trigger={ProfileTrigger} setTrigger={setProfileTrigger} />
       <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger} />
       <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} contact={selectedContact} />
@@ -136,13 +151,27 @@ function Home() {
           </div>
         </header>
         <div className="home_search">
-          <input className="home_search_bar" type="text" placeholder="search.." />
-          <button className="home_search_button"><BiSearch size={12} /></button>
+          <input
+            className="home_search_bar"
+            type="text"
+            placeholder="Search..."
+            value={conSearch}
+            onChange={e => setConSearch(e.target.value)}
+          />
+          {
+            conSearch.length > 0 ?
+              <button className="home_search_button"onClick={() => setConSearch('')}>X</button>
+              :
+              <button className="home_search_button">
+                <BiSearch size={14} />
+              </button>
+          }
         </div>
+
         <div className="home_contacts">
           {
-            contacts?.map((contact, index) => {
-
+            conSearchFilter().map((contact, index) => {
+              console.log(contacts.length)
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
                   <div className='contact_info_img'>
@@ -207,7 +236,7 @@ function Home() {
                 </div>
                 <div className="home_r-h_contact_n-s">
                   <div className="home_r-h_contact_name">
-                    <span className="">{selectedContact.name ?? selectedContact.number}</span>
+                    <span>{selectedContact.name ?? selectedContact.number}</span>
                   </div>
                   <div className="home_r-h_contact_status">
                     {
@@ -239,14 +268,28 @@ function Home() {
               {
                 selectedContact.messages?.map((data, index) => {
                   return (
-                    <div className={`home_c_message-${data.from ?? "contact"}`} key={index}  >
-                      <div className="home_c-message_box" >
-                        <span className="h_message">{data.message}</span>
-                      </div>
-                      <div>
-                        <span className="h_m_date">{data.date}</span>
-                      </div>
+                    <div key={index}>
+                      {
+                        data.from ?
+                          <div className="home_c_message-me" >
+                            <div className="home_c-message_box-me" >
+                              <span className="message">{data.message}</span>
+                            </div>
+                            <div>
+                              <span className="h_m_date">{data.date}</span>
+                            </div>
+                          </div> :
+                          <div className="home_c_message-contact"  >
+                            <div className="home_c-message_box-contact" >
+                              <span className="message">{data.message}</span>
+                            </div>
+                            <div>
+                              <span className="h_m_date">{data.date}</span>
+                            </div>
+                          </div>
+                      }
                     </div>
+                   
                   )
                 })
               }
@@ -283,13 +326,17 @@ function Home() {
               </form>
             </footer>
           </div>
-          : null
+          :
+          <div className="home_right_logo" >
+            <img
+              className="hoem_right_logo_img"
+              src="https://harver.com/wp-content/uploads/2020/08/chat@2x.png"
+              alt="logo"
+            />
+          </div>
       }
-
-
-
     </div >
   )
 }
 
-export default Home
+  export default Home

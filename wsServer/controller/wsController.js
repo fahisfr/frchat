@@ -33,13 +33,18 @@ const ContactsInfo = (clients, userWs) => {
 
 const sendMessage = (clients, data) => {
     const client = clients.find(clinet => clinet._user.number == data.to)
-    client?.send(JSON.stringify({
-        event: "message",
-        data: {
-            from: data.from,
-            message: data.message,
-        }
-    }))
+    if (client) {
+        client.send(JSON.stringify({
+            event: "message",
+            data: {
+                from: data.from,
+                message: data.message,
+            }
+        }))
+    } else {
+        
+    }
+
 }
 
 const typing = (clients, data) => {
@@ -58,7 +63,7 @@ const typing = (clients, data) => {
 const userOfline = (clients, userWs) => {
     const contacts = userWs._user.contacts
 
-    for (let contact of  contacts ) {
+    for (let contact of contacts) {
         clients.find(client => {
             if (client._user.number == contact.number) {
                 client.send(JSON.stringify({

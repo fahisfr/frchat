@@ -19,6 +19,7 @@ const wss = new WebSocket.Server({
 const clients = []
 
 
+
 wss.on("connection", (client) => {
     clients.push(client)
     wsController.ContactsInfo(clients, client)

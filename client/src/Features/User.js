@@ -40,25 +40,26 @@ export const userSlice = createSlice({
             state.userInfo.contacts = action.payload
             if (localStorage.getItem("chats")) {
                 const chats = JSON.parse(localStorage.getItem("chats"))
-                state.userInfo.contacts.forEach(contact => {
-                    chats.forEach(chat => {
+                chats.forEach(chat => {
+                    for (let contact of state.userInfo.contacts) {
                         if (contact.number === chat.number) {
                             contact.messages = chat.messages
+                            break;
                         } else {
                             state.userInfo.contacts.push(chat)
                         }
-                    })
+                    }
                 })
 
             } else {
                 localStorage.setItem("chats", JSON.stringify(state.userInfo.contacts))
             }
         },
+      
         addContactMessage: (state, action) => {
             let contactIn = false
             const contacts = state.userInfo.contacts
             for (let contact of contacts) {
-                console.log(contact.number, action.payload.from)
                 if (contact.number === action.payload.from) {
                     contact.typing = false
                     contactIn = true
@@ -94,11 +95,19 @@ export const userSlice = createSlice({
 
         },
         addContact: (state, action) => {
-
-            state.userInfo.contacts.push({ ...action.payload, messages: [] })
-            const chats = JSON.parse(localStorage.getItem('chats'))
-            chats.push({ number: action.payload.number, messages: [], })
-            localStorage.setItem('chats', JSON.stringify(chats))
+            const alreadyExist = state.userInfo.contacts.find(contact => contact.number === action.payload.number)
+            if (alreadyExist) {
+                alreadyExist = action.payload
+                const chats = JSON.parse(localStorage.getItem('chats'))
+                const chat = chats.find(chat => chat.number === action.payload.number)
+                chat = { number: action.payload.number, messages: chat.messages }
+                localStorage.setItem('chats', JSON.stringify(chats))
+            } else {
+                state.userInfo.contacts.push({ ...action.payload, messages: [] })
+                const chats = JSON.parse(localStorage.getItem('chats'))
+                chats.push({ number: action.payload.number, messages: [], })
+                localStorage.setItem('chats', JSON.stringify(chats))
+            }
 
 
         },
