@@ -31,7 +31,7 @@ function Home() {
   const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
 
-  const [typingStatus, setTypingStatus] = useState(false)
+  const [typingStatus, setTypingStatus] = useState (false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
   const [AddContactTrigger, setAddContactTrigger] = useState(false)
   const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
@@ -39,14 +39,13 @@ function Home() {
   const selectedContact = useSelector(getSelectedContact)
 
   
-
  const playMessagePopAudio = () => {
       const onwMessage = new Audio('./audios/onmessage.mp3')
       onwMessage.volume = 0.1
       onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accesstoken')}`)
+    const server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accessToken')}`)
     server.onopen = () => {
       setLoading(false)
       setSever(server)
@@ -74,11 +73,9 @@ function Home() {
       }
     }
     return () => server.close()
-  }, [dispatch])
+  }, [userInfo.isAuth, dispatch])
 
  
-
-
   const conSearchFilter = () => {
     return conSearch.length > 0 ?
       contacts.filter(contact => contact.name?.toLowerCase().includes(conSearch.toLowerCase()))
@@ -171,7 +168,6 @@ function Home() {
         <div className="home_contacts">
           {
             conSearchFilter().map((contact, index) => {
-              console.log(contacts.length)
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
                   <div className='contact_info_img'>
@@ -201,7 +197,6 @@ function Home() {
                               {contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no message"}
                             </span>
                         }
-
                       </div>
                       <div className="contact_online_status">
                         {
@@ -321,6 +316,7 @@ function Home() {
                   <button
                     type="submit"
                     className="home_message_send_button"
+            
                   >Send</button>
                 </div>
               </form>

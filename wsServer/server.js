@@ -63,7 +63,6 @@ server.on('upgrade', function upgrade(request, socket, head) {
                     wss.emit('connection', ws, request)
                 })
 
-
             }
             wss.handleUpgrade(request, socket, head, function done(ws) {
                 ws._user = result

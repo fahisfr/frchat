@@ -25,8 +25,8 @@ const verify = async (req, res, next) => {
             const refreshtoken = jwt.sign({ _id:User._id, number: number }, process.env.REFRESH_TOKEN_SECRET)
             const accesstoken = jwt.sign({ number ,name:User.name,}, process.env.ACCESS_TOKEN_SECRET)
             User.refreshtoken = refreshtoken
-            res.cookie("refreshToken", refreshtoken, { httpOnly: false, maxAge: 604800000 });
-            res.json({ success: true, message: "otp verified successfully", accesstoken });
+            res.cookie("refreshToken", refreshtoken, { httpOnly:false, secure: false, maxAge: 24 * 60 * 60 * 1000 });
+            res.json({ success: true, message: "otp verified successfully", accesstoken,expiresIn: "20s" });
             return
         }
         res.json({ success: false, message: "otp is wrong" });

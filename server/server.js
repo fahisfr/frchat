@@ -7,6 +7,7 @@ const db = require("./config/dbConn")
 const errorHandler = require("./config/errorHandler")
 const path = require("path")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 const corsOptions = require("./config/corsOptions")
 const isAuth = require("./middleware/userAuth");
 
@@ -14,10 +15,10 @@ const isAuth = require("./middleware/userAuth");
 
 
 db.connect()
-
 app.use(cors(corsOptions))
-app.use(express.json())
 app.use(morgan("dev"))
+app.use(express.json())
+app.use(cookieParser())
 app.use(express.static(path.join(__dirname,"public")))
 
 app.use('/api/singup', require("./router/singup"))

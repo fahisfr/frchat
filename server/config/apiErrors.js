@@ -1,18 +1,18 @@
 class ApiError extends Error {
-  constructor(message, statusCode) {
+  constructor(statusCode,message) {
     super(message);
     this.statusCode = statusCode;
   }
-  static badRequest(message) {
+  static badRequest() {
     return new ApiError(400, "Bad Request");
   }
-  static Unauthorized(message) {
-    return new ApiError(401, "you are not authorized");
+  static unauthorized() {
+    return new ApiError(401, "unauthorized");
   }
-  static Forbidden(message) {
+  static forbidden() {
     return new ApiError(403, "forbidden");
   }
-  static internalServerError(message) {
+  static internalServerError() {
     return new ApiError(500, "Oops! Something went wrong");
   }
 

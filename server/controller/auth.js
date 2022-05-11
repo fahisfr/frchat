@@ -1,16 +1,18 @@
 const db = require("../config/dbConn");
 const jwt = require("jsonwebtoken");
+const apiErrors = require("../config/apiErrors");
 
 const Authentication = (req, res, next) => {
     try {
-        const auccesstoken = req.headers["authorization"];
-        if (!auccesstoken) return res.json({ success: false, message: "authorization token is required" });
+        const auccesstoken = req.headers.authorization?.split(" ")[1]
+        
+        if (!auccesstoken) return next(apiErrors.unauthorized("authorization token is required"));
         const decoded = jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
-            if (err) return res.json({ success: false, message: "authorization token is invalid" });
-            const {_id,...userInfo} = await db.get().collection("users").findOne({ number: parseInt(result.number) });
+            if (err) return res.status(403).json({ success: false, message: "authorization token is invalid" });
+            const { _id, ...userInfo } = await db.get().collection("users").findOne({ number: parseInt(result.number) });
             res.json({
                 success: true,
-                UserInfo: {
+                userInfo: {
                     ...userInfo,
                     isAuth: true,
                 }
@@ -22,14 +24,21 @@ const Authentication = (req, res, next) => {
     }
 }
 
-const Re_Authentication = async (req, res, next) => {
+const reAuthentication = async (req, res, next) => {
     try {
-        const cookie = req.cookie
-        if (!cookie?.refreshtoken) return res.json({ success: false, message: "refresh token is required" });
-        const User = await db.get().collection("users").findOne({ _id: cookie._id, refreshtoken: cookie.refreshtoken });
-        if (!User) return res.json({ success: false, message: "refresh token is invalid" });
-        const auccesstoken = jwt.sign({ _id: User._id, number: User.number }, process.env.ACCESS_TOKEN_SECRET);
-        res.json({ success: true, message: "auth successfully", auccesstoken: auccesstoken });
+        const cookie = req.cookies.refrshToken
+        if (!cookie) return next(apiErrors.Unauthorized());
+        jwt.verify(cookie, process.env.REFRESH_TOKEN_SECRET, async (err, result) => {
+            if (!err) {
+                const user = await db.get().collection("users").findOne({ number: result.number });
+                if (!user) return next(apiErrors.Unauthorized());
+                const accessToken = jwt.sign(
+                    { number: result.number, name: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10m" }
+                );
+                return res.json({success: true,accessToken, message: "", });
+            }
+            next(apiErrors.Unauthorized());
+        })
 
     } catch (error) {
         next(error);
@@ -39,5 +48,5 @@ const Re_Authentication = async (req, res, next) => {
 
 module.exports = {
     Authentication,
-    Re_Authentication
+    reAuthentication
 }

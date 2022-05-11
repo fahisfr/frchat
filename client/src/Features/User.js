@@ -36,6 +36,7 @@ export const userSlice = createSlice({
                 isAuth: false,
             }
         },
+     
         addContactInfo: (state, action) => {
             state.userInfo.contacts = action.payload
             if (localStorage.getItem("chats")) {
@@ -92,7 +93,6 @@ export const userSlice = createSlice({
                 localStorage.setItem('chats', JSON.stringify(chats))
             }
 
-
         },
         addContact: (state, action) => {
             const alreadyExist = state.userInfo.contacts.find(contact => contact.number === action.payload.number)
@@ -139,7 +139,7 @@ export const userSlice = createSlice({
         [fetchUser.fulfilled]: (state, action) => {
             state.loading = false;
             if (action.payload.success) {
-                state.userInfo = action.payload.UserInfo
+                state.userInfo = action.payload.userInfo
 
             }
         },
