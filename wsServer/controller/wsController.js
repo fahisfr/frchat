@@ -1,9 +1,21 @@
+const redis = require("redis")
+
+const redisClient = redis.createClient({
+    host: "localhost",
+    port: 6360
+})
+redisClient.connect()
 
 
-const ContactsInfo = (clients, userWs) => {
+   
+
+const ContactsInfo = async (clients, userWs) => {
 
     console.log(userWs._user.number, "Connected")
-
+ 
+    console.time('time')
+    const getClientMessages = await redisClient.lRange(`messages_${userWs._user.number}`, 0, -1)
+    
     userWs._user.contacts?.map(contact => {
         contact.messages = []
         clients.find(client => {
@@ -25,28 +37,24 @@ const ContactsInfo = (clients, userWs) => {
         event: "contactsInfo",
         data: {
             contacts: userWs._user.contacts,
-            date: new Date()
+            messages: getClientMessages,
         }
 
     }))
+    console.timeEnd('time')
 }
 
-const sendMessage = (clients, data) => {
+const sendMessage = (clients, data, user) => {
+
     const client = clients.find(clinet => clinet._user.number == data.to)
-    if (client) {
-        client.send(JSON.stringify({
+    console.timeEnd("one")
+        client?.send(JSON.stringify({
             event: "message",
-            data: {
-                from: data.from,
-                message: data.message,
-            }
+            data: { from: data.from, message: data.message, }
         }))
-    } else {
-        
-    }
-
+    redisClient.rPush(`messages_${user._user.number}`, JSON.stringify({ from: data.to, message: {...data.message,from:"me"}, }))
+    redisClient.rPush(`messages_${data.to}`, JSON.stringify({ from: data.from, message: {...data.message,}, }))
 }
-
 const typing = (clients, data) => {
     const user = clients.find(client => client._user.number == data.to)
 
@@ -62,7 +70,6 @@ const typing = (clients, data) => {
 
 const userOfline = (clients, userWs) => {
     const contacts = userWs._user.contacts
-
     for (let contact of contacts) {
         clients.find(client => {
             if (client._user.number == contact.number) {

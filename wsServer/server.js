@@ -17,6 +17,18 @@ const wss = new WebSocket.Server({
 })
 
 const clients = []
+//push random 10 users to clients
+// for (let i = 0; i < 114210; i++) {
+//     clients.push({
+//         _user: {
+//             number: i,
+//             name: `user${i}`,
+//             isAuth: false,
+//             contacts: [],
+//             messages: [],
+//         }
+//     })
+// }
 
 
 
@@ -28,7 +40,7 @@ wss.on("connection", (client) => {
         const { event, data } = JSON.parse(message)
         switch (event) {
             case "message":
-                wsController.sendMessage(clients, data)
+                wsController.sendMessage(clients, data,client)
                 break;
             case "typing":
                 wsController.typing(clients, data)

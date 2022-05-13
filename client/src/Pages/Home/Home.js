@@ -55,7 +55,7 @@ function Home() {
 
       switch (event) {
         case "contactsInfo":
-          dispatch(addContactInfo(data.contacts))
+          dispatch(addContactInfo(data))
           break;
         case "message":
           dispatch(addContactMessage({ ...data, position: 'start' }))
