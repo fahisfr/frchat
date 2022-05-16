@@ -7,7 +7,7 @@ const OTP = require("./otp");
 
 const singup = async (req, res, next) => {
   try {
-    const { name, number,password } = req.body;
+    const { name, number } = req.body;
     const user = await db.get().collection("users").findOne({ number})
     if (user) return res.json({ success: false, message: "this number already login" });
     OTP.create(number)

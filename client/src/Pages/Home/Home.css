@@ -106,7 +106,7 @@
 }
 
 .contact_image{
-    width: 3.5rem;
+    width: 3.565rem;
     height: 3.4rem;
     overflow: hidden;
     border-radius: 50%;
@@ -242,8 +242,8 @@
     align-items: center;
 }
 .home_r-h_contact_image{
-     width: 3.1rem;
-    height: 3rem;
+     width: 3.40rem;
+    height: 3.1rem;
     
     overflow: hidden;
     border-radius: 50%;
@@ -373,7 +373,8 @@
 }
 .home_message_form{
     display: flex;
-    
+    align-items: center;
+
 }
 .home_r-b_message{
     flex-grow: 1;
@@ -395,7 +396,8 @@
 .home_r-b_button{
     width: 7rem;
       padding-top: 6px;
-      padding-left: 6px;
+      padding-left: 5px;
+      
 }
 .home_message_send_button{
     width: 5rem;
@@ -412,3 +414,13 @@
                                     /* home right bottom :End */
 
 
+@media (max-width:860px) {
+    .home_left{
+        width: 100%;
+    }
+    
+
+    
+    
+
+}

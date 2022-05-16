@@ -1,12 +1,11 @@
 const router = require("express").Router();
 const Contact = require("../controller/contact");
-const apivalidation = require("../ApiValidation/api");
+const apiValidation = require("../middleware/apiValidation");
 
-router.post("/", Contact.AddContact).
-      put("/", apivalidation.removeContactApiValidation ,Contact.RemoveContact)
+
+router.post("/add-contact",apiValidation("add-contact"), Contact.AddContact)
+router.put('/remove-contact',apiValidation("remove-contact"), Contact.RemoveContact)
       
-
-
 
 
 module.exports = router;

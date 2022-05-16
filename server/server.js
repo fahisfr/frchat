@@ -14,6 +14,7 @@ const isAuth = require("./middleware/userAuth");
 
 
 
+
 db.connect()
 app.use(cors(corsOptions))
 app.use(morgan("dev"))
@@ -21,9 +22,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname,"public")))
 
+app.use("/api/auth", require("./router/auth"))
 app.use('/api/singup', require("./router/singup"))
 app.use("/api/login", require("./router/login"))
-app.use("/api/auth", require("./router/auth"))
+
 app.use("/api/contact", isAuth, require("./router/contact"))
 app.use("/api/user", isAuth, require("./router/user"))
 

@@ -2,10 +2,11 @@ require('dotenv').config();
 const http = require('http')
 const WebSocket = require('ws')
 const jwt = require("jsonwebtoken")
-const dbconn = require('./dbConn')
+const dbconn = require('./config/dbConn')
 const getUserInfo = require('./controller/GetUserInfo');
 const server = http.createServer(function (req, res) { })
 const wsController = require('./controller/wsController')
+const reids = require('./config/redis')
 
 dbconn.connect(() => {
     server.listen(4000, () => {
@@ -17,19 +18,6 @@ const wss = new WebSocket.Server({
 })
 
 const clients = []
-//push random 10 users to clients
-// for (let i = 0; i < 114210; i++) {
-//     clients.push({
-//         _user: {
-//             number: i,
-//             name: `user${i}`,
-//             isAuth: false,
-//             contacts: [],
-//             messages: [],
-//         }
-//     })
-// }
-
 
 
 wss.on("connection", (client) => {
@@ -40,12 +28,11 @@ wss.on("connection", (client) => {
         const { event, data } = JSON.parse(message)
         switch (event) {
             case "message":
-                wsController.sendMessage(clients, data,client)
+                wsController.sendMessage(clients, data, client)
                 break;
             case "typing":
                 wsController.typing(clients, data)
                 break
-
 
         }
     })
@@ -60,25 +47,36 @@ wss.on("connection", (client) => {
 
 server.on('upgrade', function upgrade(request, socket, head) {
     const auccesstoken = request.url.split('=')[1]
-
-    jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    
+    if (!auccesstoken) return socket.destroy("unauthorized")
+    jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
         if (err) return socket.end('Unauthorized')
 
+        // const findUserInfo = await reids.get(`userInfo_${decoded.number}`)
+     
+        // if (findUserInfo) {
+        //      return wss.handleUpgrade(request, socket, head, function done(ws) {
+        //         ws._user = JSON.parse(findUserInfo)
+        //         wss.emit('connection', ws, request)
+        //     })
+            
+            
+        // } 
         getUserInfo(decoded).then(result => {
             if (result.length == 0) {
-                wss.handleUpgrade(request, socket, head, function done(ws) {
+                return wss.handleUpgrade(request, socket, head, function done(ws) {
                     ws._user = {
                         number: decoded.number,
-                        name: decoded.name,
                         contacts: []
                     }
                     wss.emit('connection', ws, request)
                 })
-
+               
             }
             wss.handleUpgrade(request, socket, head, function done(ws) {
                 ws._user = result
                 wss.emit('connection', ws, request)
+              
 
             })
 

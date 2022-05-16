@@ -7,11 +7,12 @@ const upload = multer.diskStorage({
         cb(null, './public/profile');
     },
     filename: (req, file, cb) => {
+        if (!file) return cb()
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
             return cb(new Error('only jpg,png,jpeg file allowed'));
         }
         const { file:image, body: { name, number } } = req;
-        cb(null, `${req.user.number}-${name}.${file.mimetype.split('/')[1]}`);
+        cb(null, `whychat_${req.user.number}_profile.${file.mimetype.split('/')[1]}`);
       
     }
 })

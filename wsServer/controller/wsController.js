@@ -1,20 +1,16 @@
-const redis = require("redis")
 
-const redisClient = redis.createClient({
-    host: "localhost",
-    port: 6360
-})
-redisClient.connect()
-
-
-   
+const  redisClient= require ("../config/redis")
+  
 
 const ContactsInfo = async (clients, userWs) => {
 
     console.log(userWs._user.number, "Connected")
  
-    console.time('time')
-    const getClientMessages = await redisClient.lRange(`messages_${userWs._user.number}`, 0, -1)
+    const userMessages = await redisClient.lRange(`messages_${userWs._user.number}`, 0, -1)
+  
+    if (userMessages.length > 666) {
+        redisClient.lTrim(`messages_${userWs._user.number}`, userMessages.length-666, -1) 
+    }
     
     userWs._user.contacts?.map(contact => {
         contact.messages = []
@@ -37,17 +33,17 @@ const ContactsInfo = async (clients, userWs) => {
         event: "contactsInfo",
         data: {
             contacts: userWs._user.contacts,
-            messages: getClientMessages,
+            messages: userMessages,
         }
 
     }))
-    console.timeEnd('time')
+
 }
 
 const sendMessage = (clients, data, user) => {
 
     const client = clients.find(clinet => clinet._user.number == data.to)
-    console.timeEnd("one")
+
         client?.send(JSON.stringify({
             event: "message",
             data: { from: data.from, message: data.message, }
@@ -69,7 +65,8 @@ const typing = (clients, data) => {
 
 
 const userOfline = (clients, userWs) => {
-    const contacts = userWs._user.contacts
+    const contacts = userWs._user?.contacts
+
     for (let contact of contacts) {
         clients.find(client => {
             if (client._user.number == contact.number) {

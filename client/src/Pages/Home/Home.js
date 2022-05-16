@@ -5,12 +5,14 @@ import Profile from '../../Components/Profile/Profile';
 import ContactProfile from '../../Components/ContactProfile/ContactProfile';
 import ContactMenu from '../../Components/ContactMenu/ContactMenu';
 import Loading from '../../Components/HomePageLoading/HomeLoading';
+import { baseUrl } from '../../Axios';
 import {
   addContactInfo, GetUserInfo,
   addContactMessage, changeContactStatus,
   changeTypingStatus, selectContact, getSelectedContact,
 }
   from "../../Features/User"
+
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
@@ -22,7 +24,6 @@ WebSocket.prototype.emit = function (event, data) {
 }
 
 function Home() {
-  const default_photo = "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
   const divRef = useRef(null);
   const dispatch = useDispatch()
   const [server, setSever] = useState(null)
@@ -168,10 +169,11 @@ function Home() {
         <div className="home_contacts">
           {
             conSearchFilter().map((contact, index) => {
+         
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
                   <div className='contact_info_img'>
-                    <img className="contact_image" src={contact.photo ?? default_photo} alt="profil" />
+                    <img className="contact_image" src={`${baseUrl}/profile/${contact.photo??"default.jpg"}`} alt="" />
                   </div>
                   <div className="contact_info_ndl">
                     <div className="contact_info_n-d">
@@ -227,7 +229,7 @@ function Home() {
               </div>
               <div className="home_r-h_contact_info">
                 <div className="home_r-h_contact_photo">
-                  <img className="home_r-h_contact_image" src={selectedContact.photo ?? default_photo} alt="" />
+                  <img className="home_r-h_contact_image" src={`${baseUrl}/profile/${selectedContact.photo??"default.jpg"}`}  alt="" />
                 </div>
                 <div className="home_r-h_contact_n-s">
                   <div className="home_r-h_contact_name">

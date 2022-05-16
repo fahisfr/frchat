@@ -1,13 +1,16 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:4001/api';
+
+export const baseUrl = 'http://localhost:4001';
+
+export const profileUrlpath = baseUrl + '/profile/'
 
 const instance = axios.create({
-    baseURL: baseUrl,
+    baseURL: `${baseUrl}/api/`,
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true,
+    
 });
 
 instance.interceptors.request.use(config => {
@@ -22,7 +25,7 @@ instance.interceptors.response.use(
         const prevRequest = error?.config;
         if (error.response.status === 403 && !prevRequest.sent) {
             prevRequest.sent = true
-            const { data } = await instance.get('/auth/refresh')
+            const { data } = await instance.get('/auth/refresh', { withCredentials: true });
             if (data.success) {
                 localStorage.setItem('accessToken', data.accessToken)
                 return instance.request(prevRequest)

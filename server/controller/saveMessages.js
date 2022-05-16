@@ -3,7 +3,7 @@ const db = require("../config/dbConn")
 const saveMessages = async (req, res, next) => {
     try {
         const { body: { message }, user: { number } } = req;
-        const user = await db.get().collection("users").findOne({ number: parseInt(req.user.number) })
+        const user = await db.get().collection("users").findOne({ number });
 
         user.contacts.forEach(contact => {
             newMessages.forEach(data => {
@@ -13,7 +13,7 @@ const saveMessages = async (req, res, next) => {
                 }
             })
         })
-        db.get().collection("users").updateOne({ number: parseInt(req.user.number) }, { $set: { contacts: user.contacts } }).then(result => {
+        db.get().collection("users").updateOne({ number}, { $set: { contacts: user.contacts } }).then(result => {
             res.json({ success: true, message: "messages saved successfully" })
         })
 

@@ -1,6 +1,8 @@
 
 import React, { useState } from "react"
 
+import {profileUrlpath} from '../../Axios'
+
 function Profile({ trigger, setTrigger, contact }) {
   
     const updateName = () => {
@@ -12,7 +14,7 @@ function Profile({ trigger, setTrigger, contact }) {
                 <div className="user_profile_photo">
                     <img
                         className="user_photo"
-                        src={contact.photo}
+                        src={profileUrlpath + contact.photo}
                         alt="profile_photo"
                     />
                 </div>

@@ -2,13 +2,13 @@ const db = require("../config/dbConn");
 
 const AddContact = async (req, res, next) => {
     try {
-        const UserNumber = parseInt(req.user.number);
+        const UserNumber = req.user.number
         const { number: ContactNumber, name } = req.body;
         console.log(UserNumber, ContactNumber)
         if (ContactNumber === UserNumber) return res.json({ success: false, message: "you can't add yourself" })
-        const User = await db.get().collection("users").findOne({ number: parseInt(ContactNumber) });
+        const User = await db.get().collection("users").findOne({ number: ContactNumber });
         if (!User) return res.json({ success: false, message: "user not found" });
-        const Contact = await db.get().collection("users").findOne({ number: parseInt(UserNumber) });
+        const Contact = await db.get().collection("users").findOne({ number: UserNumber });
         const AlReadyExist = Contact?.contacts.find(contact => contact.number === ContactNumber);
         if (AlReadyExist) return res.json({ success: false, message: "contact already exists" });
         const { value: { _id, ...contactInfo } } = await db.get().collection("users").findOneAndUpdate({ number: UserNumber }, {
@@ -33,16 +33,17 @@ const AddContact = async (req, res, next) => {
 const RemoveContact = async (req, res, next) => {
     try {
         const { number } = req.body;
-
-        const response = await db.get().collection("users").updateOne({ number: parseInt(req.user.number) }, {
+        await db.get().collection("users").updateOne({ number:req.user.number }, {
             $pull: {
                 contacts: {
-                    number: parseInt(number)
+                    number
                 }
             }
         })
+        .then(result => { res.json({ success: true, message: "contact removed successfully" }) })
+        .catch(error => res.status(500).json({ success: false, message: "faild to remove contact" }))
         
-        res.json({ success: true, message: "contact removed successfully" })
+        
     } catch (error) {
         next(error);
     }

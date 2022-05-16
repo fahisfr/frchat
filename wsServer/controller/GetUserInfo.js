@@ -1,5 +1,5 @@
 
-const db = require("../dbConn")
+const db = require("../config/dbConn")
 
 const getUserInfo = (user) => {
     return new Promise((resolve, reject) => {

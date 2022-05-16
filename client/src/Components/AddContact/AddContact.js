@@ -15,7 +15,7 @@ function AddContact({ trigger, setTrigger }) {
     const AddContactNow = async (e) => {
         e.preventDefault()
         try {
-            const response = await Axios.post("/contact", { number: parseInt(number), name })
+            const response = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
             if (response.data.success) {
                 dispatch(addContact(response.data.contact))
                 setTrigger(false)

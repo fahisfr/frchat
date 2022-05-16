@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import './Profile.css'
 import { useSelector } from 'react-redux'
-import Axios from '../../Axios'
+import Axios ,{baseUrl} from '../../Axios'
 
 
 function Profile({ trigger, setTrigger }) {
@@ -19,11 +19,13 @@ function Profile({ trigger, setTrigger }) {
         formData.append('name', name)
         formData.append('photo', photo)
         try {
-            const response = await Axios.post('/user/update', formData)
+            const response = await Axios.post('/user/update-profile', formData)
+            console.log(response)
             if (response.data.success) {
                 setTrigger(false)
             } else {
-                setErr({ status: true, message: response.message })
+                console.log("working")
+                setErr({ status: true, message: response.data.message })
             }
 
         } catch (err) {
@@ -40,7 +42,7 @@ function Profile({ trigger, setTrigger }) {
                 <div className="user_profile_photo">
                     <img
                         className="user_photo"
-                        src={photo}
+                        src={`${baseUrl}/profile/${User.photo}`}
                         alt="profile_pho"
                         onClick={() => { fileInputRef.current.click() }}
                     />

@@ -42,7 +42,6 @@ export const userSlice = createSlice({
                 let conIn = false
                 message = JSON.parse(message)
                 for (let contact of state.userInfo.contacts) {
-                    console.log(message, contact.number)
                     if (contact.number === message.from) {
                         conIn = true
                         contact.messages.push(message.message)

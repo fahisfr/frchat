@@ -53,6 +53,7 @@
     border-radius: 50%;
     box-shadow: var(--main_box-shadow);
     
+    
 }
 .user_photo_input{
     display: none;

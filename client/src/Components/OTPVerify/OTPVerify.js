@@ -26,14 +26,14 @@ function OTPVerify({ Info }) {
     const VefifyOTP = async (e) => {
         e.preventDefault()
         try {
-            const response = await Axios.post(`/${Info.url}/verify`, {
+            const response = await Axios.post(`/${Info.url}/otp-verify`, {
                 otp: otp.join(""),
-                number: Info.number,
+                number: parseInt(Info.number),
                 name: Info?.names
             })
             if (response.data.success) {
                 dispatch(login({ name: Info.name, number: Info.number }))
-                localStorage.setItem("accesstoken", response.data.accesstoken)
+                localStorage.setItem("accessToken", response.data.accesstoken)
                 return;
             }
             setError(true)

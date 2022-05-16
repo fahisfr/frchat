@@ -13,7 +13,7 @@ function ContactMenu({ trigger, setAddContactTrigger, setContactProfileTrigger }
             dispatch(removeContact(contact))
             return;
         }
-        const respose = await Axios.put('/contact', { number })
+        const respose = await Axios.put('/contact/remove-contact', { number})
         respose && dispatch(removeContact(number))
 
     }
