@@ -7,8 +7,8 @@ import Axios from "../../Axios"
 import OtpVerify from '../../Components/OTPVerify/OTPVerify'
 
 function Singup() {
-    const [name, setName] = useState('fahis')
-    const [number, setNumber] = useState(9633062570)
+    const [name, setName] = useState('')
+    const [number, setNumber] = useState("")
     const [Otp, setOtp] = useState({
         status: false,
         number: "",

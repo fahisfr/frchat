@@ -11,8 +11,6 @@ const UpdadteProfile = async (req, res, next) => {
             const respose = await db.get().collection("users").updateOne({ number }, { $set: { name } })
             return res.json({ success: true, name, message: "profile updated successfuly" })
         }
-        console.log(file)
-        console.log(number)
         const imageName = `whychat_${req.user.number}_profile.${file.mimetype.split('/')[1]}`
         const respose = await db.get().collection("users").updateOne({ number }, { $set: { photo: imageName, name } })
 

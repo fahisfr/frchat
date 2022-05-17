@@ -9,8 +9,8 @@ import OTPVerify from '../../Components/OTPVerify/OTPVerify'
 
 
 function Login() {
-  const [number, setNumber] = useState(9633062570)
-  const [Otp, setOtp] = useState({ status:false, number: 9847871724, url: "loign", })
+  const [number, setNumber] = useState("")
+  const [Otp, setOtp] = useState({ status:false, number: "", url: "", })
   const LoignNow = async (e) => {
     e.preventDefault()
     try {

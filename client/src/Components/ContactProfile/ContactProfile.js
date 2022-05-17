@@ -1,13 +1,12 @@
 
-import React, { useState } from "react"
+import React from "react"
 
 import {profileUrlpath} from '../../Axios'
 
 function Profile({ trigger, setTrigger, contact }) {
   
-    const updateName = () => {
-
-    }
+ 
+    
     return trigger ? (
         <div className="profile_container">
             <div className="contactprofile">
@@ -31,8 +30,6 @@ function Profile({ trigger, setTrigger, contact }) {
                                 className="user_info_input"
                                 value={contact.name}
                                 disabled
-                                
-                                
                             />
                         </div>
                         <label className="profile_label">Number</label>

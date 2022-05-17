@@ -31,4 +31,8 @@ app.use("/api/user", isAuth, require("./router/user"))
 
 app.use(errorHandler)
 
+app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/index.html"))
+})
+
 app.listen(port)

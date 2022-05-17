@@ -5,7 +5,7 @@ import Profile from '../../Components/Profile/Profile';
 import ContactProfile from '../../Components/ContactProfile/ContactProfile';
 import ContactMenu from '../../Components/ContactMenu/ContactMenu';
 import Loading from '../../Components/HomePageLoading/HomeLoading';
-import { baseUrl } from '../../Axios';
+import { profileUrlpath } from '../../Axios';
 import {
   addContactInfo, GetUserInfo,
   addContactMessage, changeContactStatus,
@@ -46,7 +46,7 @@ function Home() {
       onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://localhost:4000/auth=${localStorage.getItem('accessToken')}`)
+    const server = new WebSocket(`ws://live.frbots.com/auth=${localStorage.getItem('accessToken')}`)
     server.onopen = () => {
       setLoading(false)
       setSever(server)
@@ -173,7 +173,7 @@ function Home() {
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
                   <div className='contact_info_img'>
-                    <img className="contact_image" src={`${baseUrl}/profile/${contact.photo??"default.jpg"}`} alt="" />
+                    <img className="contact_image" src={`${profileUrlpath}${contact.photo??"default.jpg"}`} alt="" />
                   </div>
                   <div className="contact_info_ndl">
                     <div className="contact_info_n-d">
@@ -229,7 +229,7 @@ function Home() {
               </div>
               <div className="home_r-h_contact_info">
                 <div className="home_r-h_contact_photo">
-                  <img className="home_r-h_contact_image" src={`${baseUrl}/profile/${selectedContact.photo??"default.jpg"}`}  alt="" />
+                  <img className="home_r-h_contact_image" src={`${profileUrlpath}${selectedContact.photo??"default.jpg"}`}  alt="" />
                 </div>
                 <div className="home_r-h_contact_n-s">
                   <div className="home_r-h_contact_name">

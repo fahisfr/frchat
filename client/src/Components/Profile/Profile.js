@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import './Profile.css'
 import { useSelector } from 'react-redux'
-import Axios ,{baseUrl} from '../../Axios'
+import Axios ,{profileUrlpath} from '../../Axios'
 
 
 function Profile({ trigger, setTrigger }) {
@@ -42,7 +42,7 @@ function Profile({ trigger, setTrigger }) {
                 <div className="user_profile_photo">
                     <img
                         className="user_photo"
-                        src={`${baseUrl}/profile/${User.photo}`}
+                        src={profileUrlpath + User.photo}
                         alt="profile_pho"
                         onClick={() => { fileInputRef.current.click() }}
                     />
