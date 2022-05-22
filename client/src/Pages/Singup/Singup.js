@@ -10,8 +10,8 @@ function Singup() {
     const [name, setName] = useState('')
     const [number, setNumber] = useState("")
     const [Otp, setOtp] = useState({
-        status: false,
-        number: "",
+        trigger: false,
+        number: null,
         name: "",
         path: "",
     })
@@ -19,9 +19,9 @@ function Singup() {
     const SingupNow = async (e) => {
         e.preventDefault()
         try {
-            const response = await Axios.post("/singup", { name, number })
+            const response = await Axios.post("/singup", { name, number:parseInt(number) })
             if (response.data.success) {
-                setOtp({ status: true, number, name, url: "singup" })
+                setOtp({ trigger: true, number, name, url: "singup" })
                 return;
             }
             alert(response.data.message)
@@ -35,16 +35,17 @@ function Singup() {
                 <h1>Create new account</h1>
             </div>
             {
-                Otp.status ? <OtpVerify Info={Otp} /> : <div className='singup_body'>
+                Otp.trigger ? <OtpVerify Info={Otp} /> : <div className='singup_body'>
                     <form onSubmit={SingupNow} className="singup_from">
-                        <div className="loign_from_np">
-                            <label className="login_lable" >Nmae</label>
-                            <div className='Loign_from_input_container'>
+                        <div className="singup_from_np">
+                            <label className="singup_lable" >Nmae</label>
+                            <div className='singup_from_input_container'>
                                 <input
-                                    className='login_input'
+                                    className='singup_input'
                                     type='text'
                                     required
                                     value={name}
+                                    placeholder=""
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
@@ -53,11 +54,12 @@ function Singup() {
                             <label className="singup_lable" >Phone Number</label>
                             <div className='singup_from_input_container'>
                                 <input
-                                    className='login_input'
-                                    type='number'
-                                    required
+                                    className='singup_input'
+                                    
                                     value={number}
+                                    maxLength={10}
                                     onChange={(e) => setNumber(e.target.value)}
+                                    required
                                 />
                             </div>
                         </div>
@@ -67,7 +69,7 @@ function Singup() {
                         <button
                             type='submit'
                             className="singup_button"
-                        >Login</button>
+                        >Singup</button>
                     </form>
                 </div>
             }

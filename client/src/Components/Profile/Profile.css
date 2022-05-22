@@ -52,7 +52,8 @@
     margin: 2.2rem 1rem;
     border-radius: 50%;
     box-shadow: var(--main_box-shadow);
-    
+    object-fit: cover;
+    border:none;
     
 }
 .user_photo_input{

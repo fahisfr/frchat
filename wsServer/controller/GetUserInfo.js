@@ -12,8 +12,8 @@ const getUserInfo = (user) => {
             {
                 $lookup: {
                     from: "users",
-                    localField: "contacts.id",
-                    foreignField: "_id",
+                    localField: "contacts.number",
+                    foreignField: "number",
                     as: "_contacts"
                 }
             },
@@ -22,6 +22,7 @@ const getUserInfo = (user) => {
                     _id: 1,
                     number: 1,
                     name: 1,
+                    photo:1,
                     _contacts: {
                         name: "$contacts.name",
                         photo: 1,
@@ -35,14 +36,14 @@ const getUserInfo = (user) => {
                     _id: null,
                     number: { $first: "$number" },
                     name: { $first: "$name" },
-                    contacts: { $push: "$_contacts" },
+                    photo:{$first:"$photo"},
+                    contacts: { $push: { $arrayElemAt: ["$_contacts", 0] } },
                 }
             },
         ]).toArray()
             .then(result => {
-                if (result.length == 0) resolve(result)
-                result[0].contacts = result[0].contacts.map(contact => contact[0])
-                resolve(result[0])
+    
+                resolve(result)
             })
            .catch(err => reject(err))
      })

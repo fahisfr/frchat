@@ -7,7 +7,7 @@ import ContactMenu from '../../Components/ContactMenu/ContactMenu';
 import Loading from '../../Components/HomePageLoading/HomeLoading';
 import { profileUrlpath } from '../../Axios';
 import {
-  addContactInfo, GetUserInfo,
+  addUserInfo, GetUserInfo,
   addContactMessage, changeContactStatus,
   changeTypingStatus, selectContact, getSelectedContact,
 }
@@ -31,7 +31,7 @@ function Home() {
   const [myMessage, setMyMessage] = useState('')
   const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
-
+ 
   const [typingStatus, setTypingStatus] = useState (false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
   const [AddContactTrigger, setAddContactTrigger] = useState(false)
@@ -46,7 +46,7 @@ function Home() {
       onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://live.frbots.com/auth=${localStorage.getItem('accessToken')}`)
+    const server = new WebSocket(`ws://localhost:4001/auth=${localStorage.getItem('accessToken')}`)
     server.onopen = () => {
       setLoading(false)
       setSever(server)
@@ -55,8 +55,8 @@ function Home() {
       const { event, data } = JSON.parse(e.data)
 
       switch (event) {
-        case "contactsInfo":
-          dispatch(addContactInfo(data))
+        case "userInfo":
+          dispatch(addUserInfo(data))
           break;
         case "message":
           dispatch(addContactMessage({ ...data, position: 'start' }))
@@ -128,6 +128,8 @@ function Home() {
     divRef.current.scrollIntoView({ behavior: 'smooth' });
   }
 
+  
+
   return (
     <div className="home">
       <Loading loading={loading} />
@@ -196,7 +198,7 @@ function Home() {
                               Typing...
                             </span> :
                             <span className="contact_message" >
-                              {contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no message"}
+                              {contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no messages"}
                             </span>
                         }
                       </div>
@@ -318,7 +320,6 @@ function Home() {
                   <button
                     type="submit"
                     className="home_message_send_button"
-            
                   >Send</button>
                 </div>
               </form>

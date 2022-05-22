@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const morgan =require("morgan")
-const port = 4001
+const port = 4000
 const app = express()
 const db = require("./config/dbConn")
 const errorHandler = require("./config/errorHandler")
@@ -31,8 +31,5 @@ app.use("/api/user", isAuth, require("./router/user"))
 
 app.use(errorHandler)
 
-app.use("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public/index.html"))
-})
 
 app.listen(port)

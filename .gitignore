@@ -1,1 +1,4 @@
-.WSserver
+
+/node_modules
+
+.env

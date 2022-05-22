@@ -24,7 +24,7 @@ function AddContact({ trigger, setTrigger }) {
             console.log(response.data)
             setErr({ status: true, message: response.data.message })
         } catch (error) {
-         
+            console.log(error)
             alert("something went wrong")
         }
     }

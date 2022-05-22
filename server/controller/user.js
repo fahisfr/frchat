@@ -1,6 +1,5 @@
+
 const db = require("../config/dbConn")
-const multer = require('multer');
-const { connect } = require("../../wsServer/config/redis");
 
 
 const UpdadteProfile = async (req, res, next) => {
@@ -12,7 +11,8 @@ const UpdadteProfile = async (req, res, next) => {
             return res.json({ success: true, name, message: "profile updated successfuly" })
         }
         const imageName = `whychat_${req.user.number}_profile.${file.mimetype.split('/')[1]}`
-        const respose = await db.get().collection("users").updateOne({ number }, { $set: { photo: imageName, name } })
+
+        const response = await db.get().collection("users").updateOne({ number:parseInt(number) }, { $set: { photo: imageName, name } })
 
         res.json({ success: true, name, photo: imageName, message: "profile updated successfuly" })
         

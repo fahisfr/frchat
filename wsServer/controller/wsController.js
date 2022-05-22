@@ -13,7 +13,6 @@ const ContactsInfo = async (clients, userWs) => {
     }
     
     userWs._user.contacts?.map(contact => {
-        contact.messages = []
         clients.find(client => {
             if (client._user.number == contact.number) {
                 contact.online = true
@@ -30,9 +29,9 @@ const ContactsInfo = async (clients, userWs) => {
         })
     })
     userWs.send(JSON.stringify({
-        event: "contactsInfo",
+        event: "userInfo",
         data: {
-            contacts: userWs._user.contacts,
+            userInfo: userWs._user,
             messages: userMessages,
         }
 
@@ -41,8 +40,7 @@ const ContactsInfo = async (clients, userWs) => {
 }
 
 const sendMessage = (clients, data, user) => {
-
-    const client = clients.find(clinet => clinet._user.number == data.to)
+    const client = clients.find(clinet => clinet._user.number === data.to)
 
         client?.send(JSON.stringify({
             event: "message",
@@ -65,9 +63,7 @@ const typing = (clients, data) => {
 
 
 const userOfline = (clients, userWs) => {
-    const contacts = userWs._user?.contacts
-
-    for (let contact of contacts) {
+    userWs._user?.contacts.forEach(contact=>{
         clients.find(client => {
             if (client._user.number == contact.number) {
                 client.send(JSON.stringify({
@@ -80,7 +76,7 @@ const userOfline = (clients, userWs) => {
             }
 
         })
-    };
+    })
     console.log(userWs._user.number, "Disconnected")
 }
 

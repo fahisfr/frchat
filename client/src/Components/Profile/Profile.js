@@ -1,16 +1,28 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import './Profile.css'
 import { useSelector } from 'react-redux'
-import Axios ,{profileUrlpath} from '../../Axios'
+import Axios, { profileUrlpath } from '../../Axios'
 
 
 function Profile({ trigger, setTrigger }) {
 
     const User = useSelector(state => state.user.userInfo)
+    const [preview, setPreview] = useState(null)
     const fileInputRef = useRef(null)
     const [err, setErr] = useState({ status: false, message: "" })
-    const [name, setName] = useState(User.name)
+    const [name, setName] = useState()
     const [photo, setPhoto] = useState(User.photo)
+ 
+
+    const imagePreview = (e) => {
+
+        setPhoto(e.target.files[0])
+        const reader = new FileReader()
+        reader.onloadend = () => setPreview(reader.result)
+        
+        reader.readAsDataURL(e.target.files[0])
+    }
+
 
 
     const UpdateProfile = async (e) => {
@@ -20,16 +32,11 @@ function Profile({ trigger, setTrigger }) {
         formData.append('photo', photo)
         try {
             const response = await Axios.post('/user/update-profile', formData)
-            console.log(response)
-            if (response.data.success) {
-                setTrigger(false)
-            } else {
-                console.log("working")
-                setErr({ status: true, message: response.data.message })
-            }
+            response.data.success ? setTrigger(false) : setErr({ status: true, message: response.data.message })
 
         } catch (err) {
-            console.log(err)
+            setErr({ status: true, message: "oops something went wrong" })
+
         }
     }
 
@@ -42,7 +49,7 @@ function Profile({ trigger, setTrigger }) {
                 <div className="user_profile_photo">
                     <img
                         className="user_photo"
-                        src={profileUrlpath + User.photo}
+                        src={ preview ?? profileUrlpath + User.photo}
                         alt="profile_pho"
                         onClick={() => { fileInputRef.current.click() }}
                     />
@@ -51,20 +58,20 @@ function Profile({ trigger, setTrigger }) {
                         type="file"
                         ref={fileInputRef}
                         accept="image/*"
-                        onChange={(e) => setPhoto(e.target.files[0])}
+                        onChange={imagePreview}
                     />
                 </div>
                 <div className="user_info">
                     <div className="profile_err">
                         {
-                            err.status&& <span className="profile_err_message" >{err.message}</span>
+                            err.status && <span className="profile_err_message" >{err.message}</span>
                         }
                     </div>
                     <form id="profile_from" >
                         <label className="profile_label" >Name</label>
                         <div className="user_info_np">
                             <input
-                                value={name}
+                                value={name ?? User.name}
                                 className="user_info_input"
                                 onChange={(e) => setName(e.target.value)}
                             />

@@ -9,14 +9,14 @@ import OTPVerify from '../../Components/OTPVerify/OTPVerify'
 
 
 function Login() {
-  const [number, setNumber] = useState("")
-  const [Otp, setOtp] = useState({ status:false, number: "", url: "", })
+  const [number, setNumber] = useState('')
+  const [otp, setOtp] = useState({ trigger:false, number, url: "", })
   const LoignNow = async (e) => {
     e.preventDefault()
     try {
-      const response = await Axios.post("/login", {number})
+      const response = await Axios.post("/login", {number:parseInt(number)})
       if (response.data.success) {
-        setOtp({status:true,number,url:"login"})
+        setOtp({trigger:true,number,url:"login"})
       }
 
     } catch (error) {
@@ -29,14 +29,15 @@ function Login() {
         <h1>Sign In WhyChat</h1>
       </div>
       {
-        Otp.status ? <OTPVerify Info={Otp} /> : <div className='login_body'>
+        otp.trigger ? <OTPVerify Info={otp} /> : <div className='login_body'>
           <form onSubmit={LoignNow} className="loign_from">
             <div className="loign_from_np">
               <label className="login_lable" >Phone Number</label>
               <div className='Loign_from_input_container'>
                 <input
                   className='login_input'
-                  type='number'
+                  type='text'
+                  maxLength='10'
                   value={number}
                   onChange={(e) => setNumber(e.target.value)}
                   required />

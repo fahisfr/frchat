@@ -31,7 +31,7 @@ const updatePorfie = joi.object({
 const getSchema = (apiName) => {
 
     switch (apiName) {
-        case "signup":
+        case "singup":
             return singup
         case "login":
             return login
@@ -51,7 +51,7 @@ const getSchema = (apiName) => {
 
 const apiValidation = (apiName) => {
     return (req, res, next) => {
-        const { error } = getSchema(apiName).validate(req.body)
+        const { error } = getSchema(apiName).validate(req.body, { "convert": false })
         error ? res.json({ success: false, message: error.details[0].message }) : next()
 
     }

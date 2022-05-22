@@ -13,31 +13,26 @@ export const userSlice = createSlice({
         userInfo: {
             name: '',
             number: '',
+            photo: '',
             contacts: [],
-            isAuth: false,
+
         },
+        isAuth: false,
         selectedContact: '',
         error: '',
         loading: false,
     },
     reducers: {
         login: (state, action) => {
-            console.log(action.payload)
             state.userInfo.name = action.payload.name
             state.userInfo.number = action.payload.number
-            state.userInfo.isAuth = true
+            state.isAuth = true
 
         },
-        logout: (state, action) => {
-            state.userInfo = {
-                name: '',
-                number: '',
-                isAuth: false,
-            }
-        },
 
-        addContactInfo: (state, action) => {
-            state.userInfo.contacts = action.payload.contacts
+
+        addUserInfo: (state, action) => {
+            state.userInfo = action.payload.userInfo
             for (let message of action.payload.messages) {
                 let conIn = false
                 message = JSON.parse(message)
@@ -83,11 +78,12 @@ export const userSlice = createSlice({
 
         },
         addContact: (state, action) => {
-            const connExist = state.userInfo.contacts.find(contact => contact.number === action.payload.number)
-
-            connExist ? connExist = { ...action.payload, messages: connExist.messages }
+            const connExistInd = state.userInfo.contacts.findIndex(contact => contact.number === action.payload.number)
+        
+            connExistInd ?
+                state.userInfo.contacts[connExistInd] = { ...action.payload, messages: state.userInfo.contacts[connExistInd].messages}
                 : state.userInfo.contacts.push({ ...action.payload, messages: [] })
-   
+
         },
         changeContactStatus: (state, action) => {
             const { number, status } = action.payload
@@ -110,11 +106,9 @@ export const userSlice = createSlice({
 
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
-            state.loading = false;
-            if (action.payload.success) {
-                state.userInfo = action.payload.userInfo
 
-            }
+            state.loading = false;
+            state.isAuth = action.payload.isAuth
         },
         [fetchUser.pending]: (state, action) => {
             state.loading = true;
@@ -132,7 +126,7 @@ export const GetUserInfo = state => state.user.userInfo
 export const getSelectedContact = state => state.user.userInfo?.contacts.find(contact => contact.number === state.user.selectedContact)
 
 export const {
-    login, logout, addContactInfo, addContact,
+    login, logout, addUserInfo, addContact,
     addContactMessage, changeContactStatus,
     changeTypingStatus, removeContact, selectContact
 } = userSlice.actions;
