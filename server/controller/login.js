@@ -6,12 +6,13 @@ const login = async (req, res, next) => {
    
     try {
         const { number } = req.body;
-        console.log(number)
         const client = await db.get().collection("users").findOne({ number:number })
         if (!client) return res.json({ success: false, message: "number  was wrong" });
+
         OTP.create(number)
             .then(reulst => res.json({ success: true, message: "otp send successfully" }))
-            .catch(error => {res.json({ success: false, message:error.message })})
+            .catch(error => { res.json({ success: false, message: error.message }) })
+        
     } catch (error) {
         next(error);
     }
@@ -22,7 +23,8 @@ const verify = async (req, res, next) => {
     try {
         const { number, otp } = req.body
         const OTPVerify = await OTP.verify(number, otp)
-        if (OTPVerify) {
+
+        if (OTPVerify.valid) {
             const refreshtoken = jwt.sign({  number}, process.env.REFRESH_TOKEN_SECRET)
             const accesstoken = jwt.sign({ number }, process.env.ACCESS_TOKEN_SECRET)
             const User = await db.get().collection("users").updateOne({number},{$set:{refreshtoken}})
@@ -30,7 +32,9 @@ const verify = async (req, res, next) => {
             res.json({ success: true, message: "otp verified successfully", accesstoken});
             return
         }
+
         res.json({ success: false, message: "otp is wrong" });
+        
     } catch (error) {
         next(error);
     }

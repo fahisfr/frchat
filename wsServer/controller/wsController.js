@@ -7,7 +7,6 @@ const ContactsInfo = async (clients, userWs) => {
     console.log(userWs._user.number, "Connected")
  
     const userMessages = await redisClient.lRange(`messages_${userWs._user.number}`, 0, -1)
-  
     if (userMessages.length > 666) {
         redisClient.lTrim(`messages_${userWs._user.number}`, userMessages.length-666, -1) 
     }
@@ -28,6 +27,7 @@ const ContactsInfo = async (clients, userWs) => {
 
         })
     })
+    
     userWs.send(JSON.stringify({
         event: "userInfo",
         data: {

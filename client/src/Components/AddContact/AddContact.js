@@ -4,32 +4,36 @@ import Axios from "../../Axios"
 import { useDispatch  } from "react-redux"
 import { addContact } from "../../Features/User"
 function AddContact({ trigger, setTrigger }) {
+
     const dispatch = useDispatch()
-  
     const [number, setNumber] = useState("")
     const [name, setName] = useState("")
     const [Err, setErr] = useState({
         status: false,
         message: ""
     })
+
     const AddContactNow = async (e) => {
         e.preventDefault()
         try {
+
             const response = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
             if (response.data.success) {
                 dispatch(addContact(response.data.contact))
                 setTrigger(false)
                 return
             }
-            console.log(response.data)
+
             setErr({ status: true, message: response.data.message })
+
         } catch (error) {
-            console.log(error)
-            alert("something went wrong")
+          setErr({ status: true, message:error.message })
         }
     }
     return trigger? (
-        <div className="add_contact_container">
+        <div className="add_contact_container"
+            onClick={(e) => e.target === e.currentTarget ? setTrigger(false) : null}
+        >
             <div className="add_contact">
                 <div className="add_contact_header">
                     <div className="add_contact_exit">

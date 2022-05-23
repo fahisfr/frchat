@@ -1,11 +1,12 @@
 const router = require('express').Router();
-const updadteProfile = require('../controller/user');
 const saveImage = require('../controller/saveImage');
 const apiValidation = require('../middleware/apiValidation');
+const userController = require('../controller/user');
 
 
 router.post('/update-profile', saveImage.single("photo"),
-    apiValidation('update-proflie'), updadteProfile)
+    apiValidation('update-proflie'), userController.UpdadteProfile);
+router.post('/logout', userController.logout);
 
 
 

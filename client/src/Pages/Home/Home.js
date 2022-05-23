@@ -12,7 +12,6 @@ import {
   changeTypingStatus, selectContact, getSelectedContact,
 }
   from "../../Features/User"
-
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
@@ -142,13 +141,7 @@ function Home() {
             size={37}
             onClick={() => setProfileTrigger(true)}
           />
-          <div className="home_r-h_m" >
-            <div className="home_m_div" >
-              <div className="home_menu"></div>
-              <div className="home_menu"></div>
-              <div className="home_menu"></div>
-            </div>
-          </div>
+         
         </header>
         <div className="home_search">
           <input
@@ -225,8 +218,10 @@ function Home() {
           <div className="home_right">
             <header className='home_right_header'>
               <div className="home_r-h_back">
-                <button className="home_r-h_back_button">
-                  <BsArrowLeftShort size={45} />
+                <button
+                  onClick={() => dispatch(selectContact(null))}
+                  className="home_r-h_back_button">
+                  <BsArrowLeftShort size={43} />
                 </button>
               </div>
               <div className="home_r-h_contact_info">
@@ -311,7 +306,7 @@ function Home() {
                     onChange={messageOnChange}
                     onBlur={onFouceOutMessage}
 
-                    placeholder="Type a message"
+                    placeholder="Type a message..."
                     className="home_message_input"
                     required
                   />
@@ -320,7 +315,7 @@ function Home() {
                   <button
                     type="submit"
                     className="home_message_send_button"
-                  >Send</button>
+                  ></button>
                 </div>
               </form>
             </footer>

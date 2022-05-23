@@ -7,25 +7,35 @@ const AddContact = async (req, res, next) => {
         const userNumber = req.user.number
         const { number: contactNumber, name } = req.body;
 
-        if (contactNumber === userNumber) return res.json({ success: false, message: "you can't add yourself" })
-        const contactInfo = await db.get().collection("users").findOne({ number: contactNumber });
-        if (!contactInfo) return res.json({ success: false, message: "user not found" });
-        const user = await db.get().collection("users").findOne({ number: userNumber });
-        const AlReadyExist = user?.contacts.find(contact => contact.number === contactNumber);
-        if (AlReadyExist) return res.json({ success: false, message: "contact already exists" });
-        db.get().collection("users").findOneAndUpdate({ number: userNumber }, {
+         if (contactNumber === userNumber) return res.json({ success: false, message: "you can't add yourself" })
+        const userAndConInfo = await db.get().collection("users").find(
+            { number: { $in: [userNumber, contactNumber] } }).toArray();
+    
+        if (userAndConInfo.length !== 2) return res.json({ success: false, message: "number doesn't exist" })
+        const conAlredyExist = userAndConInfo[0].contacts?.find(contact => contact.number === contactNumber)
+        if (conAlredyExist) return res.json({ success: false, message: "number already exist" })
+        
+        db.get().collection("users").updateOne({ number: userNumber }, {
             $push: {
                 contacts: {
-                    id: contactInfo._id,
-                    name,
                     number: contactNumber,
+                    name,
                     messages: []
-
                 }
             }
-        }).then(result => res.json({success: true, contact: {name,photo: contactInfo.photo,number:contactNumber}, message: "contact added successfully"}))
-          .catch(error => res.json({ success: false, messages: "failed to addcontact" }))
-
+        })
+            .then(result => {
+                res.json({
+                    success: true, contact: {
+                        name,
+                        photo:userAndConInfo[1].photo,
+                        number:contactNumber,
+                    }, message: "contact added successfully"
+                })
+            })
+            .catch(error => res.json({ success: false, message: "faild to add contact" }))
+        
+        
     } catch (error) {
         next(error);
     }

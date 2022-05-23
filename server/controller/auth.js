@@ -5,13 +5,10 @@ const apiErrors = require("../config/apiErrors");
 const Authentication = (req, res, next) => {
     try {
 
-       
-     
         const auccesstoken = req.headers.authorization?.split(" ")[1]
-
-        if (!auccesstoken) return res.json({isAuth:false});
+        if (!auccesstoken) return res.json({ isAuth: false });
+        
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
-            
             if (err) return res.status(403).json({ success: false, message: "invalid token " });
             res.json({ isAuth: true });
             

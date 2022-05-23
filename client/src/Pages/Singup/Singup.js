@@ -7,6 +7,7 @@ import Axios from "../../Axios"
 import OtpVerify from '../../Components/OTPVerify/OTPVerify'
 
 function Singup() {
+    const [error,setError] = useState({trigger:false,message:""})
     const [name, setName] = useState('')
     const [number, setNumber] = useState("")
     const [Otp, setOtp] = useState({
@@ -19,18 +20,17 @@ function Singup() {
     const SingupNow = async (e) => {
         e.preventDefault()
         try {
+
             const response = await Axios.post("/singup", { name, number:parseInt(number) })
-            if (response.data.success) {
-                setOtp({ trigger: true, number, name, url: "singup" })
-                return;
-            }
-            alert(response.data.message)
+            response.data.success ? setOtp({ trigger: true, number, name, url: "singup" })
+                : setError({ trigger: true, message: response.data.message })
+           
         } catch (error) {
-            alert(error.message)
+            setError({ trigger: true, message:error.message })
         }
     }
     return (
-        <div className="singup">
+        <div className="singup" style={{backgroundImage:"url(./images/ls_bg.jpg)"}}>
             <div className='singup_header'>
                 <h1>Create new account</h1>
             </div>
@@ -38,7 +38,7 @@ function Singup() {
                 Otp.trigger ? <OtpVerify Info={Otp} /> : <div className='singup_body'>
                     <form onSubmit={SingupNow} className="singup_from">
                         <div className="singup_from_np">
-                            <label className="singup_lable" >Nmae</label>
+                            <label className="singup_lable" >Name</label>
                             <div className='singup_from_input_container'>
                                 <input
                                     className='singup_input'
@@ -55,12 +55,14 @@ function Singup() {
                             <div className='singup_from_input_container'>
                                 <input
                                     className='singup_input'
-                                    
+                                    type='number'
                                     value={number}
-                                    maxLength={10}
                                     onChange={(e) => setNumber(e.target.value)}
                                     required
                                 />
+                            </div>
+                            <div className='ls_body_err'>
+                                {error.trigger ? <span className='ls_err_message'>{error.message}</span> : null}
                             </div>
                         </div>
                         <div className="singup_from_np">

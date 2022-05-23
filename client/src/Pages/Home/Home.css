@@ -3,6 +3,7 @@
     height: 100vh;
     display: flex;
     background-color: var(--ls-color);
+    overflow: hidden;
     
 }
 .home_left{
@@ -51,7 +52,6 @@
     height: 43px;
     background-color: var(--ld_bg);
     border-radius: 25rem  0px 0px 25rem ;
-  
     border: none;
 
 }
@@ -181,11 +181,12 @@
     conic-gradient(from 90deg at var(--b) var(--b),var(--defult_blue) 90deg,rgb(255, 255, 255) 0) 
     calc(100% + var(--b)/2) calc(100% + var(--b)/2)/
     calc(50%  + var(--b))   calc(50%  + var(--b));
-  display:inline-block;
+    display:inline-block;
     position: absolute;
     bottom:1rem;
     right:1rem;
     border-radius: 50%;
+    
 }
     
                                      /* left body contact s :End  */
@@ -217,16 +218,19 @@
     height:400px;
 }
 .home_r-h_back{
-    display:none;
     width: 3rem;
     text-align: center;
 }
+
 .home_r-h_back_button{
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border: none;
+    background-color: var(--ld_bg);
+    cursor: pointer;
     
 }
+
 .home_r-h_contact_info{
     flex-grow: 1;
     display: flex;
@@ -297,11 +301,15 @@
 
 .home_chats{
     flex-grow: 1;
+    
     overflow:scroll;
     overflow-x: hidden;
     
     
 
+}
+.home::-webkit-scrollbar {
+    display: none;
 }
 .home_chats::-webkit-scrollbar {
     display: none;
@@ -331,17 +339,20 @@
     margin-right: 6px;
     margin-left: 6px;
    max-width: 47%;
+   height: auto;
   padding: 0.540rem;
   border-radius: 10px 0px 17px 5px;
   min-height: 0rem;
   background-color: var(--defult_blue);
   text-align: center;
+  
 }
 .home_c-message_box-contact{
     margin-top: 15px;
     margin-right: 6px;
     margin-left: 6px;
    min-width: 3rem;
+   height: auto;
   padding: 0.540rem;
   min-height: 0rem;
      max-width: 47%;
@@ -389,26 +400,26 @@
     font-size: 15px;
     box-shadow: var(--main_box-shadow);
     border: none;
+    border-radius: 10px;
+    padding-left: 5px;
     background-color: var(--white);
 }
 .home_message_input:focus{
     outline: none;
 }
 .home_r-b_button{
-    width: 7rem;
+   
       padding-top: 6px;
-      padding-left: 5px;
-      
+
+      margin-left: 15px;
+   
 }
 .home_message_send_button{
-    width: 5rem;
-    height: 45px;
- 
-    border: none;
-    background-color: var(--defult_bg);
-    border-radius: 0px 25rem  25rem 0px   ;
-    font-size: 19px;
-    color: var(--white);
+  width: 0;
+  height: 0;
+  border-top: 21px solid transparent;
+  border-left: 44px solid var(--defult_blue);
+  border-bottom: 21px solid transparent;
 }
 
 
@@ -419,8 +430,28 @@
     .home_left{
         width: 100%;
     }
+    .home_right{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top:0;
+        left:0;
+        z-index:1;
+    }
+    .home_chats{
+        height: 100%;
+        background-color: var(--white);
+    }
     
-
+    .home_search_bar{
+     width:  90%;
+   }
+   .home_left_header{
+    height:55px;
+}
+.add_contact_icon{
+  border:8px solid var(--defult_bg); 
+}
     
     
 

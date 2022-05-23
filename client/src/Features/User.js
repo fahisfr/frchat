@@ -101,6 +101,15 @@ export const userSlice = createSlice({
 
         }, selectContact: (state, action) => {
             state.selectedContact = action.payload
+        },
+        logout: (state, action) => {
+            state.userInfo = {
+                name: '',
+                number: '',
+                photo: '',
+                contacts: [],
+            }
+            state.isAuth = false
         }
 
 

@@ -8,7 +8,9 @@ function Profile({ trigger, setTrigger, contact }) {
  
     
     return trigger ? (
-        <div className="profile_container">
+        <div className="profile_container"
+            onClick={(e) => e.target === e.currentTarget ? setTrigger(false) : null}
+        >
             <div className="contactprofile">
                 <div className="user_profile_photo">
                     <img
@@ -19,9 +21,7 @@ function Profile({ trigger, setTrigger, contact }) {
                 </div>
                 <div className="user_info">
                     <div className="profile_err">
-                        {
-                            // contact.err.status && <span className="profile_err_message" >{contact.err.message}</span>
-                        }
+                        
                     </div>
                     <form className="profile_from" >
                         <label className="profile_label" >Name</label>

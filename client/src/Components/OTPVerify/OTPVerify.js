@@ -77,7 +77,7 @@ function OTPVerify({ Info }) {
                             otp.map((data, index) => {
                                 return (
                                     <input className="otp_input"
-                                        type="text"
+                                        type="number"
                                         maxLength="1"
                                         key={index}
                                         value={data}
@@ -92,8 +92,8 @@ function OTPVerify({ Info }) {
                     </div>
                 </div >
                 <div className="">
-                    <h4 className="otp_nonotp">Didn't receive the code
-                        <span className="opt_resend" onClick={(e) => reSendOTP(e)} >Resend OTP?</span>
+                    <h4 className="otp_nonotp">Didn't receive the code? 
+                        <span className="opt_resend" onClick={(e) => reSendOTP(e)} > Resend OTP</span>
                     </h4>
                 </div>
                 <button type="submit" className="otp_button">Verify</button>

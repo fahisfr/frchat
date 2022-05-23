@@ -8,7 +8,6 @@
    
 }
 .contact_menu_options{
-    /* width: 100%; */
     height: auto;
     padding: 0.5rem;
     border-bottom: 1px solid var(--ld_border);
@@ -27,4 +26,23 @@
 }
 .contact_menu_option{
     color: rgba(114, 106, 106, 0.973);
+}
+
+@media  (max-width: 860px){
+    .contact_menu{
+    position: fixed;
+    right: 5px;
+    width: 13rem;
+    height: auto;
+    background-color:var(--ld_bg);
+    box-shadow: var(--main_box-shadow);
+   
+}
+.contact_menu_options{
+    height: auto;
+    padding: 0.450rem;
+    border-bottom: 1px solid var(--ld_border);
+    border-top: 0.1px solid rgba(113, 114, 106, 0.973);;
+    transition:0.2s;
+}
 }

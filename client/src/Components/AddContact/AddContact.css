@@ -5,7 +5,7 @@
     height: 100vh;
     display: flex;
     justify-content: center;
-    padding-top: 9rem;
+    align-items: center;
     background-color: rgba(0,0,0,0.5);
 }
 
@@ -29,6 +29,7 @@
     float: right;
     font-size: 1.4rem;
     background-color: var(--white);
+    color: var(--ld_color);
     border : none;
     cursor: pointer;
 }
@@ -95,4 +96,39 @@
     color: var(--white);
     transition: all 0.2s;
    
+}
+@media (max-width:650px){
+    
+   
+ .add_contact_title h1{
+     font-size: 28px;
+     padding-top: 1rem;
+     color: var(--ld_color);
+}
+.add_contact_body{
+    width: 100%;
+    margin-left: 0rem;
+    display: flex;
+    justify-content: center;
+}
+.add_contact_message{
+    text-align: center;
+}
+
+.add_contact_message span{
+    font-size: 15px;
+
+   
+}
+.add_contact_label{
+    font-size: 1rem;
+}
+
+.add_contact_input input{
+ 
+    height: 2.150rem;
+    font-size: 0.9rem;
+
+}
+    
 }
