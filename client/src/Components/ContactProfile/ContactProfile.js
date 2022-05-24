@@ -4,9 +4,9 @@ import React from "react"
 import {profileUrlpath} from '../../Axios'
 
 function Profile({ trigger, setTrigger, contact }) {
-  
- 
-    
+
+
+
     return trigger ? (
         <div className="profile_container"
             onClick={(e) => e.target === e.currentTarget ? setTrigger(false) : null}

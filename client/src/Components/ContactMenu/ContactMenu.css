@@ -32,7 +32,7 @@
     .contact_menu{
     position: fixed;
     right: 5px;
-    width: 13rem;
+    width: 12rem;
     height: auto;
     background-color:var(--ld_bg);
     box-shadow: var(--main_box-shadow);
@@ -40,7 +40,7 @@
 }
 .contact_menu_options{
     height: auto;
-    padding: 0.450rem;
+    padding: 0.400rem;
     border-bottom: 1px solid var(--ld_border);
     border-top: 0.1px solid rgba(113, 114, 106, 0.973);;
     transition:0.2s;

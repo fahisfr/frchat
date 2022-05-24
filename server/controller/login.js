@@ -11,7 +11,7 @@ const login = async (req, res, next) => {
 
         OTP.create(number)
             .then(reulst => res.json({ success: true, message: "otp send successfully" }))
-            .catch(error => { res.json({ success: false, message: error.message }) })
+            .catch(error => { res.json({ success: false, message: "faild to send otp" }) })
         
     } catch (error) {
         next(error);
@@ -25,10 +25,10 @@ const verify = async (req, res, next) => {
         const OTPVerify = await OTP.verify(number, otp)
 
         if (OTPVerify.valid) {
-            const refreshtoken = jwt.sign({  number}, process.env.REFRESH_TOKEN_SECRET)
-            const accesstoken = jwt.sign({ number }, process.env.ACCESS_TOKEN_SECRET)
+            const refreshtoken = jwt.sign({  number}, process.env.REFRESH_TOKEN_SECRET,{expiresIn: "30m"})
+            const accesstoken = jwt.sign({ number }, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: "24d" })
             const User = await db.get().collection("users").updateOne({number},{$set:{refreshtoken}})
-            res.cookie("refreshToken", refreshtoken, { httpOnly:false, secure: false, maxAge: 24 * 60 * 60 * 1000 });
+            res.cookie("refreshToken", refreshtoken, { httpOnly:false, secure:true, maxAge: 24 * 60 * 60 * 1000 });
             res.json({ success: true, message: "otp verified successfully", accesstoken});
             return
         }

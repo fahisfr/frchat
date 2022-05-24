@@ -45,7 +45,7 @@ function Home() {
       onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://localhost:4001/auth=${localStorage.getItem('accessToken')}`)
+    const server = new WebSocket(`ws://192.168.20.7:4001/auth=${localStorage.getItem('accessToken')}`)
     server.onopen = () => {
       setLoading(false)
       setSever(server)

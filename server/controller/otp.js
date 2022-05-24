@@ -17,10 +17,7 @@ const verify = async (number, otp) => {
         twilio.verify.services(process.env.TWILIO_SERVICE_id).
             verificationChecks.create({ to: `+91${number}`, code: otp })
             .then(response => resolve(response))
-            .catch(err => {
-                console.log(err)
-                reject(err)
-            })
+            .catch(err => { reject(err)})
     })
 }
 

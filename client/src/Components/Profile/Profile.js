@@ -66,7 +66,7 @@ function Profile({ trigger, setTrigger }) {
                     <img
                         className="user_photo"
                         src={preview ?? profileUrlpath + User.photo}
-                        alt="profile_pho"
+                        alt="profile_photo"
                         onClick={() => { fileInputRef.current.click() }}
                     />
                     <input

@@ -28,7 +28,7 @@ const reAuthentication = async (req, res, next) => {
                 const user = await db.get().collection("users").findOne({ number: result.number });
                 if (!user) return next(apiErrors.Unauthorized());
                 const accessToken = jwt.sign(
-                    { number: result.number, name: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1d" }
+                    { number: result.number, name: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" }
                 );
                 return res.json({success: true,accessToken, message: "", });
             }

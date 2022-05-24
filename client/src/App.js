@@ -1,10 +1,10 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from './Pages/Home/Home';
 import Login from './Pages/Login/Login';
 import Singup from './Pages/Singup/Singup';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 
 function App() {
