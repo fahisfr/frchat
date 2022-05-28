@@ -13,6 +13,7 @@ function Profile({ trigger, setTrigger }) {
     const [err, setErr] = useState({ status: false, message: "" })
     const [name, setName] = useState()
     const [photo, setPhoto] = useState(User.photo)
+    const [loading, setLoading] = useState(false)
 
 
     const imagePreview = (e) => {
@@ -27,16 +28,19 @@ function Profile({ trigger, setTrigger }) {
 
     const UpdateProfile = async (e) => {
         e.preventDefault()
+        setLoading(true)
         const formData = new FormData()
         formData.append('name', name)
         formData.append('photo', photo)
         try {
             const response = await Axios.post('/user/update-profile', formData)
-            response.data.success ? setTrigger(false) : setErr({ status: true, message: response.data.message })
+            response.data && setErr({ status: true, message: response.data.message })
 
         } catch (err) {
             setErr({ status: true, message: "oops something went wrong" })
 
+        } finally {
+            setLoading(false)
         }
 
 
@@ -103,9 +107,9 @@ function Profile({ trigger, setTrigger }) {
                         <div className="user_info_bottom">
 
                             <button
-                                className="profile_save_button"
+                                className={`profile_save_button ${loading && "button_loading"}`}
                                 onClick={(e)=>UpdateProfile(e)}
-                            >Save</button>
+                            ><span className='small_button_text'>Save</span></button>
 
                             <button
                                 className='profile_logout_button'

@@ -82,7 +82,7 @@
 .add_contact_button{
     width: 11rem;
     height: 2.5rem;
-
+    position: relative;
     margin-top: 1.7rem;
     margin-left: 5rem;
     border:none;

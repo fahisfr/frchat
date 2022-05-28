@@ -4,7 +4,7 @@ import './OTPVerify.css'
 import Axios from "../../Axios"
 
 import { useDispatch } from "react-redux"
-import User, { login } from "../../Features/User"
+import  { login } from "../../Features/User"
 
 
 function OTPVerify({ Info }) {
@@ -13,6 +13,7 @@ function OTPVerify({ Info }) {
     const dispatch = useDispatch()
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const [err, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
     const handleChange = (element, index) => {
         setOtp([...otp.map((value, arryindex) => {
             if (arryindex === index) {
@@ -29,6 +30,7 @@ function OTPVerify({ Info }) {
     userInfo.number=parseInt(userInfo.number)
     const vefifyOTP = async (e) => {
         e.preventDefault()
+        setLoading(true)
         try {
             const response = await Axios.post(`/${url}/otp-verify`, {
                 otp: otp.join(""),
@@ -41,7 +43,9 @@ function OTPVerify({ Info }) {
             }
             setError(true)
         } catch (error) {
-            alert(error)
+            alert("Something went wrong")
+        } finally {
+            setLoading(false)
         }
     }
     const reSendOTP = async (e) => {
@@ -66,7 +70,7 @@ function OTPVerify({ Info }) {
                     {
                         err ? <h3 className="otp_title_contact" style={{ color: 'red' }}>Invalid OTP</h3> :
                             <h3 className="otp_title_contact">
-                                Please Enter The Verification Code Send To 91+{Info.number}
+                                Please enter OTP  we've sent you on 91+{Info.number}
                             </h3>
                     }
                 </div>
@@ -96,7 +100,9 @@ function OTPVerify({ Info }) {
                         <span className="opt_resend" onClick={(e) => reSendOTP(e)} > Resend OTP</span>
                     </h4>
                 </div>
-                <button type="submit" className="otp_button">Verify</button>
+                <button type="submit" className={`otp_button ${loading && "button_loading"}`}>
+                    <span className='button_text'>Verify</span>
+                </button>
             </form>
         </div>
     )

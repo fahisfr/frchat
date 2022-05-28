@@ -66,6 +66,7 @@
 }
 .singup_button{
     width: 100%;
+    position: relative;
     border-radius: .5rem;
     height: 2.55rem;
     margin-top: 1rem;

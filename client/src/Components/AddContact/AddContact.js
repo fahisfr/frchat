@@ -8,6 +8,7 @@ function AddContact({ trigger, setTrigger }) {
     const dispatch = useDispatch()
     const [number, setNumber] = useState("")
     const [name, setName] = useState("")
+    const [loading, setLoading] = useState(false)
     const [Err, setErr] = useState({
         status: false,
         message: ""
@@ -15,6 +16,7 @@ function AddContact({ trigger, setTrigger }) {
 
     const AddContactNow = async (e) => {
         e.preventDefault()
+        setLoading(true)
         try {
 
             const response = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
@@ -28,6 +30,8 @@ function AddContact({ trigger, setTrigger }) {
 
         } catch (error) {
           setErr({ status: true, message:error.message })
+        }finally{
+            setLoading(false)
         }
     }
     return trigger? (
@@ -83,8 +87,9 @@ function AddContact({ trigger, setTrigger }) {
                         <button
                             type="submit"
                             onClick={(e) => AddContactNow(e)}
-                            className="add_contact_button"
-                        >Add Contact</button>
+                            className={`add_contact_button ${loading && "button_loading"}`}>
+                            <span className='button_text'>Add Contact</span>
+                        </button>
                     </from>
                 </div>
             </div>

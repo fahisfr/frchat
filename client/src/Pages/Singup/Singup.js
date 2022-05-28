@@ -7,9 +7,10 @@ import Axios from "../../Axios"
 import OtpVerify from '../../Components/OTPVerify/OTPVerify'
 
 function Singup() {
-    const [error,setError] = useState({trigger:false,message:""})
+    const [error, setError] = useState({ trigger: false, message: "" })
     const [name, setName] = useState('')
     const [number, setNumber] = useState("")
+    const [loading,setLoadign] = useState(false)
     const [Otp, setOtp] = useState({
         trigger: false,
         number: null,
@@ -19,18 +20,23 @@ function Singup() {
 
     const SingupNow = async (e) => {
         e.preventDefault()
+        setLoadign(true)
         try {
 
-            const response = await Axios.post("/singup", { name, number:parseInt(number) })
+            const response = await Axios.post("/singup", { name, number: parseInt(number) })
+            setLoadign(false)
             response.data.success ? setOtp({ trigger: true, number, name, url: "singup" })
                 : setError({ trigger: true, message: response.data.message })
-           
+
         } catch (error) {
-            setError({ trigger: true, message:error.message })
+            setError({ trigger: true, message: error.message })
+            
+        }finally{
+            setLoadign(false)
         }
     }
     return (
-        <div className="singup" style={{backgroundImage:"url(./images/ls_bg.jpg)"}}>
+        <div className="singup" style={{ backgroundImage: "url(./images/ls_bg.jpg)" }}>
             <div className='singup_header'>
                 <h1>Create new account</h1>
             </div>
@@ -68,10 +74,9 @@ function Singup() {
                         <div className="singup_from_np">
                             <Link className="singup_from_link" to='/login'>Already have an account ?</Link>
                         </div>
-                        <button
-                            type='submit'
-                            className="singup_button"
-                        >Singup</button>
+                        <button type="submit" className={`singup_button ${loading && "button_loading"}`}>
+                            <span className="button_text">Singup</span>
+                        </button>
                     </form>
                 </div>
             }

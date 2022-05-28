@@ -9,17 +9,23 @@ import OTPVerify from '../../Components/OTPVerify/OTPVerify'
 function Login() {
   const [number, setNumber] = useState('')
   const [error, setError] = useState({trigger:false,message:''})
-  const [otp, setOtp] = useState({ trigger:false, number, url: "", })
+  const [otp, setOtp] = useState({ trigger: false, number, url: "", })
+  const [loading,setLoading] = useState(false)
   const LoignNow = async (e) => {
     e.preventDefault()
+    setLoading(!loading)
     try {
 
       const response = await Axios.post("/login", { number: parseInt(number) })
+      
       response.data.success ? setOtp({ trigger: true, number, url: "login" }) :
         setError({ trigger: true, message: response.data.message })
       
-    } catch (error) {
-      setError({ trigger: true, message:error.message })
+    }catch (error) {
+      setError({ trigger: true, message: error.message })
+      
+    }finally {
+      setLoading(false)
     }
   }
   return (
@@ -30,10 +36,10 @@ function Login() {
       {
         otp.trigger ? <OTPVerify Info={otp} /> : <div className='login_body'>
          
-          <form onSubmit={LoignNow} className="loign_from">
-            <div className="loign_from_np">
+          <form onSubmit={LoignNow} className="login_from">
+            <div className="login_from_np">
               <label className="login_lable" >Phone Number</label>
-              <div className='Loign_from_input_container'>
+              <div className='Login_from_input_container'>
                 <input
                   className='login_input'
                   type='number'
@@ -45,10 +51,12 @@ function Login() {
                 {error.trigger ? <span className='ls_err_message'>{error.message}</span> : null}
               </div>
             </div>
-            <div className="loign_from_np">
-              <Link className="loign_from_link" to='/singup'>Create New Account ?</Link>
+            <div className="login_from_np">
+              <Link className="login_from_link" to='/singup'>Create New Account ?</Link>
             </div>
-            <button type="submit" className="loign_button">Login</button>
+            <button type="submit" className={`login_button ${loading && "login_button  button_loading"}`}>
+              <span className="button_text">Login</span>
+            </button>
           </form>
         </div>
       }

@@ -70,7 +70,7 @@
    padding-top: 1rem;
 }
 .profile_err_message{
-    color: red;
+    color: rgb(14, 168, 8);
     font-size: 0.950rem;
 
 
@@ -98,9 +98,8 @@
     float: right;
     width: 6rem;
     height: 2.3rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    font-style: italic;
+    position: relative;
+    
     border-radius: 5px;
     margin-top: 1rem;
     background-color: var(--button_green_bg);
@@ -148,10 +147,9 @@
 .profile_err{
     height: 1rem;
    text-align: center;
-    padding-top: rem;
 }
 .profile_err_message{
-    color: red;
+
     font-size: 0.78rem;
 }
 
@@ -194,7 +192,6 @@
     float: right;
     width: 4rem;
     height: 2rem;
-    font-size: 0.8rem;
     border-radius: 5px;
     margin-top: 0rem;
     background-color: var(--button_green_bg);

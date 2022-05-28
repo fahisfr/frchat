@@ -8,7 +8,8 @@ import { useSelector } from 'react-redux'
 
 
 function App() {
-    const {isAuth} = useSelector(state => state.user)
+  const { isAuth } = useSelector(state => state.user)
+  
   return (
     <div>
       <Router>

@@ -18,7 +18,7 @@
   width: 60px;
   height: 60px;
   -webkit-animation: spin 2s linear infinite; 
-  animation: spin 2s linear infinite;
+  animation: spin 1.2s linear infinite;
 
 }
 .homeloagin_image{

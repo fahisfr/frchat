@@ -65,6 +65,7 @@
 .otp_button{
      width: 100%;
     border-radius: .5rem;
+    position: relative;
     height: 2.55rem;
     margin-top: .5rem;
     background-color: var(--button_green_bg);

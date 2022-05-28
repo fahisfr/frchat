@@ -27,6 +27,7 @@
     border-radius: .5rem;
     background-color: var(--ls_body_bg);
     padding: 2rem;
+   
 }
 
 .ls_body_err{
@@ -39,7 +40,7 @@
     font-size: 16px;
     font-family: "Prata",serif;
 }
-.loign_from_np{
+.login_from_np{
     margin-top: 1.09rem;
 }
 .login_lable{
@@ -69,7 +70,7 @@
     transition: all .3s ;
 }
 
-.loign_from_link{
+.login_from_link{
     margin-top: 1.09rem;
     font-size: 15px;
     font-family: arial;
@@ -77,21 +78,29 @@
     color: rgb(255, 255, 255);
     text-decoration: none;
 }
-.loign_button{
+.login_button{
     width: 100%;
     border-radius: .5rem;
     height: 2.55rem;
+    position: relative;
     margin-left: 0rem;
     margin-top: 1rem;
+    
     background-color: var(--button_green_bg);
-    color: white;
     border: none;
-    font-size: 19px;
-    font-weight: 500;
-    font-style: italic;
     cursor: pointer;
+    transition: all 1s;
     
 }
+
+
+.login_button:active{
+    background-color: rgba(37, 194, 23, 0.959);
+    transition: all 1s;
+}
+
+
+
 
 @media(max-width:768px){
 
@@ -121,14 +130,14 @@
   .login_input{
     font-size: 1rem;
 }
-  .loign_from_link{
+  .login_from_link{
     margin-top: 1.09rem;
     font-size: 14px;
     font-family: arial;
     color: rgb(255, 255, 255);
     text-decoration: none;
 }
-.loign_button{
+.login_button{
     font-size: 17px;
     font-weight: 400;
   }
