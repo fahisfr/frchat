@@ -17,6 +17,8 @@
     box-shadow: var(--main_box-shadow);
     display: flex;
      background-color: var(--white);
+     animation-name: pop_up;
+    animation-duration: 0.4s;
     
 
 }
@@ -28,6 +30,8 @@
     box-shadow: var(--main_box-shadow);
     display: flex;
      background-color: var(--white);
+     animation-name: pop_up;
+    animation-duration: 0.4s;
 }
 
 .profile_exit_button{

@@ -1,15 +1,12 @@
+const db = require("../config/dbConn")
+const redisClient = require("../config/redis")
 
-const  redisClient= require ("../config/redis")
-  
 
 const ContactsInfo = async (clients, userWs) => {
 
     console.log(userWs._user.number, "Connected")
  
     const userMessages = await redisClient.lRange(`messages_${userWs._user.number}`, 0, -1)
-    if (userMessages.length > 666) {
-        redisClient.lTrim(`messages_${userWs._user.number}`, userMessages.length-666, -1) 
-    }
     
     userWs._user.contacts?.map(contact => {
         clients.find(client => {
@@ -42,13 +39,15 @@ const ContactsInfo = async (clients, userWs) => {
 const sendMessage = (clients, data, user) => {
     const client = clients.find(clinet => clinet._user.number === data.to)
 
-        client?.send(JSON.stringify({
-            event: "message",
-            data: { from: data.from, message: data.message, }
-        }))
-    redisClient.rPush(`messages_${user._user.number}`, JSON.stringify({ from: data.to, message: {...data.message,from:"me"}, }))
-    redisClient.rPush(`messages_${data.to}`, JSON.stringify({ from: data.from, message: {...data.message,}, }))
+    client?.send(JSON.stringify({
+        event: "message",
+        data: { from: data.from, message: data.message, }
+    }))
+    
+    redisClient.rPush(`messages_${user._user.number}`, JSON.stringify({ from: data.to, message: { ...data.message, from: "me" }, }))
+    redisClient.rPush(`messages_${data.to}`, JSON.stringify({ from: data.from, message: { ...data.message, }, }))
 }
+
 const typing = (clients, data) => {
     const user = clients.find(client => client._user.number == data.to)
 
@@ -62,8 +61,9 @@ const typing = (clients, data) => {
 }
 
 
-const userOfline = (clients, userWs) => {
-    userWs._user?.contacts.forEach(contact=>{
+const userOffline = async (clients, userWs) => {
+
+    userWs._user?.contacts.forEach(contact => {
         clients.find(client => {
             if (client._user.number == contact.number) {
                 client.send(JSON.stringify({
@@ -81,7 +81,7 @@ const userOfline = (clients, userWs) => {
 }
 
 module.exports = {
-    userOfline,
+    userOffline,
     sendMessage,
     ContactsInfo,
     typing

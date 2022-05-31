@@ -18,6 +18,8 @@ import { BiSearch } from "react-icons/bi";
 import { useSelector, useDispatch } from 'react-redux'
 
 
+
+
 WebSocket.prototype.emit = function (event, data) {
   this.send(JSON.stringify({ event, data }));
 }
@@ -45,10 +47,10 @@ function Home() {
       onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`wss://live.frbots.com/auth=${localStorage.getItem('accessToken')}`)
+    const server = new WebSocket(`wss://live.frbots.com/a?${localStorage.getItem('accessToken')}`)
     server.onopen = () => {
-      setLoading(false)
       setSever(server)
+      setLoading(false)
     }
     server.onmessage = (e) => {
       const { event, data } = JSON.parse(e.data)
@@ -131,18 +133,20 @@ function Home() {
 
   return (
     <div className="home">
+
       <Loading loading={loading} />
       <Profile trigger={ProfileTrigger} setTrigger={setProfileTrigger} />
       <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger} />
-      <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} contact={selectedContact} />
+      <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger}  />
+      
       <div className="home_left">
-        <header className="home_left_header">
+        <nav className="home_left_header">
           <FiAlignLeft
             size={37}
             onClick={() => setProfileTrigger(true)}
           />
          
-        </header>
+        </nav>
         <div className="home_search">
           <input
             className="home_search_bar"
@@ -209,6 +213,7 @@ function Home() {
             })
           }
           <div className="add_contact_icon" onClick={() => setAddContactTrigger(true)} >
+            
           </div>
         </div>
       </div>

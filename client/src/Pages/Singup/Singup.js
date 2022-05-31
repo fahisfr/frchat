@@ -29,7 +29,7 @@ function Singup() {
                 : setError({ trigger: true, message: response.data.message })
 
         } catch (error) {
-            setError({ trigger: true, message: error.message })
+            setError({ trigger: true, message: "oops something went wrong" })
             
         }finally{
             setLoadign(false)

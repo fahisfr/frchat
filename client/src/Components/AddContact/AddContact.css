@@ -15,7 +15,10 @@
     background-color: var(--white);
     border-radius: 0.5rem;
     box-shadow: var(--main_box-shadow);
-
+    animation-name: pop_up;
+    animation-duration: 0.4s;
+    
+  
 }
 .add_contact_header{
     width: 100%;
@@ -97,6 +100,9 @@
     transition: all 0.2s;
    
 }
+
+
+
 @media (max-width:650px){
     
    

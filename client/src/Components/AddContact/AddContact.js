@@ -61,7 +61,7 @@ function AddContact({ trigger, setTrigger }) {
                 </div>
 
                 <div className="add_contact_body">
-                    <from className="add_contact_form">
+                    <form className="add_contact_form">
                         <div className="add_contact_from_child">
                             <label className="add_contact_label">Name</label>
                             <div className="add_contact_input">
@@ -90,7 +90,7 @@ function AddContact({ trigger, setTrigger }) {
                             className={`add_contact_button ${loading && "button_loading"}`}>
                             <span className='button_text'>Add Contact</span>
                         </button>
-                    </from>
+                    </form>
                 </div>
             </div>
         </div>

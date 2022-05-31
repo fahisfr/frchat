@@ -7,7 +7,6 @@ const singup = joi.object({
 
 const login = joi.object({
     number: joi.number().required(),
- 
 })
 
 const otpVerify = joi.object({
@@ -15,18 +14,25 @@ const otpVerify = joi.object({
     number: joi.number().required(),
     otp: joi.string().required(),
 })
+
 const removeContact = joi.object({
     number: joi.number().required(),
 })
+
 const addContact = joi.object({
     name: joi.string().required(),
     number: joi.number().required(),
 })
+
 const updatePorfie = joi.object({
     name: joi.string().required(),
     photo:joi.any()
 })
 
+const updateContact = joi.object({
+    name: joi.string().required(),
+    number: joi.number().required(),
+})
 
 const getSchema = (apiName) => {
 
@@ -43,8 +49,8 @@ const getSchema = (apiName) => {
             return updatePorfie
         case "remove-contact":
             return removeContact
-        default:
-            return null
+        case "update-contact":
+            return updateContact
     }
 }
 
@@ -56,8 +62,6 @@ const apiValidation = (apiName) => {
 
     }
 }
-
-
 
 
 module.exports = apiValidation

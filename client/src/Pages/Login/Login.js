@@ -22,7 +22,7 @@ function Login() {
         setError({ trigger: true, message: response.data.message })
       
     }catch (error) {
-      setError({ trigger: true, message: error.message })
+      setError({ trigger: true, message: "oops somthing went wrong" })
       
     }finally {
       setLoading(false)

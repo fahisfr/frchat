@@ -17,7 +17,7 @@ export const userSlice = createSlice({
             contacts: [],
 
         },
-        isAuth: false,
+        isAuth: true,
         selectedContact: '',
         error: '',
         loading: false,
@@ -102,6 +102,12 @@ export const userSlice = createSlice({
         }, selectContact: (state, action) => {
             state.selectedContact = action.payload
         },
+        changeContactName: (state, action) => {
+            
+            const { number, name } = action.payload
+            state.userInfo.contacts.find(contact => contact.number === number).name = name
+        },
+
         logout: (state, action) => {
             state.userInfo = {
                 name: '',
@@ -111,12 +117,10 @@ export const userSlice = createSlice({
             }
             state.isAuth = false
         }
-
+        
 
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
-
-            state.loading = false;
             state.isAuth = action.payload.isAuth
         },
         [fetchUser.pending]: (state, action) => {
@@ -137,7 +141,8 @@ export const getSelectedContact = state => state.user.userInfo?.contacts.find(co
 export const {
     login, logout, addUserInfo, addContact,
     addContactMessage, changeContactStatus,
-    changeTypingStatus, removeContact, selectContact
+    changeTypingStatus, removeContact,
+    selectContact, changeContactName
 } = userSlice.actions;
 
 export default userSlice.reducer;

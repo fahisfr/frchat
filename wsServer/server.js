@@ -38,7 +38,7 @@ wss.on("connection", (client) => {
 
     client.on("close", (ws) => {
         clients.splice(clients.indexOf(client), 1)
-        wsController.userOfline(clients, client)
+        wsController.userOffline(clients, client)
 
     })
 
@@ -47,11 +47,12 @@ wss.on("connection", (client) => {
 server.on('upgrade', function upgrade(request, socket, head) {
 
     try {
-        const auccesstoken = request.url.split('=')[1]
+        console.log(request.headers.cookie)
+        const auccesstoken = request.url.split('a?')[1]
         if (!auccesstoken) return socket.destroy("unauthorized")
 
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-            if (err) return socket.end('Unauthorized')
+            if (err) return socket.destroy('Unauthorized')
             const userInfo = await getUserInfo(decoded)
           
             if (userInfo.length > 0) {
