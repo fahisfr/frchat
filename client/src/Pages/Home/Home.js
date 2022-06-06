@@ -20,6 +20,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 
 
+
 WebSocket.prototype.emit = function (event, data) {
   this.send(JSON.stringify({ event, data }));
 }
@@ -32,52 +33,59 @@ function Home() {
   const [myMessage, setMyMessage] = useState('')
   const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
- 
-  const [typingStatus, setTypingStatus] = useState (false)
+
+  const [typingStatus, setTypingStatus] = useState(false)
   const [ProfileTrigger, setProfileTrigger] = useState(false)
   const [AddContactTrigger, setAddContactTrigger] = useState(false)
   const [ContactMenuTrigger, setContactMenuTrigger] = useState(false)
   const [ContactProfileTrigger, setContactProfileTrigger] = useState(false)
   const selectedContact = useSelector(getSelectedContact)
 
-  
- const playMessagePopAudio = () => {
-      const onwMessage = new Audio('./audios/onmessage.mp3')
-      onwMessage.volume = 0.1
-      onwMessage.play()
+
+  const playMessagePopAudio = () => {
+    const onwMessage = new Audio('./audios/onmessage.mp3')
+    onwMessage.volume = 0.1
+    onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`wss://live.frbots.com/a?${localStorage.getItem('accessToken')}`)
+    const server = new WebSocket(`ws://localhost:4001/a?${localStorage.getItem('auth_token')}`)
     server.onopen = () => {
       setSever(server)
       setLoading(false)
     }
-    server.onmessage = (e) => {
-      const { event, data } = JSON.parse(e.data)
+    server.onerror = (err) => {
 
-      switch (event) {
-        case "userInfo":
-          dispatch(addUserInfo(data))
-          break;
-        case "message":
-          dispatch(addContactMessage({ ...data, position: 'start' }))
-          divRef.current.scrollIntoView({ behavior: 'smooth' });
-          playMessagePopAudio()
-          break;
-        case "onlineStatus":
-          dispatch(changeContactStatus(data))
-          break;
-        case "typing":
-          dispatch(changeTypingStatus(data))
-          break;
-        default:
-          break;
+      //consosole err message
+      console.log(err)
+  }
+    
+
+      server.onmessage = (e) => {
+        const { event, data } = JSON.parse(e.data)
+
+        switch (event) {
+          case "userInfo":
+            dispatch(addUserInfo(data))
+            break;
+          case "message":
+            dispatch(addContactMessage({ ...data, position: 'start' }))
+            divRef.current.scrollIntoView({ behavior: 'smooth' });
+            playMessagePopAudio()
+            break;
+          case "onlineStatus":
+            dispatch(changeContactStatus(data))
+            break;
+          case "typing":
+            dispatch(changeTypingStatus(data))
+            break;
+          default:
+            break;
+        }
       }
-    }
-    return () => server.close()
-  }, [userInfo.isAuth, dispatch])
+      return () => server.close()
+    }, [userInfo.isAuth, dispatch])
 
- 
+
   const conSearchFilter = () => {
     return conSearch.length > 0 ?
       contacts.filter(contact => contact.name?.toLowerCase().includes(conSearch.toLowerCase()))
@@ -85,7 +93,7 @@ function Home() {
   }
 
   const sendTypingStatus = (status) => {
-  
+
     server.emit('typing', {
       from: userInfo.number,
       to: selectedContact.number,
@@ -107,7 +115,7 @@ function Home() {
     sendTypingStatus(false)
   }
 
-  const setMessageObj = (from,to) => {
+  const setMessageObj = (from, to) => {
     const info = {
       from,
       message: {
@@ -123,13 +131,13 @@ function Home() {
     playMessagePopAudio()
     e.preventDefault()
     dispatch(addContactMessage(setMessageObj(selectedContact.number)))
-    server.emit('message',setMessageObj(userInfo.number, selectedContact.number))
+    server.emit('message', setMessageObj(userInfo.number, selectedContact.number))
     setMyMessage('')
     setTypingStatus(false)
     divRef.current.scrollIntoView({ behavior: 'smooth' });
   }
 
-  
+
 
   return (
     <div className="home">
@@ -137,15 +145,15 @@ function Home() {
       <Loading loading={loading} />
       <Profile trigger={ProfileTrigger} setTrigger={setProfileTrigger} />
       <AddContact trigger={AddContactTrigger} setTrigger={setAddContactTrigger} />
-      <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger}  />
-      
+      <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} />
+
       <div className="home_left">
         <nav className="home_left_header">
           <FiAlignLeft
             size={37}
             onClick={() => setProfileTrigger(true)}
           />
-         
+
         </nav>
         <div className="home_search">
           <input
@@ -157,7 +165,7 @@ function Home() {
           />
           {
             conSearch.length > 0 ?
-              <button className="home_search_button"onClick={() => setConSearch('')}>X</button>
+              <button className="home_search_button" onClick={() => setConSearch('')}>X</button>
               :
               <button className="home_search_button">
                 <BiSearch size={14} />
@@ -168,11 +176,11 @@ function Home() {
         <div className="home_contacts">
           {
             conSearchFilter().map((contact, index) => {
-         
+
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
                   <div className='contact_info_img'>
-                    <img className="contact_image" src={`${profileUrlpath}${contact.photo??"default.jpg"}`} alt="" />
+                    <img className="contact_image" src={`${profileUrlpath}${contact.photo ?? "default.jpg"}`} alt="" />
                   </div>
                   <div className="contact_info_ndl">
                     <div className="contact_info_n-d">
@@ -213,7 +221,7 @@ function Home() {
             })
           }
           <div className="add_contact_icon" onClick={() => setAddContactTrigger(true)} >
-            
+
           </div>
         </div>
       </div>
@@ -231,7 +239,7 @@ function Home() {
               </div>
               <div className="home_r-h_contact_info">
                 <div className="home_r-h_contact_photo">
-                  <img className="home_r-h_contact_image" src={`${profileUrlpath}${selectedContact.photo??"default.jpg"}`}  alt="" />
+                  <img className="home_r-h_contact_image" src={`${profileUrlpath}${selectedContact.photo ?? "default.jpg"}`} alt="" />
                 </div>
                 <div className="home_r-h_contact_n-s">
                   <div className="home_r-h_contact_name">
@@ -288,7 +296,7 @@ function Home() {
                           </div>
                       }
                     </div>
-                   
+
                   )
                 })
               }
@@ -338,4 +346,4 @@ function Home() {
   )
 }
 
-  export default Home
+export default Home

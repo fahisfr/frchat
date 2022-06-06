@@ -10,15 +10,15 @@ const instance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    
+
 });
 
 instance.interceptors.request.use(config => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('auth_token');
     accessToken && (config.headers.Authorization = `Bearer ${accessToken}`);
     return config;
 }, error => Promise.reject(error));
- 
+
 instance.interceptors.response.use(
     response => response,
     async (error) => {
@@ -27,9 +27,10 @@ instance.interceptors.response.use(
             prevRequest.sent = true
             const { data } = await instance.get('/auth/refresh', { withCredentials: true });
             if (data.success) {
-                localStorage.setItem('accessToken', data.accessToken)
+                localStorage.setItem('auth_token', data.accessToken)
                 return instance.request(prevRequest)
             }
+            localStorage.removeItem('auth_token')
             return Promise.reject(error)
         }
     }

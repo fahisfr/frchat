@@ -6,8 +6,11 @@ const dbconn = require('./config/dbConn')
 const port = 4001
 const getUserInfo = require('./controller/GetUserInfo');
 const server = http.createServer(function (req, res) { })
-const wsController = require('./controller/wsController')
+const newWsConn = require('./controller/newWsConnection');
+const { sendMessage, typing } = require('./controller/userEvents');
+const closeWs = require('./controller/closeWs');
 
+const clients = []
 
 dbconn.connect(() => server.listen(port, () => console.log(`server is running on port ${port}`)))
 
@@ -15,31 +18,27 @@ const wss = new WebSocket.Server({
     noServer: true
 })
 
-const clients = []
 
 
-wss.on("connection", (client) => {
+wss.on("connection", async (ws) => {
 
-    clients.push(client)
-    wsController.ContactsInfo(clients, client)
+    const [err, wsInfo] = await newWsConn(ws, clients)
+    wsInfo && clients.push(wsInfo)
 
-    client.on("message", (message) => {
+    ws.on("message", (message) => {
         const { event, data } = JSON.parse(message)
         switch (event) {
             case "message":
-                wsController.sendMessage(clients, data, client)
+                sendMessage(data, clients)
                 break;
             case "typing":
-                wsController.typing(clients, data)
+                typing(data, clients)
                 break
-
         }
     })
-
-    client.on("close", (ws) => {
-        clients.splice(clients.indexOf(client), 1)
-        wsController.userOffline(clients, client)
-
+    ws.on("close", () => {
+        closeWs(ws._user, clients)
+        clients.splice(clients.indexOf(ws), 1)
     })
 
 })
@@ -47,14 +46,14 @@ wss.on("connection", (client) => {
 server.on('upgrade', function upgrade(request, socket, head) {
 
     try {
-        console.log(request.headers.cookie)
+
         const auccesstoken = request.url.split('a?')[1]
-        if (!auccesstoken) return socket.destroy("unauthorized")
+        if (!auccesstoken) return socket.end("token is missing")
 
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-            if (err) return socket.destroy('Unauthorized')
+            if (err) return socket.end('Unauthorized')
             const userInfo = await getUserInfo(decoded)
-          
+
             if (userInfo.length > 0) {
                 return wss.handleUpgrade(request, socket, head, function done(ws) {
                     ws._user = userInfo[0]
@@ -79,6 +78,4 @@ server.on('upgrade', function upgrade(request, socket, head) {
 
 
 });
-
-
 

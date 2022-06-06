@@ -2,6 +2,7 @@
 const db = require("../config/dbConn")
 
 const getUserInfo = (user) => {
+  
     return new Promise((resolve, reject) => {
         db.get().collection("users").aggregate([
             {
@@ -41,11 +42,8 @@ const getUserInfo = (user) => {
                 }
             },
         ]).toArray()
-            .then(result => {
-    
-                resolve(result)
-            })
-           .catch(err => reject(err))
+            .then(result => resolve(result))
+            .catch(err => reject(err))
      })
     
 }

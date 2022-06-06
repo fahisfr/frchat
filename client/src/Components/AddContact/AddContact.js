@@ -89,6 +89,7 @@ function AddContact({ trigger, setTrigger }) {
                             onClick={(e) => AddContactNow(e)}
                             className={`add_contact_button ${loading && "button_loading"}`}>
                             <span className='button_text'>Add Contact</span>
+                   
                         </button>
                     </form>
                 </div>

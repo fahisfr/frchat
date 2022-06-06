@@ -4,6 +4,7 @@ import Axios from '../Axios'
 
 
 export const fetchUser = createAsyncThunk('user/fetchUser', async (userId) => {
+    
     const response = await Axios.get('/auth').then(res => res.data)
     return response
 })

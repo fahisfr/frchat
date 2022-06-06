@@ -12,6 +12,7 @@ const store = configureStore({
   reducer: {
     user,
   },
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 store.dispatch(fetchUser());

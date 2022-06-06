@@ -94,6 +94,7 @@
     cursor: pointer;
     
 }
+
 .add_contact_button span{
     font-size: 1rem;
     color: var(--white);
