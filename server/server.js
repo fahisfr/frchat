@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const morgan =require("morgan")
-const port = 4002
+const port = 3001
 const app = express()
 const db = require("./config/dbConn")
 const errorHandler = require("./config/errorHandler")

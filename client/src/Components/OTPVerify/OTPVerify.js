@@ -38,7 +38,7 @@ function OTPVerify({ Info }) {
             })
             if (response.data.success) {
                 dispatch(login(userInfo))
-                localStorage.setItem("accessToken", response.data.accesstoken)
+                localStorage.setItem("auth_token", response.data.accesstoken)
                 return;
             }
             setError(true)

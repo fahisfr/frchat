@@ -44,7 +44,7 @@ function Profile({ trigger, setTrigger }) {
             <div className="profile">
 
                 <div className="user_profile_photo">
-                    <img className="user_photo"src={profileUrlpath + conInfo.photo}alt="profile_photo"/>
+                    <img className="user_photo"src={profileUrlpath + conInfo.photo} alt=""/>
                 </div>
 
                 <div className="user_info">

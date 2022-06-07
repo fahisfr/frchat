@@ -3,6 +3,7 @@ import './AddContact.css'
 import Axios from "../../Axios"
 import { useDispatch  } from "react-redux"
 import { addContact } from "../../Features/User"
+
 function AddContact({ trigger, setTrigger }) {
 
     const dispatch = useDispatch()
@@ -54,7 +55,7 @@ function AddContact({ trigger, setTrigger }) {
 
                         {
                             Err.status ? <span style={{ color: "red" }}>{Err.message}</span> :
-                                <span>Only WhyChat Rigster User Number</span>
+                                <span>Enter contact name and number</span>
                         }
 
                     </div>
@@ -74,7 +75,7 @@ function AddContact({ trigger, setTrigger }) {
                             </div>
                         </div>
                         <div className="add_contact_from_chiled">
-                            <label className="add_contact_label">Phone Number</label>
+                            <label className="add_contact_label">Number</label>
                             <div className="add_contact_input">
                                 <input
                                     type="number"

@@ -48,42 +48,38 @@ function Home() {
     onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://localhost:4001/a?${localStorage.getItem('auth_token')}`)
+    const server = new WebSocket(`ws://localhost:3002/a?${localStorage.getItem('auth_token')}`)
     server.onopen = () => {
       setSever(server)
       setLoading(false)
     }
-    server.onerror = (err) => {
 
-      //consosole err message
-      console.log(err)
-  }
     
 
-      server.onmessage = (e) => {
-        const { event, data } = JSON.parse(e.data)
+    server.onmessage = (e) => {
+      const { event, data } = JSON.parse(e.data)
 
-        switch (event) {
-          case "userInfo":
-            dispatch(addUserInfo(data))
-            break;
-          case "message":
-            dispatch(addContactMessage({ ...data, position: 'start' }))
-            divRef.current.scrollIntoView({ behavior: 'smooth' });
-            playMessagePopAudio()
-            break;
-          case "onlineStatus":
-            dispatch(changeContactStatus(data))
-            break;
-          case "typing":
-            dispatch(changeTypingStatus(data))
-            break;
-          default:
-            break;
-        }
+      switch (event) {
+        case "userInfo":
+          dispatch(addUserInfo(data))
+          break;
+        case "message":
+          dispatch(addContactMessage({ ...data, position: 'start' }))
+          divRef.current.scrollIntoView({ behavior: 'smooth' });
+          playMessagePopAudio()
+          break;
+        case "onlineStatus":
+          dispatch(changeContactStatus(data))
+          break;
+        case "typing":
+          dispatch(changeTypingStatus(data))
+          break;
+        default:
+          break;
       }
-      return () => server.close()
-    }, [userInfo.isAuth, dispatch])
+    }
+    return () => server.close()
+  }, [userInfo.isAuth, dispatch])
 
 
   const conSearchFilter = () => {
@@ -148,13 +144,14 @@ function Home() {
       <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} />
 
       <div className="home_left">
-        <nav className="home_left_header">
+        <header className="home_left_header">
           <FiAlignLeft
             size={37}
+            id="home_left_header_icon"
             onClick={() => setProfileTrigger(true)}
           />
 
-        </nav>
+        </header>
         <div className="home_search">
           <input
             className="home_search_bar"
@@ -239,7 +236,12 @@ function Home() {
               </div>
               <div className="home_r-h_contact_info">
                 <div className="home_r-h_contact_photo">
-                  <img className="home_r-h_contact_image" src={`${profileUrlpath}${selectedContact.photo ?? "default.jpg"}`} alt="" />
+                  <img
+                    className="home_r-h_contact_image"
+                    src={`${profileUrlpath}${selectedContact.photo ?? "default.jpg"}`}
+                    alt=""
+                    onClick={() => setContactProfileTrigger(true)}
+                  />
                 </div>
                 <div className="home_r-h_contact_n-s">
                   <div className="home_r-h_contact_name">

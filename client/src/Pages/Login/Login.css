@@ -49,8 +49,8 @@
     font-family: arial;
     color: rgb(255, 255, 255);
 }
-.Loign_from_input_container{
-    margin-top: .30rem;
+.Login_from_input_container{
+    margin-top: 0.30rem;
 }
 .login_input{
     width:96%;

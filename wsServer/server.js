@@ -3,12 +3,13 @@ const http = require('http')
 const WebSocket = require('ws')
 const jwt = require("jsonwebtoken")
 const dbconn = require('./config/dbConn')
-const port = 4001
+const port = 3002
 const getUserInfo = require('./controller/GetUserInfo');
 const server = http.createServer(function (req, res) { })
 const newWsConn = require('./controller/newWsConnection');
 const { sendMessage, typing } = require('./controller/userEvents');
 const closeWs = require('./controller/closeWs');
+
 
 const clients = []
 
@@ -73,7 +74,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
 
 
     } catch (error) {
-        socket.destroy("oops something went wrong")
+        socket.end("oops something went wrong")
     }
 
 

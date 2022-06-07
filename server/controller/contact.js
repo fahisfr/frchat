@@ -13,7 +13,7 @@ const addContact = async (req, res, next) => {
 
         if (userAndConInfo.length !== 2) return res.json({ success: false, message: "number doesn't exist" })
         const conAlredyExist = userAndConInfo[0].contacts?.find(contact => contact.number === contactNumber)
-        if (conAlredyExist) return res.json({ success: false, message: "number already exist" })
+        if (conAlredyExist) return res.json({ success: false, message: "number already saved?" })
 
         db.get().collection("users").updateOne({ number: userNumber }, {
             $push: {

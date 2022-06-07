@@ -28,15 +28,16 @@ const verify = async (req, res, next) => {
   try {
     
     const { number, otp, name } = req.body;
-    const OTPVerify = await OTP.verify(number, otp)
-    if (OTPVerify.valid) {
-
+    const { valid } = await OTP.verify(number, otp)
+    
+    if (valid) {
+      
       const accesstoken = Jwt.sign({ number, name }, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: "30m" })
-      const refreshtoken = Jwt.sign({ number }, process.env.REFRESH_TOKEN_SECRET,{expiresIn: "24d"})
+      const refreshtoken = Jwt.sign({ number }, process.env.REFRESH_TOKEN_SECRET,{expiresIn: "30d"})
 
       db.get().collection("users").insertOne({ number, name, refreshtoken, contacts: [] })
         .then(resutl => {
-          res.cookie('refreshtoken', refreshtoken, { httpOnly: false, secure: true, maxAge: 24 * 60 * 60 * 1000 });
+          res.cookie('refreshtoken', refreshtoken, { httpOnly: false, secure: true, maxAge: 30 * 60 * 60 * 1000 });
           return res.json({ success: true, message: "otp verified successfully", accesstoken });
         })
         .catch(error => next(error))

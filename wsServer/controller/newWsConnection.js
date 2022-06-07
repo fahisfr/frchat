@@ -15,11 +15,7 @@ const newWsConnection = async (ws, clients) => {
                     user.contacts[conInd].online = true
                     client.send(JSON.stringify({
                         event: "onlineStatus",
-                        data: {
-                            status: true,
-                            number: user.number
-
-                        }
+                        data: { status: true, number: user.number }
                     }))
                     break;
                 }

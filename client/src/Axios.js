@@ -1,12 +1,12 @@
 import axios from 'axios';
 
-export const baseUrl = 'https://chat.frbots.com';
+export const baseUrl = 'http://192.168.20.7:3001/';
 
 
-export const profileUrlpath = baseUrl + '/profile/'
+export const profileUrlpath = baseUrl + 'profile/'
 
 const instance = axios.create({
-    baseURL: `${baseUrl}/api/`,
+    baseURL: `${baseUrl}api/`,
     headers: {
         'Content-Type': 'application/json',
     },
