@@ -80,7 +80,7 @@
     
 }
 
-@media(max-width:768px){
+@media(max-width:640px){
     .singup{
     width: 100vw;
     min-height: 100vh;    

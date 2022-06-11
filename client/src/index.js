@@ -15,7 +15,7 @@ const store = configureStore({
   devTools: process.env.NODE_ENV !== "production",
 });
 
-store.dispatch(fetchUser());
+localStorage.getItem("auth_token") && store.dispatch(fetchUser());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

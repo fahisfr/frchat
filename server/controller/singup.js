@@ -37,7 +37,7 @@ const verify = async (req, res, next) => {
 
       db.get().collection("users").insertOne({ number, name, refreshtoken, contacts: [] })
         .then(resutl => {
-          res.cookie('refreshtoken', refreshtoken, { httpOnly: false, secure: true, maxAge: 30 * 60 * 60 * 1000 });
+          res.cookie("auth_token", refreshtoken, { httpOnly: false, secure: true, maxAge: 30 * 60 * 60 * 1000 });
           return res.json({ success: true, message: "otp verified successfully", accesstoken });
         })
         .catch(error => next(error))

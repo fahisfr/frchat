@@ -113,7 +113,7 @@
      color: var(--ld_color);
 }
 .add_contact_body{
-    width: 100%;
+    width: 95%;
     margin-left: 0rem;
     display: flex;
     justify-content: center;

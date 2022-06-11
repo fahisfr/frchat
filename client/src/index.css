@@ -9,12 +9,9 @@
   --white:#fff;
 }
 
-
-
-body {
+* {
   margin: 0;
   padding: 0;
-  
 }
 
 ::-webkit-scrollbar {
@@ -45,14 +42,11 @@ h1{
   font-weight: 500;
   font-style: italic;
 }
-.button_loading .button_text {
+.button_loading .button_text ,.button_loading .small_button_text{
    visibility: hidden;
    opacity: 0;
 }
-.button_loading .small_button_text{
-  visibility: hidden;
-  opacity: 0;
-}
+
 
 .button_loading::after{
     content: "";

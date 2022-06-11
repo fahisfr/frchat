@@ -7,11 +7,11 @@ const Authentication = (req, res, next) => {
 
         const auccesstoken = req.headers.authorization?.split(" ")[1]
         if (!auccesstoken) return res.json({ isAuth: false });
-        
+
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
             if (err) return res.status(403).json({ success: false, message: "invalid token " });
             res.json({ isAuth: true });
-            
+
         });
 
     } catch (error) {
@@ -21,18 +21,22 @@ const Authentication = (req, res, next) => {
 
 const reAuthentication = async (req, res, next) => {
     try {
-        const cookie = req.cookies.refreshToken
-        if (!cookie) return next(apiErrors.unauthorized());
+        const cookie = req.cookies.auth_token
+        if (!cookie) return res.json({ success: false, message: "token not found" })
+
         jwt.verify(cookie, process.env.REFRESH_TOKEN_SECRET, async (err, result) => {
+
             if (!err) {
                 const user = await db.get().collection("users").findOne({ number: result.number });
                 if (!user) return next(apiErrors.Unauthorized());
                 const accessToken = jwt.sign(
-                    { number: result.number, name: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30m" }
+                    { number: result.number, name: user.name }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "30s" }
                 );
+
                 return res.json({success: true,accessToken, message: "", });
             }
-            next(apiErrors.Unauthorized());
+            
+            res.json({ success: false, message: "invalid token " });
         })
 
     } catch (error) {

@@ -9,15 +9,15 @@ import { profileUrlpath } from '../../Axios';
 import {
   addUserInfo, GetUserInfo,
   addContactMessage, changeContactStatus,
-  changeTypingStatus, selectContact, getSelectedContact,
+  changeTypingStatus, selectContact,
+  getSelectedContact
+
 }
   from "../../Features/User"
 import { FiAlignLeft, } from "react-icons/fi";
 import { BsArrowLeftShort } from "react-icons/bs";
 import { BiSearch } from "react-icons/bi";
 import { useSelector, useDispatch } from 'react-redux'
-
-
 
 
 
@@ -28,8 +28,8 @@ WebSocket.prototype.emit = function (event, data) {
 function Home() {
   const divRef = useRef(null);
   const dispatch = useDispatch()
-  const [server, setSever] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [ws, setWs] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [myMessage, setMyMessage] = useState('')
   const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
@@ -41,22 +41,21 @@ function Home() {
   const [ContactProfileTrigger, setContactProfileTrigger] = useState(false)
   const selectedContact = useSelector(getSelectedContact)
 
-
+ 
   const playMessagePopAudio = () => {
     const onwMessage = new Audio('./audios/onmessage.mp3')
     onwMessage.volume = 0.1
     onwMessage.play()
   }
   useEffect(() => {
-    const server = new WebSocket(`ws://localhost:3002/a?${localStorage.getItem('auth_token')}`)
-    server.onopen = () => {
-      setSever(server)
+    const ws = new WebSocket(`ws://live.frbots.com/a?${localStorage.getItem('auth_token')}`)
+    ws.onopen = () => {
+      setWs(ws)
       setLoading(false)
     }
 
-    
 
-    server.onmessage = (e) => {
+    ws.onmessage = (e) => {
       const { event, data } = JSON.parse(e.data)
 
       switch (event) {
@@ -78,19 +77,26 @@ function Home() {
           break;
       }
     }
-    return () => server.close()
-  }, [userInfo.isAuth, dispatch])
+    return () => ws.close()
+  }, [dispatch])
 
 
-  const conSearchFilter = () => {
-    return conSearch.length > 0 ?
-      contacts.filter(contact => contact.name?.toLowerCase().includes(conSearch.toLowerCase()))
-      : contacts
+  const filterContactList = () => {
+    let contactList = []
+    if (conSearch.length > 0) {
+      contactList = contacts.filter(contact => contact.name?.toLowerCase().includes(conSearch.toLowerCase()))
+    } else {
+      for (let contact of contacts) {
+        contact.online ? contactList.splice(0, 0, contact) : contactList.push(contact)
+      }
+    }
+    return contactList
   }
+
 
   const sendTypingStatus = (status) => {
 
-    server.emit('typing', {
+    ws.emit('typing', {
       from: userInfo.number,
       to: selectedContact.number,
       status
@@ -124,10 +130,10 @@ function Home() {
   }
 
   const SendMessgaeNow = e => {
-    playMessagePopAudio()
     e.preventDefault()
+    playMessagePopAudio()
     dispatch(addContactMessage(setMessageObj(selectedContact.number)))
-    server.emit('message', setMessageObj(userInfo.number, selectedContact.number))
+    ws.emit('message', setMessageObj(userInfo.number, selectedContact.number))
     setMyMessage('')
     setTypingStatus(false)
     divRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -172,7 +178,7 @@ function Home() {
 
         <div className="home_contacts">
           {
-            conSearchFilter().map((contact, index) => {
+            filterContactList().map((contact, index) => {
 
               return (
                 <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >

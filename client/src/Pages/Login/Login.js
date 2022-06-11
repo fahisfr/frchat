@@ -23,6 +23,7 @@ function Login() {
       
     }catch (error) {
       setError({ trigger: true, message: "oops somthing went wrong" })
+      alert(error.message)
       
     }finally {
       setLoading(false)

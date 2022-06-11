@@ -29,16 +29,16 @@
     color: rgb(255, 255, 255);
 }
 .otp_input_container{
-    margin-top: 0.5rem;
-    margin-left: 1.1rem;
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-evenly;
 }
 .otp_input{
-    width:13%;
+    width:3rem;
     height: 2.3rem;
     border-radius: .5rem;
     font-size: 1.2rem;;
     text-align: center;
-    margin-left: 8px;
     border: none;
 }
 .otp_input::-webkit-inner-spin-button{
@@ -76,7 +76,7 @@
 }
 
 
-@media(max-width:768px){
+@media(max-width:640px){
     .otp_body{
     width: 78%;
     height: 60%;
@@ -84,11 +84,12 @@
     background-color: rgb(72 91 181 / 55%);
     padding: 2rem;
 }
-
+.otp_form_np{
+    margin-top:0.5rem;
+}
 .otp_label{
     font-size: 14px;
     font-family: arial;
-  
     color: rgb(255, 255, 255);
 }
 .otp_button{
@@ -101,7 +102,7 @@
     margin-left: .0rem;
 }
 .otp_input{
-    width:13%;
+    width:2.5rem;
     height: 2.3rem;
     border-radius: .5rem;
     font-size: 1.2rem;;

@@ -31,7 +31,6 @@ export const userSlice = createSlice({
 
         },
 
-
         addUserInfo: (state, action) => {
             state.userInfo = action.payload.userInfo
             for (let message of action.payload.messages) {
@@ -119,7 +118,6 @@ export const userSlice = createSlice({
             state.isAuth = false
         }
         
-
     }, extraReducers: {
         [fetchUser.fulfilled]: (state, action) => {
             state.isAuth = action.payload.isAuth
@@ -143,7 +141,7 @@ export const {
     login, logout, addUserInfo, addContact,
     addContactMessage, changeContactStatus,
     changeTypingStatus, removeContact,
-    selectContact, changeContactName
+    selectContact, changeContactName,
 } = userSlice.actions;
 
 export default userSlice.reducer;

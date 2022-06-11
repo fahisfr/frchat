@@ -31,10 +31,10 @@ const newWsConnection = async (ws, clients) => {
         }))
 
         ws._user.contacts.map(contact => contact.messages = [])
-        return [false, ws]
+        return [null,ws]
 
     } catch (err) {
-        return [err, false]
+        return [err, null]
     }
 }
 
