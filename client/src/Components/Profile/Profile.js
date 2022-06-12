@@ -118,12 +118,7 @@ function Profile({ trigger, setTrigger }) {
                         </div>
                     </form>
                 </div>
-                <div className="profile_exit">
-                    <button
-                        className="profile_exit_button"
-                        onClick={() => setTrigger(false)}
-                    >X</button>
-                </div>
+               
             </div>
 
         </div>

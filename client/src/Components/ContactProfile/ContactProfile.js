@@ -1,5 +1,5 @@
 
-import React,{useState,useEffect} from "react"
+import React,{useState} from "react"
 import axios from "../../Axios"
 import { profileUrlpath } from '../../Axios'
 import { useSelector,useDispatch } from 'react-redux'
@@ -79,9 +79,7 @@ function Profile({ trigger, setTrigger }) {
                     </form>
                 </div>
 
-                <div className="profile_exit">
-                    <button className="profile_exit_button" onClick={() => setTrigger(false)}>X</button>
-                </div>
+               
 
             </div>
 

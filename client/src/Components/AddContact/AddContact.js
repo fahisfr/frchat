@@ -41,14 +41,7 @@ function AddContact({ trigger, setTrigger }) {
         >
             <div className="add_contact">
                 <div className="add_contact_header">
-                    <div className="add_contact_exit">
-                        <button
-                            className='add_contact_exit_button'
-                            onClick={() => setTrigger(false)}
-                        >X</button>
-                    </div>
                     <div className="add_contact_title">
-                        <span> </span>
                         <h1>Add Contact</h1>
                     </div>
                     <div className="add_contact_message">
@@ -65,8 +58,9 @@ function AddContact({ trigger, setTrigger }) {
                     <form className="add_contact_form">
                         <div className="add_contact_from_child">
                             <label className="add_contact_label">Name</label>
-                            <div className="add_contact_input">
+                            <div className="add_contact_input_container">
                                 <input
+                                    className="add_contact_input"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -76,8 +70,9 @@ function AddContact({ trigger, setTrigger }) {
                         </div>
                         <div className="add_contact_from_chiled">
                             <label className="add_contact_label">Number</label>
-                            <div className="add_contact_input">
+                            <div className="add_contact_input_container">
                                 <input
+                                    className="add_contact_input"
                                     type="number"
                                     value={number}
                                     onChange={(e) => setNumber(e.target.value)}
@@ -85,13 +80,17 @@ function AddContact({ trigger, setTrigger }) {
                                 />
                             </div>
                         </div>
-                        <button
-                            type="submit"
-                            onClick={(e) => AddContactNow(e)}
-                            className={`add_contact_button ${loading && "button_loading"}`}>
-                            <span className='button_text'>Add Contact</span>
-                   
-                        </button>
+                        <div
+                            className='add_contact_body_bottom'
+                        >
+                            <button
+                                type="submit"
+                                onClick={(e) => AddContactNow(e)}
+                                className={`add_contact_button ${loading && "button_loading"}`}>
+                                <span className='button_text'>Add Contact</span>
+                            </button>
+                        </div>
+                        
                     </form>
                 </div>
             </div>

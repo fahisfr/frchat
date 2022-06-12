@@ -1,6 +1,7 @@
 .home{
     width: 100vw;
     height: 100vh;
+    height: var(--vh, 100vh);
     display: flex;
     background-color: var(--ls-color);
     overflow: hidden;
@@ -173,6 +174,7 @@
     color: rgb(180, 157, 157);
     font-size: .9rem;
 }
+
 
 .add_contact_icon{
      --b:4px; 
@@ -639,13 +641,7 @@
   border-bottom:18px solid transparent;
 }
 
-.add_contact_icon{
-  z-index:0 ;
-  bottom:4rem;
-  right:1rem;
-}
-    
-    
+
 
 }
 

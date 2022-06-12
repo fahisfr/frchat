@@ -3,7 +3,7 @@ const http = require('http')
 const WebSocket = require('ws')
 const jwt = require("jsonwebtoken")
 const dbconn = require('./config/dbConn')
-const port = 3002
+const port = 4002
 const getUserInfo = require('./controller/GetUserInfo');
 const server = http.createServer(function (req, res) { })
 const newWsConn = require('./controller/newWsConnection');
@@ -48,7 +48,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
 
     try {
 
-        const auccesstoken = request.url.split('a?')[1]
+        const auccesstoken = request.url.split('a-')[1]
         if (!auccesstoken) return socket.end("token is missing")
 
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {

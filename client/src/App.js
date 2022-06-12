@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 
 
 function App() {
+
   const { isAuth } = useSelector(state => state.user)
   const token = localStorage.getItem("auth_token")
 
@@ -15,7 +16,7 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={token && isAuth ? <Home /> : <Navigate to="/login" />} />
+          <Route path="/" element={isAuth? <Home /> : <Navigate to="/login" />} />
           <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
           <Route path="/singup" element={token ? <Navigate to="/" /> : <Singup />} />
           <Route path="*" element={<Navigate to="/" />} />

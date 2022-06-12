@@ -7,6 +7,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import user from "./Features/User";
 import { fetchUser } from "./Features/User";
+import { isMobile } from "react-device-detect";
+
+
+if (isMobile) {
+  const vh = window.innerHeight
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
 
 const store = configureStore({
   reducer: {
@@ -14,6 +22,8 @@ const store = configureStore({
   },
   devTools: process.env.NODE_ENV !== "production",
 });
+
+
 
 localStorage.getItem("auth_token") && store.dispatch(fetchUser());
 

@@ -97,6 +97,7 @@ export const userSlice = createSlice({
         removeContact: (state, action) => {
             const conIndex = state.userInfo.contacts.findIndex(contact => contact.number === action.payload)
             state.userInfo.contacts.splice(conIndex, 1)
+            state.selectedContact = ''
 
 
         }, selectContact: (state, action) => {

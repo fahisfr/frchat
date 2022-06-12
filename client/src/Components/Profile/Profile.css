@@ -2,7 +2,7 @@
     position: fixed;
     z-index: 2;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,7 +11,7 @@
 }
 
 .profile{
-    width: 32rem;
+    width: 31.5rem;
     height: 15.3rem;
     background-color: var(--white);
     border-radius: 0.5rem;
@@ -20,6 +20,8 @@
      background-color: var(--white);
      animation-name: pop_up;
     animation-duration: 0.4s;
+    overflow: hidden;
+
     
 
 }
@@ -33,6 +35,7 @@
      background-color: var(--white);
      animation-name: pop_up;
     animation-duration: 0.4s;
+    overflow: hidden;
 }
 
 .profile_exit_button{
@@ -60,6 +63,7 @@
     box-shadow: var(--main_box-shadow);
     object-fit: cover;
     border:none;
+    ;
     
 }
 .user_photo_input{
@@ -136,15 +140,15 @@
     color: rgb(255, 0, 0);
     cursor: pointer;
 }
-@media (max-width: 638px){
+@media (max-width: 600px){
 
     .profile{
-    width: 100%;
+    width: 93%;
     height: 11.6rem;
 
 }
 .contactprofile{
-    width: 95%;
+    width: 90%;
     height: 10rem;
    
 }
@@ -178,12 +182,12 @@
 
 
 .profile_label{
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--ld_color);
 }
 
 .user_info_input{
-    width: 12.5rem;
+    width: 12.3rem;
     height: 1rem;
     border-top: none;
     border-left: none;
@@ -192,6 +196,7 @@
     border-bottom: 1px solid var(--ld_color);
     font-size: 0.9rem;
     padding: 0.1rem 0.5rem;
+    
 }
 .profile_save_button{
     float: right;
@@ -208,14 +213,16 @@
 
 
 .profile_logout_button{
+
     float: right;
     height: 2rem;
     width: 4rem;
     font-size: 0.8rem;
     font-size: 0.8rem;
     margin-top: 0rem;
-    font-weight: 500;
+    font-weight: 300;
     border-radius: 5px;
+     font-size: 0.7rem;
    
 }
 .profile_exit{

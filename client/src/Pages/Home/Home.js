@@ -26,10 +26,11 @@ WebSocket.prototype.emit = function (event, data) {
 }
 
 function Home() {
+
   const divRef = useRef(null);
   const dispatch = useDispatch()
   const [ws, setWs] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [myMessage, setMyMessage] = useState('')
   const [conSearch, setConSearch] = useState('')
   const { contacts, ...userInfo } = useSelector(GetUserInfo)
@@ -41,14 +42,14 @@ function Home() {
   const [ContactProfileTrigger, setContactProfileTrigger] = useState(false)
   const selectedContact = useSelector(getSelectedContact)
 
- 
+
   const playMessagePopAudio = () => {
     const onwMessage = new Audio('./audios/onmessage.mp3')
     onwMessage.volume = 0.1
     onwMessage.play()
   }
   useEffect(() => {
-    const ws = new WebSocket(`ws://live.frbots.com/a?${localStorage.getItem('auth_token')}`)
+    const ws = new WebSocket(`wss://live.frbots.com/a?${localStorage.getItem('auth_token')}`)
     ws.onopen = () => {
       setWs(ws)
       setLoading(false)
@@ -77,6 +78,11 @@ function Home() {
           break;
       }
     }
+    ws.onclose = () => {
+      setWs(null)
+      setLoading(true)
+    }
+
     return () => ws.close()
   }, [dispatch])
 
