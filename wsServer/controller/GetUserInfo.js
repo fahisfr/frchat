@@ -1,12 +1,12 @@
 
 const db = require("../config/dbConn")
 
-const getUserInfo = (user) => {
+const getUserInfo = (number) => {
   
     return new Promise((resolve, reject) => {
         db.get().collection("users").aggregate([
             {
-                $match: { number: parseInt(user.number) }
+                $match: { number: parseInt(number) }
             },
             { $unwind: "$contacts" },
 
@@ -42,7 +42,7 @@ const getUserInfo = (user) => {
                 }
             },
         ]).toArray()
-            .then(result => resolve(result))
+            .then(result => resolve(result[0]))
             .catch(err => reject(err))
      })
     

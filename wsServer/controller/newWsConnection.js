@@ -1,21 +1,27 @@
 const redisClient = require("../config/redis")
+const getUserInfo = require("./GetUserInfo")
 
 
 const newWsConnection = async (ws, clients) => {
-
     try {
-        const user = ws._user
-        const userMessages = await redisClient.lRange(`messages_${user.number}`, 0, -1)
+
+        const { number } = ws._user
+        clients = Array.from(clients)
+  
+        const oldMessages = await redisClient.lRange(`messages_${number}`, 0, -1)
+
+        const userInfo = await getUserInfo(number)
 
         for (let wsInd = 0; wsInd < clients.length; wsInd++) {
 
-            for (let conInd = 0; conInd < user.contacts.length; conInd++) {
+            for (contact of userInfo.contacts) {
                 const client = clients[wsInd]
-                if (client._user.number === user.contacts[conInd].number) {
-                    user.contacts[conInd].online = true
+
+                if (client._user.number === contact.number) {
+                    contact.online = true
                     client.send(JSON.stringify({
                         event: "onlineStatus",
-                        data: { status: true, number: user.number }
+                        data: { number, status: true }
                     }))
                     break;
                 }
@@ -24,14 +30,11 @@ const newWsConnection = async (ws, clients) => {
 
         ws.send(JSON.stringify({
             event: "userInfo",
-            data: {
-                userInfo: user,
-                messages: userMessages,
-            }
+            data: {userInfo, oldMessages}
         }))
 
-        ws._user.contacts.map(contact => contact.messages = [])
-        return [null,ws]
+        userInfo.contacts.map(contact => contact.messages = [])
+        return [null, userInfo]
 
     } catch (err) {
         return [err, null]

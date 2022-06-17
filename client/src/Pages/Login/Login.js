@@ -32,7 +32,7 @@ function Login() {
   return (
     <div className="login" style={{ backgroundImage: "url(./images/ls_bg.jpg)"}}  >
       <div className='login_header'>
-        <h1>Sign In WhyChat</h1>
+        <h1>Sign In FRchat</h1>
       </div>
       {
         otp.trigger ? <OTPVerify Info={otp} /> : <div className='login_body'>

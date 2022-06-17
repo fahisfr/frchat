@@ -49,16 +49,14 @@ function Home() {
     onwMessage.play()
   }
   useEffect(() => {
-    const ws = new WebSocket(`wss://live.frbots.com/a?${localStorage.getItem('auth_token')}`)
+    const ws = new WebSocket(`ws://localhost:4002/a?${localStorage.getItem('auth_token')}`)
     ws.onopen = () => {
       setWs(ws)
       setLoading(false)
     }
 
-
     ws.onmessage = (e) => {
       const { event, data } = JSON.parse(e.data)
-
       switch (event) {
         case "userInfo":
           dispatch(addUserInfo(data))
@@ -78,6 +76,7 @@ function Home() {
           break;
       }
     }
+
     ws.onclose = () => {
       setWs(null)
       setLoading(true)
@@ -156,14 +155,14 @@ function Home() {
       <ContactProfile trigger={ContactProfileTrigger} setTrigger={setContactProfileTrigger} />
 
       <div className="home_left">
-        <header className="home_left_header">
+        <div className="home_left_header">
           <FiAlignLeft
             size={37}
             id="home_left_header_icon"
             onClick={() => setProfileTrigger(true)}
           />
 
-        </header>
+        </div>
         <div className="home_search">
           <input
             className="home_search_bar"
@@ -238,7 +237,7 @@ function Home() {
       {
         selectedContact ?
           <div className="home_right">
-            <header className='home_right_header'>
+            <div className='home_right_header'>
               <div className="home_r-h_back">
                 <button
                   onClick={() => dispatch(selectContact(null))}
@@ -279,7 +278,7 @@ function Home() {
                   <div className="home_menu"></div>
                 </div>
               </div>
-            </header>
+            </div>
             <div className="home_chats" >
               <ContactMenu
                 trigger={ContactMenuTrigger}
@@ -324,7 +323,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <footer className="home_right_footer">
+            <div className="home_right_footer">
               <form onSubmit={SendMessgaeNow} className="home_message_form">
                 <div className="home_r-b_message">
                   <input
@@ -345,7 +344,7 @@ function Home() {
                   ></button>
                 </div>
               </form>
-            </footer>
+            </div>
           </div>
           :
           <div className="home_right_logo" >

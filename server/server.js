@@ -29,6 +29,10 @@ app.use("/api/login", require("./router/login"))
 app.use("/api/contact", isAuth, require("./router/contact"))
 app.use("/api/user", isAuth, require("./router/user"))
 
+app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/index.html"))
+})
+
 app.use(errorHandler)
 
 

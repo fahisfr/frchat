@@ -7,16 +7,16 @@ import Singup from './Pages/Singup/Singup';
 import { useSelector } from 'react-redux'
 
 
-function App() {
 
-  const { isAuth } = useSelector(state => state.user)
+function App() {
+  const isAuth = useSelector(state => state.user.isAuth)
   const token = localStorage.getItem("auth_token")
 
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={isAuth? <Home /> : <Navigate to="/login" />} />
+          <Route path="/" element={ token? <Home /> : <Navigate to="/login" />} />
           <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
           <Route path="/singup" element={token ? <Navigate to="/" /> : <Singup />} />
           <Route path="*" element={<Navigate to="/" />} />

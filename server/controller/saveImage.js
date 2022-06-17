@@ -12,7 +12,7 @@ const upload = multer.diskStorage({
             return cb(new Error('only jpg,png,jpeg file allowed'));
         }
         const { file:image, body: { name, number } } = req;
-        cb(null, `whychat_${req.user.number}_profile.${file.mimetype.split('/')[1]}`);
+        cb(null, `frchat_${req.user.number}_profile.${file.mimetype.split('/')[1]}`);
       
     }
 })

@@ -48,7 +48,6 @@ function Profile({ trigger, setTrigger }) {
     }
 
     const logoutNow = async (e) => {
-        console.log("logout now")
         e.preventDefault()
         try {
                 Axios.post('/user/logout').then(res => {

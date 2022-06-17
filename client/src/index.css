@@ -42,7 +42,7 @@ h1{
   font-weight: 500;
   font-style: italic;
 }
-.button_loading .button_text ,.button_loading .small_button_text{
+.button_loading .button_text{
    visibility: hidden;
    opacity: 0;
 }
@@ -64,7 +64,10 @@ h1{
     animation: button_loading_spin 1s ease infinite;
 }
 
-
+.button_loading .small_button_text{
+  visibility: hidden;
+  opacity: 0;
+}
 @keyframes button_loading_spin{
     0%{
         transform: rotate(0turn);

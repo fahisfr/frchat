@@ -158,14 +158,11 @@
    text-align: center;
 }
 .profile_err_message{
-
     font-size: 0.78rem;
 }
-
 .user_profile_photo{
-    width: 30%;
-
-   
+    width: 50%;
+    overflow: hidden;
 }
 .user_photo{
     width: 6.4rem;
@@ -177,9 +174,6 @@
     width: 100%;
     padding: 0rem 3px ;
 }
-
-
-
 
 .profile_label{
     font-size: 0.8rem;
