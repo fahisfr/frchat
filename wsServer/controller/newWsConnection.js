@@ -8,7 +8,7 @@ const newWsConnection = async (ws, clients) => {
         const { number } = ws._user
         clients = Array.from(clients)
   
-        const oldMessages = await redisClient.lRange(`messages_${number}`, 0, -1)
+        const oldMessages = await redisClient.lRange(`${number}_messages`, 0, -1)
 
         const userInfo = await getUserInfo(number)
 
@@ -27,16 +27,19 @@ const newWsConnection = async (ws, clients) => {
                 }
             }
         }
-
+        console.log("yes")
+       
         ws.send(JSON.stringify({
             event: "userInfo",
             data: {userInfo, oldMessages}
         }))
 
-        userInfo.contacts.map(contact => contact.messages = [])
+
+        userInfo.contacts?.map(contact => contact.messages = [])
         return [null, userInfo]
 
     } catch (err) {
+        console.log(err)
         return [err, null]
     }
 }

@@ -55,7 +55,7 @@ function Login() {
             <div className="login_from_np">
               <Link className="login_from_link" to='/singup'>Create New Account ?</Link>
             </div>
-            <button type="submit" className={`login_button ${loading && "login_button  button_loading"}`}>
+            <button type="submit" className={`login_button ${loading && " button_loading"}`}>
               <span className="button_text">Login</span>
             </button>
           </form>

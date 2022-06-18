@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseUrl = 'https://chat.frbots.com/';
+export const baseUrl = "http://localhost:4001/"
 
 
 export const profileUrlpath = baseUrl + 'profile/'

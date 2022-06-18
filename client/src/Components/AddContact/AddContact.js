@@ -20,17 +20,19 @@ function AddContact({ trigger, setTrigger }) {
         setLoading(true)
         try {
 
-            const response = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
-            if (response.data.success) {
-                dispatch(addContact(response.data.contact))
+            const { data: { success, message, contact } } = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
+            console.log(success, message, contact)
+            if (success) {
+                dispatch(addContact(contact))
                 setTrigger(false)
                 return
             }
 
-            setErr({ status: true, message: response.data.message })
+            setErr({ status: true, message })
 
         } catch (error) {
-          setErr({ status: true, message:error.message })
+            console.log(error)
+          setErr({ status: true, message:"oops something went wrong" })
         }finally{
             setLoading(false)
         }

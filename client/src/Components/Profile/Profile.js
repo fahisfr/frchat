@@ -52,7 +52,7 @@ function Profile({ trigger, setTrigger }) {
         try {
                 Axios.post('/user/logout').then(res => {
                     dispatch(logout())
-                    localStorage.removeItem('accessToken')
+                    localStorage.removeItem('auth_token')
             })
         } catch (err) {
             setErr({ status: true, message: err.message })

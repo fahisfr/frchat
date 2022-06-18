@@ -27,9 +27,9 @@ const closeWs = async (ws, clients) => {
             }
         }
 
-        const newMessages = await redisClient.lRange(`messages_${number}`, -1, 0)
-        const conNumbers = ws._user.contacts.map(contact => contact.number)
-
+        const newMessages = await redisClient.lRange(`${number}_messages`, 0, -1)
+        const conNumbers = ws._user.contacts?.map(contact => contact.number)
+   
         if (newMessages.length > 0) {
             
             for (const mes of newMessages) {
@@ -53,7 +53,6 @@ const closeWs = async (ws, clients) => {
             }
 
             //save newmessages to db
-
           db.get().collection('users').updateOne({
                 number: ws._user.number
             },
@@ -118,7 +117,9 @@ const closeWs = async (ws, clients) => {
                                             input: ws._user.contacts,
                                             as: "ns_con",
                                             cond: {
-                                                $eq: ["$$ns_con.notSaved",true]
+                                                $not: {
+                                                    $in: ["$$ns_con.number", conNumbers]
+                                               }
                                             }
                                         }
                                             
@@ -129,7 +130,7 @@ const closeWs = async (ws, clients) => {
                     }
                 ]
 
-          ).then(() => redisClient.del(`messages_${number}`))
+          ).then(() => redisClient.del(`${number}_messages`))
         }
     } catch (err) {
         console.log(err.message)

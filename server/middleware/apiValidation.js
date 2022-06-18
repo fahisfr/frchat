@@ -17,6 +17,7 @@ const otpVerify = joi.object({
 
 const removeContact = joi.object({
     number: joi.number().required(),
+    saved: joi.boolean().required(),
 })
 
 const addContact = joi.object({

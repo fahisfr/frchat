@@ -64,7 +64,9 @@ server.on('upgrade', function upgrade(request, socket, head) {
         if (!auccesstoken) return socket.end("token is missing")
 
         jwt.verify(auccesstoken, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+        
             if (err) return socket.end('Unauthorized')
+
 
             wss.handleUpgrade(request, socket, head, function done(ws) {
                 ws._user = decoded

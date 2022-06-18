@@ -10,6 +10,7 @@
 }
 .contact_menu_options{
     height: auto;
+    position: relative;
     padding: 0.5rem;
     border-bottom: 1px solid var(--ld_border);
     border-top: 0.1px solid rgba(113, 114, 106, 0.973);;
@@ -28,6 +29,28 @@
 .contact_menu_option{
     color: rgba(114, 106, 106, 0.973);
 }
+
+.menu_options_loading::after{
+     content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    width: 16px;
+    height: 16px;
+    border:4px solid transparent;
+      border-top-color:rgba(252, 0, 0, 0.705);
+    border-radius: 50%;
+    animation: button_loading_spin 1s ease infinite;
+}
+.menu_options_loading .contact_menu_option-r{
+    visibility: hidden;
+    opacity: 0;
+
+}
+
 
 @keyframes conmenu_popup{
     0%{

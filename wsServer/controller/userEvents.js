@@ -12,8 +12,8 @@ const sendMessage = ({ to, from, message }, clients) => {
             }))
         }
 
-        redisClient.rPush(`messages_${from}`, JSON.stringify({ from: to, message: { ...message, from: "me" } }))
-        redisClient.rPush(`messages_${to}`, JSON.stringify({ from, message }))
+        redisClient.rPush(`${from}_messages`, JSON.stringify({ from: to, message: { ...message, from: "me" } }))
+        redisClient.rPush(`${to}_messages`, JSON.stringify({ from, message }))
 
     } catch (err) {
         console.log(err)

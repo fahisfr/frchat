@@ -86,12 +86,14 @@
 }
 
 .add_contact_button{
+
     width: 11rem;
     height: 2.5rem;
     border:none;
     color: var(--white);
     background-color: var(--defult_blue);
     cursor: pointer;
+    position: absolute;
     
 }
 

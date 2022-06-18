@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './ContactMenu.css'
 import { getSelectedContact, removeContact } from "../../Features/User"
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,19 +8,20 @@ function ContactMenu({ trigger, setAddContactTrigger, setContactProfileTrigger }
 
     const dispatch = useDispatch()
     const contact = useSelector(getSelectedContact)
+    const [loading, setLoading] = useState(false)
     const removeContactNow = async (e) => {
-        const { notSaved, number } = contact
+
         try {
+            setLoading(true)
+            const { notSaved, number } = contact
 
-            if (notSaved) {
-                dispatch(removeContact(contact))
-                return;
-            }
-            const respose = await Axios.put('/contact/remove-contact', { number })
+            const respose = await Axios.put('/contact/remove-contact', { number, saved: notSaved ? false : true })
             respose && dispatch(removeContact(number))
-            
-        } catch (err) {
 
+        } catch (err) {
+            alert("oops something went wrong")
+        } finally {
+            setLoading(false)
         }
 
 
@@ -28,7 +29,7 @@ function ContactMenu({ trigger, setAddContactTrigger, setContactProfileTrigger }
     return trigger ? (
         <div className="contact_menu">
             {
-                contact.notSaved ?
+                contact.notSaved || !contact.name ?
                     <div
                         className="contact_menu_options"
                         onClick={() => setAddContactTrigger({ status: true, number: contact.number })}
@@ -43,7 +44,7 @@ function ContactMenu({ trigger, setAddContactTrigger, setContactProfileTrigger }
                     </div>
             }
             <div
-                className="contact_menu_options"
+                className= {`contact_menu_options ${loading && "menu_options_loading"}`}
                 onClick={removeContactNow}
             >
                 <span className="contact_menu_option-r">Remove Contact</span>

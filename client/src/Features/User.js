@@ -82,8 +82,8 @@ export const userSlice = createSlice({
         },
         addContact: (state, action) => {
             const connExistInd = state.userInfo.contacts.findIndex(contact => contact.number === action.payload.number)
-
-            connExistInd ?
+            console.log(connExistInd)
+            connExistInd >-1 ?
                 state.userInfo.contacts[connExistInd] = { ...action.payload, messages: state.userInfo.contacts[connExistInd].messages }
                 : state.userInfo.contacts.push({ ...action.payload, messages: [] })
 
