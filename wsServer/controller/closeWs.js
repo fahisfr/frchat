@@ -1,13 +1,15 @@
 const db = require("../config/dbConn")
 const redisClient = require("../config/redis")
 
+
 const closeWs = async (ws, clients) => {
 
     try {
 
         clients = Array.from(clients)
         const { number, contacts } = ws._user
-
+        
+        //send offline status to all user contacts
         for (let wsInd = 0; wsInd < clients.length; wsInd++) {
             const client = clients[wsInd]
 
@@ -26,17 +28,16 @@ const closeWs = async (ws, clients) => {
 
             }
         }
-
+       
         const newMessages = await redisClient.lRange(`${number}_messages`, 0, -1)
-        const conNumbers = ws._user.contacts?.map(contact => contact.number)
-   
+       
         if (newMessages.length > 0) {
-            
+
             for (const mes of newMessages) {
                 let conIn = false
                 const { message, from } = JSON.parse(mes)
 
-                for (const { number, messages } of ws._user.contacts) {
+                for (const { number, messages } of contacts) {
 
                     if (number === from) {
                         messages.push(message)
@@ -45,92 +46,107 @@ const closeWs = async (ws, clients) => {
                     }
                 }
 
-                !conIn && ws._user.contacts.push({
+                !conIn && contacts.push({
                     number: from,
-                    notSaved: true,
                     messages: [message]
                 })
             }
 
-            //save newmessages to db
-          db.get().collection('users').updateOne({
-                number: ws._user.number
+         //save newmessages to db
+          db.get().collection('users').updateOne(
+            {
+                number
             },
                 [
                     {
                         $set: {
                             contacts: {
-                                $concatArrays: [
-                                    {
-                                        $map: {
-                                            input: "$contacts",
-                                            as: "contact",
-                                            in: {
-                                                $cond: [
-                                                    { $in: ["$$contact.number", conNumbers] },
-                                                    {
-                                                        $mergeObjects: [
-                                                            "$$contact", {
-                                                                messages:
-                                                                {
-                                                                    $let: {
-                                                                        vars: {
-                                                                            filltercon: {
-                                                                                $filter: {
-                                                                                    input: ws._user.contacts,
-                                                                                    as: "con",
-                                                                                    cond: { $eq: ["$$con.number", "$$contact.number"] }
-
-                                                                                }
-
-                                                                            },
-
-                                                                        },
-                                                                        in: {
-                                                                            $concatArrays: [
-                                                                                {
-                                                                                    $arrayElemAt: [
-                                                                                        "$$filltercon.messages", 0
-                                                                                    ]
-                                                                                },
-                                                                                "$$contact.messages"
-                                                                            ]
-                                                                        }
-
-                                                                    }
-                                                                }
-
-
-                                                            }
-                                                        ]
-                                                    },
-                                                    "$$contact"
-
-                                                ]
+                                $let:{
+                                    vars:{
+                                        consNumberArray:{
+                                            $map:{
+                                                input:"$contacts",
+                                                as:"con1",
+                                                in:"$$con1.number"
                                             }
-
                                         }
                                     },
-                                    {
-
-                                        $filter: {
-                                            input: ws._user.contacts,
-                                            as: "ns_con",
-                                            cond: {
-                                                $not: {
-                                                    $in: ["$$ns_con.number", conNumbers]
-                                               }
+                                    in:{
+                                        $concatArrays: [
+                                            {
+                                                $map: {
+                                                    input: "$contacts",
+                                                    as: "contact",
+                                                    in: {
+                                                        $cond: [
+                                                            { $in: ["$$contact.number", "$$consNumberArray"] },
+                                                            {
+                                                                $mergeObjects: [
+                                                                    "$$contact", {
+                                                                        messages:
+                                                                        {
+                                                                            $let: {
+                                                                                vars: {
+                                                                                    filltercon: {
+                                                                                        $filter: {
+                                                                                            input: contacts,
+                                                                                            as: "con",
+                                                                                            cond: { $eq: ["$$con.number", "$$contact.number"] }
+        
+                                                                                        }
+        
+                                                                                    },
+        
+                                                                                },
+                                                                                in: {
+                                                                                    $concatArrays: [ 
+                                                                                        "$$contact.messages",
+                                                                                        {
+                                                                                            $arrayElemAt: [
+                                                                                                "$$filltercon.messages", 0
+                                                                                            ]
+                                                                                        }
+        
+                                                                                    ]
+                                                                                }
+        
+                                                                            }
+                                                                        }
+        
+        
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "$$contact"
+        
+                                                        ]
+                                                 
+                                                }
                                             }
-                                        }
                                             
+                                        },
+                                        {
+                                            $filter: {
+                                                input:contacts,
+                                                as: "ns_con",
+                                                cond: {
+                                                    $not: {
+                                                        $in: ["$$ns_con.number", "$$consNumberArray"]
+                                                   }
+                                                }
+                                            }
+                                                
+                                        }
+                                                     
+                                       ]
                                     }
-                               ]
+                                }
                             }
                         }
                     }
                 ]
 
-          ).then(() => redisClient.del(`${number}_messages`))
+          ).then(() => redisClient.del(`${number}_messages`)).catch(err => console.log(err))
         }
     } catch (err) {
         console.log(err.message)

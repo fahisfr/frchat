@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import './AddContact.css'
 import Axios from "../../Axios"
 import { useDispatch  } from "react-redux"
@@ -21,10 +21,11 @@ function AddContact({ trigger, setTrigger }) {
         try {
 
             const { data: { success, message, contact } } = await Axios.post("/contact/add-contact", { number: parseInt(number), name })
-            console.log(success, message, contact)
             if (success) {
                 dispatch(addContact(contact))
                 setTrigger(false)
+                setName("")
+                setNumber("")
                 return
             }
 

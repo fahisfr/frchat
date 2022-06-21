@@ -27,8 +27,7 @@ const newWsConnection = async (ws, clients) => {
                 }
             }
         }
-        console.log("yes")
-       
+
         ws.send(JSON.stringify({
             event: "userInfo",
             data: {userInfo, oldMessages}

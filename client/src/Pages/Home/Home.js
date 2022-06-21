@@ -183,10 +183,12 @@ function Home() {
 
         <div className="home_contacts">
           {
-            filterContactList().map((contact, index) => {
-
+            contacts.length>0 ?filterContactList().map((contact, index) => {
               return (
-                <div className="contact " key={index} onClick={() => dispatch(selectContact(contact.number))} >
+                <div className="contact " key={index} onClick={() => {
+                  setMyMessage('')
+                  dispatch(selectContact(contact.number))}}
+                >
                   <div className='contact_info_img'>
                     <img className="contact_image" src={`${profileUrlpath}${contact.photo ?? "default.jpg"}`} alt="" />
                   </div>
@@ -212,7 +214,8 @@ function Home() {
                             </span> :
                             <span className="contact_message" >
                               {contact.messages?.length > 0 ? contact.messages[contact.messages.length - 1].message : "no messages"}
-                            </span>
+                            </span> 
+                            
                         }
                       </div>
                       <div className="contact_online_status">
@@ -226,14 +229,18 @@ function Home() {
                   </div>
                 </div>
               )
+              
             })
+            :<div id="contact_list_emty">
+              <h2 id="no_contacts">No Contacts :(</h2>
+            </div>
           }
           <div className="add_contact_icon" onClick={() => setAddContactTrigger(true)} >
 
           </div>
         </div>
       </div>
-
+      
       {
         selectedContact ?
           <div className="home_right">

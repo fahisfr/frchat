@@ -1,5 +1,5 @@
 
-const redisClient = require("../../wsServer/config/redis");
+const redisClient = require('../config/redis')
 const db = require("../config/dbConn");
 
 const addContact = async (req, res, next) => {
@@ -74,9 +74,8 @@ const removeContact = async (req, res, next) => {
         const { body: { number: conNumber, saved }, user: { number } } = req
 
         const removeConMessages = async (messages) => {
-
             //remove contacat messages from redis (crash)
-            const filterMessages = messages.filter(message => message.number !== conNumber)
+            const filterMessages = messages.filter(message => JSON.parse(message).from !== conNumber)
             await redisClient.del(`${number}_messages`)
             filterMessages.length > 0 && redisClient.rPush(`${number}_messages`, ...filterMessages)
 
@@ -96,7 +95,7 @@ const removeContact = async (req, res, next) => {
             ])
 
             if (removeCon[0].modifiedCount === 0) return res.json({ success: false, message: "contact not found" })
-            removeCon[1].length > 0 && removeConMessages(removeCon[1])
+            removeCon[1].length > 0 &&  removeConMessages(removeCon[1])
 
         } else {
 

@@ -8,7 +8,12 @@ const getUserInfo = (number) => {
             {
                 $match: { number: parseInt(number) }
             },
-            { $unwind: "$contacts" },
+            { 
+                $unwind: {
+                    path: "$contacts",
+                    preserveNullAndEmptyArrays: true
+                } 
+            },
 
             {
                 $lookup: {
