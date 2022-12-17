@@ -1,0 +1,53 @@
+.profile {
+  min-width: 20rem;
+  border-right: 1px solid var(--border-primary);
+}
+.pf_top {
+  display: flex;
+  height: 64px;
+  padding-left: 10px;
+  align-items: center;
+  column-gap: 10px;
+  border-bottom: 1px solid var(--gray_100);
+}
+.pf_title {
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+.pf_body {
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+}
+.pf_info {
+  text-align: center;
+}
+.pf_number {
+  padding: 10px;
+  font-size: 19px;
+}
+.pf_profile {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  position: relative;
+}
+
+
+.pf_edit {
+  padding: 1rem;
+}
+.pf_label {
+  font-size: 15px;
+}
+.pf_name_input {
+  width: 100%;
+  margin-top: 5px;
+  height: 2.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+  padding-left: 10px;
+  font-size: 15px;
+  outline: none;
+}

@@ -1,17 +1,19 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { faker } from "@faker-js/faker";
-
 import SideBar from "../components/sideBar/SideBar";
-import Contact from "../components/contacts/Contacts";
+import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
+import Profile from "../components/profile/Profile";
+import ContactProfile from "../components/profile/ContactProfile";
 function Index() {
   return (
     <div className={styles.container}>
       <SideBar />
-      <Contact />
+      <Contacts />
+      {/* <Profile /> */}
       <Chats />
+      {/* <ContactProfile /> */}
     </div>
   );
 }

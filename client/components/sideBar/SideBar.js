@@ -4,16 +4,20 @@ import { faker } from "@faker-js/faker";
 import { FiSettings } from "react-icons/fi";
 import { AiOutlineHome } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
+import Image from "next/image";
 
 function SideBar() {
   return (
     <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.profile}>
-          <img className={styles.profile_img} src={faker.image.avatar()} />
-        </div>
+      <div className={styles.wb_logo}>
+        <Image
+          fill
+          alt=""
+          className="rounded-full"
+          src="/frlogo.png"
+        />
       </div>
-      <div className={styles.center}>
+      <div className={styles.options}>
         <div className={styles.group}>
           <AiOutlineHome className={styles.icons} />
         </div>
@@ -23,6 +27,14 @@ function SideBar() {
         <div className={styles.group}>
           <FiSettings className={styles.icons} />
         </div>
+      </div>{" "}
+      <div className={styles.profile}>
+        <Image
+          fill
+          alt=""
+          className="rounded-full"
+          src={faker.image.avatar()}
+        />
       </div>
     </div>
   );

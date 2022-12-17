@@ -6,17 +6,21 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 :root {
+  --gray_50: #f9fafa;
+  --gray_100: #f3f4f6;
+  --gray_200: #e5e7eb;
+  --gray_300: #d1d5db;
+  --gray_400: #9ca3af;
+  --gray_500: #6b7280;
+  --gray_600: #4b5563;
+  --gray_700: #374151;
 
-  --primary-color: #ffffff;
   --secondary-color: rgb(255, 255, 255);
   --color-blue: #007aed;
-  --bg-primary: #ffffff;
-  --bg-secondary: #ffffff;
   --text-primary: #000000;
   --text-secondary: #007aed;
   --border-primary: #e5e7eb;
   --border-secondary: #f3f4f6;
-  --just-loading: just-loading;
   --box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
     rgba(27, 31, 35, 0.055) 0px 0px 0px 1px;
 }
@@ -27,4 +31,7 @@ a {
 
 * {
   box-sizing: border-box;
+}
+.rounded-full {
+  border-radius: 50%;
 }
