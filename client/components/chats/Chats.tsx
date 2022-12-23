@@ -2,7 +2,7 @@ import styles from "./css.module.css";
 import React from "react";
 import { faker } from "@faker-js/faker";
 import { FiArrowLeft } from "react-icons/fi";
-import SendMessage from "../SendMessage/SendMessage";
+import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
 function Chats() {
   return (
@@ -20,7 +20,7 @@ function Chats() {
           />
         </div>
         <div className={styles.chat_contact_info}>
-          <spna>{faker.internet.userName()}</spna>
+          <span>{faker.internet.userName()}</span>
         </div>
       </div>
 

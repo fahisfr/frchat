@@ -14,9 +14,10 @@ const createTokens = (info) => {
 const login = async (req, res, next) => {
   try {
     const { number } = req.body;
-    const { accessToken, refreshToken } = createTokens({ number });
+
     const user = await dbUser.findOne({ number });
     if (user) {
+      const { accessToken, refreshToken } = createTokens({ id: user._id });
       res.cookie("auth_token", refreshToken, { maxAge: 900000 });
       res.json({ status: "ok", token: accessToken });
       user.refreshToken = refreshToken;
@@ -25,13 +26,17 @@ const login = async (req, res, next) => {
     }
     const createUser = await dbUser.create({
       number,
-      refreshToken: refreshToken,
     });
     if (createUser) {
+      const { accessToken, refreshToken } = createTokens({
+        id: createUser._id,
+      });
       res.json({ status: "ok", token: accessToken });
+      createUser.refreshToken = refreshToken;
+      createUser.save();
+      return;
     }
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

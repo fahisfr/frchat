@@ -8,31 +8,29 @@ import Profile from "../components/profile/Profile";
 import ContactProfile from "../components/profile/ContactProfile";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
-import { convertToObject } from "typescript";
 
 function Index() {
   const [socket, setScket] = useState({});
-
+  const [userInfo, setUserInfo] = useState();
   useEffect(() => {
-    const ioSocket = io(`http://localhost:4000`, {
+    const newScoket = io(`http://localhost:4000`, {
       auth: {
         token: localStorage.getItem("auth_token"),
       },
     });
-    
-    ioSocket.on("open", () => {
-alert("yes is work")
-      setScket(ioSocket);
 
+    newScoket.on("on-connect", (user) => {
+      setUserInfo(user);
     });
 
-    ioSocket.on("connect_error", (err) => {
-      console.log(err.message); // prints the message associated with the error
+    newScoket.on("connect_error", (err) => {
+      alert("faild to connect")
     });
   }, []);
   return (
     <div className={styles.container}>
-      <SideBar />
+      {/* <AddContact /> */}
+      <SideBar  />
       <Contacts />
       {/* <Profile /> */}
       <Chats />

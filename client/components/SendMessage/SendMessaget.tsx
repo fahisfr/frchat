@@ -1,11 +1,10 @@
 import React, { useState, useRef } from "react";
 import styles from "./css.module.css";
 import dynamic from "next/dynamic";
-
-import { faker } from "@faker-js/faker";
 import { AiOutlineFileImage } from "react-icons/ai";
 import { BsEmojiSmile } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
+import { EmojiClickData } from "emoji-picker-react";
 
 const Picker = dynamic(
   () => {
@@ -19,29 +18,28 @@ function SendMessage() {
 
   const [file, setFile] = useState(null);
 
-  const messageInputRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onEmojiClick = (event, emojiObject) => {
-    console.log(emojiObject.emoji)
+  const onEmojiClick = (emojiObject: any) => {
+    console.log(emojiObject)
     setMessage(`${message}${emojiObject}`);
   };
 
-  const messageInputOnChange = (e) => {
+  const messageInputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
-    messageInputRef.current.style.height = "auto";
-    messageInputRef.current.style.height = `${e.target.scrollHeight}px`;
+    if (messageInputRef.current != null) {
+      messageInputRef.current.style.height = "auto";
+      messageInputRef.current.style.height = `${e.target.scrollHeight}px`;
+    }
   };
   return (
     <div className={styles.send_message}>
-      
       <div className={styles.input_wrappe}>
         <textarea
-          rows="1"
           ref={messageInputRef}
           value={message}
           onChange={messageInputOnChange}
-          type="text"
           placeholder="Send message"
           className={styles.message_input}
         />

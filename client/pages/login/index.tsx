@@ -1,5 +1,5 @@
 import axios from "../../axios";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";
 function index() {
@@ -9,9 +9,13 @@ function index() {
   const [counteryCode, setCounteryCode] = useState();
   const [otp, sentOtp] = useState(new Array(4).fill(""));
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data } = await axios.post("/auth/login", { number, counteryCode, otp });
+    const { data } = await axios.post("/auth/login", {
+      number,
+      counteryCode,
+      otp,
+    });
     if (data.status === "ok") {
       localStorage.setItem("auth_token", data.token);
       router.replace("/");
@@ -43,13 +47,13 @@ function index() {
               maxLength={10}
               id="number"
             />
-          </div>  <div className={styles.lg_bottom}>
-          <button type="submit" className={styles.lg_next_btn}>
-            Next
-          </button>
-        </div>
+          </div>{" "}
+          <div className={styles.lg_bottom}>
+            <button type="submit" className={styles.lg_next_btn}>
+              Next
+            </button>
+          </div>
         </form>
-      
       </div>
     </div>
   );
