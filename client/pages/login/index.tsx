@@ -1,4 +1,4 @@
-import axios from "../../axios";
+import axios from "../../helper/axios";
 import React, { FormEvent, useState } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";

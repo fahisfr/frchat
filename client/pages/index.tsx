@@ -1,3 +1,4 @@
+import { use, useContext } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
@@ -8,10 +9,11 @@ import Profile from "../components/profile/Profile";
 import ContactProfile from "../components/profile/ContactProfile";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
+import { userState } from "../helper/context";
 
 function Index() {
-  const [socket, setScket] = useState({});
-  const [userInfo, setUserInfo] = useState();
+  const { setSocket, user, setUser } = userState();
+  console.log(user);
   useEffect(() => {
     const newScoket = io(`http://localhost:4000`, {
       auth: {
@@ -19,21 +21,26 @@ function Index() {
       },
     });
 
-    newScoket.on("on-connect", (user) => {
-      setUserInfo(user);
+    newScoket.on("on-connect", (info) => {
+      setSocket(newScoket);
+      setUser({ ...info.userInfo, isAuth: true });
     });
 
-    newScoket.on("connect_error", (err) => {
-      alert("faild to connect")
-    });
+    newScoket.on("connect_error", (err) => {});
   }, []);
+
+  if (!user.isAuth) {
+    return <div className="loading"></div>;
+  }
+
   return (
     <div className={styles.container}>
       {/* <AddContact /> */}
-      <SideBar  />
+      <SideBar />
       <Contacts />
       {/* <Profile /> */}
-      <Chats />
+      {/* <Chats
+      /> */}
       {/* <ContactProfile /> */}
     </div>
   );

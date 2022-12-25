@@ -3,7 +3,11 @@ import styles from "./css.module.css";
 import { AiOutlineSearch } from "react-icons/ai";
 import { faker } from "@faker-js/faker";
 import Image from "next/image";
-function Contact() {
+import { profileUrl } from "../../helper/axios";
+import { userState } from "../../helper/context";
+
+function Contacts() {
+  const { user, setSelectedContact } = userState();
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -20,23 +24,27 @@ function Contact() {
         </div>
       </div>
       <div className={styles.bottom}>
-        {new Array(10).fill(0).map((item, index) => {
+        {user.contacts.map((contact, index) => {
           return (
-            <div className={styles.contact}>
+            <div
+              className={styles.contact}
+              key={index}
+              onClick={() => setSelectedContact(contact.number)}
+            >
               <div>
                 <div className={styles.contact_profile}>
                   <Image
                     fill
                     alt=""
                     className="rounded-full"
-                    src={faker.image.avatar()}
+                    src={`${profileUrl}/${contact.profile}`}
                   />
                 </div>
               </div>
               <div className={styles.contact_info}>
                 <div className={styles.contact_info_top}>
                   <div>
-                    <span>{faker.internet.userName()}</span>
+                    <span>{contact.name}</span>
                   </div>
                   <div>
                     <span className={styles.contact_message_date}>
@@ -60,4 +68,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default Contacts;

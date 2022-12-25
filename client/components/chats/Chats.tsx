@@ -25,7 +25,7 @@ function Chats() {
       </div>
 
       <div className={styles.messages}>
-        <div className={`${styles.own_message}`}>
+        {/* <div className={`${styles.own_message}`}>
           <div className={styles.message_wrapper}>
             <div className={styles.message_details}>
               <div>
@@ -38,8 +38,8 @@ function Chats() {
               </span>
             </div>
           </div>
-        </div>
-
+        </div> */}
+        {/* 
         <div>
           <div className={styles.message_wrapper}>
             <div className={styles.message_details}>
@@ -63,10 +63,10 @@ function Chats() {
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <SendMessage />
+      <SendMessage  />
     </div>
   );
 }

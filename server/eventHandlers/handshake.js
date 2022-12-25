@@ -13,7 +13,7 @@ module.exports = (socket, next) => {
         next(new Error("user not found"));
       }
       
-      socket.userInfo = userInfo;
+      socket.user = userInfo;
       next();
     });
   } else {

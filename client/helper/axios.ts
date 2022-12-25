@@ -1,9 +1,11 @@
 import axios from "axios";
 
-export const baseURL = "http://localhost:4000/api/";
+export const baseURL = "http://localhost:4000";
+
+export const profileUrl = `${baseURL}/profiles/`;
 
 const instance = axios.create({
-  baseURL,
+  baseURL: `${baseURL}/api`,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -11,7 +13,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  (config) => {
+  (config: any) => {
     const accessToken = localStorage.getItem("auth_token");
     if (accessToken) {
       config.headers["x-access-token"] = `${accessToken}`;

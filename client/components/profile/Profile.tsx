@@ -3,7 +3,9 @@ import styles from "./css.module.css";
 import { FiArrowLeft } from "react-icons/fi";
 import { faker } from "@faker-js/faker";
 import Image from "next/image";
+
 function Profile() {
+
   return (
     <div className={styles.profile}>
       <div className={styles.pf_top}>

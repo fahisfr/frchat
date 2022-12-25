@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import styles from "./css.module.css";
-import { faker } from "@faker-js/faker";
 import { FiSettings } from "react-icons/fi";
 import { AiOutlineHome, AiOutlineUserAdd } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import Image from "next/image";
 import AddContact from "../addContact/AddContact";
+import { profileUrl } from "../../helper/axios";
+import { userState } from "../../helper/context";
 
 function SideBar() {
+  const { user, setUser } = userState();
   const [addContact, setAddContact] = useState(false);
   return (
     <div className={styles.container}>
-      {addContact && <AddContact setTrigger={setAddContact} />}
+      {addContact && <AddContact />}
       <div className={styles.wb_logo}>
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
       </div>
@@ -37,7 +39,7 @@ function SideBar() {
           fill
           alt=""
           className="rounded-full"
-          src={faker.image.avatar()}
+          src={`${profileUrl}/${user.profile}`}
         />
       </div>
     </div>

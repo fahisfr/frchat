@@ -17,7 +17,6 @@ body {
   --gray-600: #4b5563;
   --gray-700: #374151;
 
-  
   --secondary-color: rgb(255, 255, 255);
   --color-blue: #007aed;
   --text-primary: #000000;
@@ -41,8 +40,34 @@ h1 {
 .rounded-full {
   border-radius: 50%;
 }
+.loading {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading::after {
+  content: "";
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-blue);
+  border-top: none;
+  border-left: none;
+  animation: just-loading 0.4s linear infinite;
+}
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+@keyframes just-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

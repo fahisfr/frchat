@@ -1,4 +1,4 @@
-import axios from "../../axios";
+import axios from "../../helper/axios";
 import React, { FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
 
@@ -22,13 +22,11 @@ function AddContact() {
     setError(data.error);
   };
 
-  function setTrigger(arg0: boolean): void {
-    throw new Error("Function not implemented.");
-  }
+
 
   return (
     <div className={styles.add_contact}>
-      <div className={styles.ac_close} onClick={(e) => setTrigger(false)}></div>
+      <div className={styles.ac_close} ></div>
       <div className={styles.ac_body}>
         {error && (
           <div className={styles.ac_error}>

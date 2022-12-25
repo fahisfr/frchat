@@ -21,8 +21,7 @@ function SendMessage() {
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const onEmojiClick = (emojiObject: any) => {
-    console.log(emojiObject)
+  const onEmojiClick = (emojiObject: unknown) => {
     setMessage(`${message}${emojiObject}`);
   };
 
