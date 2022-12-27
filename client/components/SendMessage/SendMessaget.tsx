@@ -4,40 +4,59 @@ import dynamic from "next/dynamic";
 import { AiOutlineFileImage } from "react-icons/ai";
 import { BsEmojiSmile } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
-import { EmojiClickData } from "emoji-picker-react";
-
+import { getContext } from "../../helper/context";
 const Picker = dynamic(
   () => {
     return import("emoji-picker-react");
   },
   { ssr: false }
 );
-function SendMessage() {
+function SendMessage({ to }: { to: Number }) {
+  const {
+    state: { socket, number },
+    dispatch,
+    reducerActionTypes,
+  } = getContext();
+
   const [emojiPicker, setEmojiPicker] = useState(false);
-  const [message, setMessage] = useState("");
-
+  const [text, setText] = useState("");
   const [file, setFile] = useState(null);
-
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    socket.emit("send-message", { text, to });
+    dispatch({
+      type: reducerActionTypes.ADD_MESSAGE,
+      payload: {
+        number: to,
+        text,
+        from: number,
+        date: new Date(),
+      },
+    });
+    setText("");
+  };
+
   const onEmojiClick = (emojiObject: unknown) => {
-    setMessage(`${message}${emojiObject}`);
+    setText(`${text}${emojiObject}`);
   };
 
   const messageInputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
+    setText(e.target.value);
     if (messageInputRef.current != null) {
       messageInputRef.current.style.height = "auto";
       messageInputRef.current.style.height = `${e.target.scrollHeight}px`;
     }
   };
+
   return (
-    <div className={styles.send_message}>
+    <form className={styles.send_message} onSubmit={sendMessage}>
       <div className={styles.input_wrappe}>
         <textarea
           ref={messageInputRef}
-          value={message}
+          value={text}
           onChange={messageInputOnChange}
           placeholder="Send message"
           className={styles.message_input}
@@ -57,10 +76,10 @@ function SendMessage() {
         </div>
       </div>
 
-      <button className={styles.send_btn}>
+      <button type="submit" className={styles.send_btn}>
         <BiSend />
       </button>
-    </div>
+    </form>
   );
 }
 

@@ -6,13 +6,14 @@ import { CgProfile } from "react-icons/cg";
 import Image from "next/image";
 import AddContact from "../addContact/AddContact";
 import { profileUrl } from "../../helper/axios";
-import { userState } from "../../helper/context";
+import { getContext } from "../../helper/context";
 
 function SideBar() {
-  const { user, setUser } = userState();
+  const { state } = getContext();
   const [addContact, setAddContact] = useState(false);
+
   return (
-    <div className={styles.container}>
+    <div className={styles.sidebar_container}>
       {addContact && <AddContact />}
       <div className={styles.wb_logo}>
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
@@ -39,7 +40,7 @@ function SideBar() {
           fill
           alt=""
           className="rounded-full"
-          src={`${profileUrl}/${user.profile}`}
+          src={`${profileUrl}/${state.profile}`}
         />
       </div>
     </div>

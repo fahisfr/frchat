@@ -36,6 +36,7 @@ h1 {
 }
 * {
   box-sizing: border-box;
+
 }
 .rounded-full {
   border-radius: 50%;

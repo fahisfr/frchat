@@ -4,12 +4,13 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { faker } from "@faker-js/faker";
 import Image from "next/image";
 import { profileUrl } from "../../helper/axios";
-import { userState } from "../../helper/context";
+import { getContext } from "../../helper/context";
 
 function Contacts() {
-  const { user, setSelectedContact } = userState();
+  const { state, dispatch, reducerActionTypes } = getContext();
+
   return (
-    <div className={styles.container}>
+    <div className={styles.contacts_container}>
       <div className={styles.top}>
         <div className={styles.search}>
           <label htmlFor={styles.search_input}>
@@ -24,12 +25,17 @@ function Contacts() {
         </div>
       </div>
       <div className={styles.bottom}>
-        {user.contacts.map((contact, index) => {
+        {state.contacts.map((contact, index) => {
           return (
             <div
               className={styles.contact}
               key={index}
-              onClick={() => setSelectedContact(contact.number)}
+              onClick={() =>
+                dispatch({
+                  type: reducerActionTypes.SELECTEDCONTACT,
+                  payload: { number: contact.number },
+                })
+              }
             >
               <div>
                 <div className={styles.contact_profile}>
@@ -65,7 +71,7 @@ function Contacts() {
         })}
       </div>
     </div>
-  );
+  )
 }
 
 export default Contacts;

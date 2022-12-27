@@ -1,60 +1,82 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import { io, Socket } from "socket.io-client";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useReducer,
+  Dispatch,
+} from "react";
 
-const userInitionsState = {
+import { User } from "./interfaces";
+
+const reducerActionTypes = {
+  LOGIN: "LOGIN",
+  SELECTEDCONTACT: "SELECTED_CONTACT",
+  ADD_MESSAGE: "ADD_MESSAGE",
+};
+
+const InitionsState = {
+  socket: null,
   name: "",
   number: 0,
   profile: "",
   contacts: [],
+  selectedContact: 0,
   isAuth: false,
 };
 
-interface User {
-  name: string;
-  number: Number;
-  profile: string;
-  contacts: never[];
-  isAuth: Boolean;
+interface ContextProps {
+  state: User;
+  dispatch: any;
+  reducerActionTypes: typeof reducerActionTypes;
 }
 
-interface UserContextProps {
-  user: User;
-  setUser: React.Dispatch<React.SetStateAction<User>>;
-  socket: Socket;
-  setSocket: React.Dispatch<React.SetStateAction<Socket>>;
-  selectedContact: Number | null;
-  setSelectedContact: React.Dispatch<React.SetStateAction<Number | null>>;
+interface ReducerAction {
+  type: String;
+  payload: Object;
 }
 
-const UserContext = createContext<UserContextProps>({
-  user: userInitionsState,
-  setUser: () => {},
-  socket: io(),
-  setSocket: () => {},
-  selectedContact: null,
-  setSelectedContact: () => {},
+const Context = createContext<ContextProps>({
+  state: InitionsState,
+  dispatch: (action) => {},
+  reducerActionTypes: reducerActionTypes,
 });
 
-function Context({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User>(userInitionsState);
-  const [socket, setSocket] = useState<Socket>(io());
-  const [selectedContact, setSelectedContact] = useState<Number | null>(null);
+const reducer = (state: User, action: ReducerAction) => {
+  switch (action.type) {
+    case reducerActionTypes.LOGIN:
+      return { ...state, ...action.payload };
+    case reducerActionTypes.SELECTEDCONTACT:
+      return { ...state, selectedContact: action.payload.number };
+    case reducerActionTypes.ADD_MESSAGE: {
+      const updatedContacts = state.contacts.map((contact) => {
+
+        if (contact.number === action.payload.number) {
+          if (!contact.messages) {
+            contact.messages = [];
+          }
+          return {
+            ...contact,
+            messages: [...contact.messages, action.payload],
+          };
+        }
+        return contact;
+      });
+      return { ...state, contacts: updatedContacts };
+    }
+    default:
+      throw new Error();
+  }
+};
+
+function ContextProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(reducer, InitionsState);
   return (
-    <UserContext.Provider
-      value={{
-        socket,
-        setSocket,
-        user,
-        setUser,
-        selectedContact,
-        setSelectedContact,
-      }}
-    >
+    <Context.Provider value={{ state, dispatch, reducerActionTypes }}>
       {children}
-    </UserContext.Provider>
+    </Context.Provider>
   );
 }
 
-export const userState = () => useContext(UserContext);
+export const getContext = () => useContext(Context);
 
-export default Context;
+export default ContextProvider;

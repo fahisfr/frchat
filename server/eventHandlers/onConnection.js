@@ -1,9 +1,11 @@
 const dbUser = require("../dbSChemas/user");
-const db = require("mongoose").Types.ObjectId;
+
+const clients = [];
+
 module.exports = async (socket) => {
   const { _id, number } = socket.user;
-  console.log(`${number} conected`);
-
+  console.log(`${number} Conected`);
+  clients.push(socket);
   const userInfo = await dbUser.aggregate([
     {
       $match: {
@@ -50,10 +52,21 @@ module.exports = async (socket) => {
     },
   ]);
 
-
   socket.emit("on-connect", { userInfo: userInfo[0] });
 
+  socket.on("send-message", async ({ to, text }) => {
+    const client = clients.find((client) => client.user.number === to);
+
+    const messsage = { from: number, to, text, date: new Date() };
+
+    if (client) {
+      client.emit("recieve-message", messsage);
+    }
+  });
+
   socket.on("disconnect", () => {
-    console.log("User Disconnect");
+    console.log(`${number} Discoected`);
+    const userIndex = clients.findIndex((user) => user === socket);
+    clients.splice(userIndex, 1);
   });
 };

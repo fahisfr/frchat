@@ -9,11 +9,11 @@ import Profile from "../components/profile/Profile";
 import ContactProfile from "../components/profile/ContactProfile";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
-import { userState } from "../helper/context";
+import { getContext } from "../helper/context";
 
 function Index() {
-  const { setSocket, user, setUser } = userState();
-  console.log(user);
+  const { state, dispatch, reducerActionTypes } = getContext();
+
   useEffect(() => {
     const newScoket = io(`http://localhost:4000`, {
       auth: {
@@ -22,15 +22,24 @@ function Index() {
     });
 
     newScoket.on("on-connect", (info) => {
-      setSocket(newScoket);
-      setUser({ ...info.userInfo, isAuth: true });
+      dispatch({
+        type: "LOGIN",
+        payload: { ...info.userInfo, isAuth: true, socket: newScoket },
+      });
     });
 
     newScoket.on("connect_error", (err) => {});
+
+    newScoket.on("recieve-message", (message) => {
+      dispatch({
+        type: reducerActionTypes.ADD_MESSAGE,
+        payload: { number: message.from, ...message },
+      });
+    });
   }, []);
 
-  if (!user.isAuth) {
-    return <div className="loading"></div>;
+  if (!state.isAuth) {
+    return <div className="loading"></div>
   }
 
   return (
@@ -39,10 +48,9 @@ function Index() {
       <SideBar />
       <Contacts />
       {/* <Profile /> */}
-      {/* <Chats
-      /> */}
+      <Chats />
       {/* <ContactProfile /> */}
     </div>
-  );
+  )
 }
 export default Index;

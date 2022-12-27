@@ -5,7 +5,7 @@ import Context from "../helper/context";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <Context>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </Context>
   );
 }

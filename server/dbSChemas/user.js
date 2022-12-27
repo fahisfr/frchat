@@ -10,7 +10,13 @@ const user = new mongoose.Schema({
     {
       name: String,
       number: Number,
-      message: [],
+      messages: [
+        {
+          from: Number,
+          text: String,
+          date: { type: Date },
+        },
+      ],
     },
   ],
 });

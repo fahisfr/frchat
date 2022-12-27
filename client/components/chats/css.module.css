@@ -1,4 +1,4 @@
-.chats_container {
+.chats {
   flex-grow: 1;
   display: flex;
   height: 100%;
