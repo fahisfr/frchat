@@ -1,25 +1,26 @@
 import { Socket } from "socket.io-client";
 
 export interface Message {
-  from: String;
-  text: String;
-  date: Date;
-  number?: Number;
+  from: string;
+  text: string;
+  date: string;
+  number?: number;
 }
 
 export interface Contact {
-  name: String;
-  number: Number;
-  profile: String;
+  name: string;
+  number: number;
+  profile: string;
+  onlineStatus: boolean;
   messages: Message[];
 }
 
 export interface User {
   socket: Socket | null;
-  name: String;
-  number: Number;
-  profile: String;
+  name: string;
+  number: number;
+  profile: string;
   contacts: Contact[];
-  selectedContact: Number;
-  isAuth: Boolean;
+  selectedContact: number;
+  isAuth: boolean;
 }

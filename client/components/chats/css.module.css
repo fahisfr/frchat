@@ -24,6 +24,9 @@
 
 .messages {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  grid-row: 10px;
   overflow: auto;
   background-color: #edf0f9;
   row-gap: 1rem;
@@ -39,6 +42,7 @@
 }
 .message_details {
   display: flex;
+  column-gap: 10px;
   justify-content: space-between;
   align-items: flex-end;
 }
@@ -49,15 +53,14 @@
   position: relative;
 }
 
-
-
 .message_date {
-  font-size: 15px;
-  color: var(--gray_500);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--gray-500);
 }
 
 .own_message_text_wrapper {
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
   margin-top: 3px;
 
@@ -67,7 +70,11 @@
   padding: 12px;
   border-radius: 8px;
   margin-top: 3px;
+  
 
   background-color: #007aedd0;
   color: #ffffff;
+}
+.message_text {
+  word-wrap: break-word;
 }

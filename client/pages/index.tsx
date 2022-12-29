@@ -10,47 +10,61 @@ import ContactProfile from "../components/profile/ContactProfile";
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
+import { User } from "../helper/interfaces";
 
 function Index() {
   const { state, dispatch, reducerActionTypes } = getContext();
 
   useEffect(() => {
-    const newScoket = io(`http://localhost:4000`, {
+    const socket = io(`http://localhost:4000`, {
       auth: {
         token: localStorage.getItem("auth_token"),
       },
     });
 
-    newScoket.on("on-connect", (info) => {
+    socket.on("on-connect", ({ userInfo }: { userInfo: User }) => {
       dispatch({
         type: "LOGIN",
-        payload: { ...info.userInfo, isAuth: true, socket: newScoket },
+        payload: { ...userInfo, isAuth: true, socket },
       });
     });
 
-    newScoket.on("connect_error", (err) => {});
+    socket.on("connect_error", (err) => {});
 
-    newScoket.on("recieve-message", (message) => {
+    socket.on("recieve-message", (message) => {
       dispatch({
         type: reducerActionTypes.ADD_MESSAGE,
         payload: { number: message.from, ...message },
       });
     });
+
+    socket.on("user-online", (number) => {
+      dispatch({
+        type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
+        payload: { status: true, number },
+      });
+    });
+    socket.on("user-oofline", (number) => {
+      alert("yse");
+      dispatch({
+        type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
+        payload: { status: false, number },
+      });
+    });
   }, []);
 
   if (!state.isAuth) {
-    return <div className="loading"></div>
+    return <div className="loading"></div>;
   }
 
   return (
     <div className={styles.container}>
-      {/* <AddContact /> */}
       <SideBar />
       <Contacts />
       {/* <Profile /> */}
       <Chats />
       {/* <ContactProfile /> */}
     </div>
-  )
+  );
 }
 export default Index;

@@ -14,7 +14,7 @@ function SideBar() {
 
   return (
     <div className={styles.sidebar_container}>
-      {addContact && <AddContact />}
+      {addContact && <AddContact setTrigger={setAddContact} />}
       <div className={styles.wb_logo}>
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
       </div>

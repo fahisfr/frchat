@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from "./css.module.css";
 import dynamic from "next/dynamic";
-import { AiOutlineFileImage } from "react-icons/ai";
+
 import { BsEmojiSmile } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
 import { getContext } from "../../helper/context";
@@ -11,26 +11,27 @@ const Picker = dynamic(
   },
   { ssr: false }
 );
-function SendMessage({ to }: { to: Number }) {
+function SendMessage() {
   const {
-    state: { socket, number },
+    state: { socket, number, selectedContact },
     dispatch,
     reducerActionTypes,
   } = getContext();
 
   const [emojiPicker, setEmojiPicker] = useState(false);
   const [text, setText] = useState("");
-  const [file, setFile] = useState(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit("send-message", { text, to });
+
+    if (socket === null) return;
+
+    socket.emit("send-message", { text, to: selectedContact });
     dispatch({
       type: reducerActionTypes.ADD_MESSAGE,
       payload: {
-        number: to,
+        number: selectedContact,
         text,
         from: number,
         date: new Date(),
@@ -50,20 +51,26 @@ function SendMessage({ to }: { to: Number }) {
       messageInputRef.current.style.height = `${e.target.scrollHeight}px`;
     }
   };
-
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      sendMessage(e);
+    }
+  };
   return (
     <form className={styles.send_message} onSubmit={sendMessage}>
       <div className={styles.input_wrappe}>
         <textarea
           ref={messageInputRef}
           value={text}
+          rows={1}
+          onKeyDown={handleKeyDown}
           onChange={messageInputOnChange}
-          placeholder="Send message"
+          placeholder="Send a message"
           className={styles.message_input}
         />
         <div className={styles.ap_types}>
-          <input ref={fileInputRef} type="file" className={styles.file_input} />
-          <AiOutlineFileImage className={styles.icon} />
+          {/* <input ref={fileInputRef} type="file" className={styles.file_input} />
+          <AiOutlineFileImage className={styles.icon} /> */}
           <BsEmojiSmile
             className={styles.icon}
             onClick={() => setEmojiPicker(!emojiPicker)}

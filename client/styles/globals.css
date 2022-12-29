@@ -36,7 +36,9 @@ h1 {
 }
 * {
   box-sizing: border-box;
-
+}
+.contact_border {
+  border: 1px solid green;
 }
 .rounded-full {
   border-radius: 50%;

@@ -3,10 +3,10 @@ import React, { FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
 
 type AddContactProps = {
-  setTrigger: boolean;
+  setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-function AddContact() {
+function AddContact({ setTrigger }: AddContactProps) {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
@@ -22,11 +22,9 @@ function AddContact() {
     setError(data.error);
   };
 
-
-
   return (
     <div className={styles.add_contact}>
-      <div className={styles.ac_close} ></div>
+      <div className={styles.ac_close} onClick={() => setTrigger(false)}></div>
       <div className={styles.ac_body}>
         {error && (
           <div className={styles.ac_error}>

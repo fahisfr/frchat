@@ -1,7 +1,8 @@
 .profile {
-  min-width: 20rem;
+  width: 20rem;
   border-right: 1px solid var(--border-primary);
 }
+
 .pf_top {
   display: flex;
   height: 64px;
@@ -33,7 +34,6 @@
   border-radius: 50%;
   position: relative;
 }
-
 
 .pf_edit {
   padding: 1rem;

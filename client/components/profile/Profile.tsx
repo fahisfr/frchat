@@ -1,10 +1,13 @@
 import React from "react";
 import styles from "./css.module.css";
 import { FiArrowLeft } from "react-icons/fi";
-import { faker } from "@faker-js/faker";
+
 import Image from "next/image";
+import { getContext } from "../../helper/context";
+import { getProfileUrl } from "../../helper/axios";
 
 function Profile() {
+  const { state } = getContext();
 
   return (
     <div className={styles.profile}>
@@ -23,11 +26,11 @@ function Profile() {
               fill
               alt=""
               className="rounded-full"
-              src={faker.image.avatar()}
+              src={getProfileUrl(state.profile)}
             />
           </div>
           <div className={styles.pf_number}>
-            <span>{faker.phone.phoneNumber("+91 ##########")}</span>
+            <span>{state.number}</span>
           </div>
         </div>
       </div>

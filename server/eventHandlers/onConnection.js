@@ -1,72 +1,97 @@
 const dbUser = require("../dbSChemas/user");
 
-const clients = [];
+const clients = new Map();
 
 module.exports = async (socket) => {
-  const { _id, number } = socket.user;
-  console.log(`${number} Conected`);
-  clients.push(socket);
-  const userInfo = await dbUser.aggregate([
-    {
-      $match: {
-        _id,
+  try {
+    const { _id, number, contacts } = socket.user;
+    console.log(`${number} Conected`);
+    clients.set(number, socket);
+
+    const userInfo = await dbUser.aggregate([
+      {
+        $match: {
+          _id,
+        },
       },
-    },
-    {
-      $unwind: {
-        preserveNullAndEmptyArrays: true,
-        path: "$contacts",
+      {
+        $unwind: {
+          preserveNullAndEmptyArrays: true,
+          path: "$contacts",
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "users",
-        foreignField: "number",
-        localField: "contacts.number",
-        as: "contactInfo",
+      {
+        $lookup: {
+          from: "users",
+          foreignField: "number",
+          localField: "contacts.number",
+          as: "contactInfo",
+        },
       },
-    },
-    {
-      $project: {
-        number: 1,
-        profile: 1,
-        messages: 1,
-        contacts: {
-          name: 1,
+      {
+        $project: {
           number: 1,
-          profile: {
-            $arrayElemAt: ["$contactInfo.profile", 0],
+          profile: 1,
+          contacts: {
+            name: 1,
+            number: 1,
+            messages:1,
+            profile: {
+              $arrayElemAt: ["$contactInfo.profile", 0],
+            },
           },
         },
       },
-    },
-    {
-      $group: {
-        _id: null,
-        number: { $first: "$number" },
-        profile: { $first: "$profile" },
-        contacts: {
-          $push: "$contacts",
+      {
+        $group: {
+          _id: null,
+          number: { $first: "$number" },
+          profile: { $first: "$profile" },
+          contacts: {
+            $push: "$contacts",
+          },
         },
       },
-    },
-  ]);
+    ]);
 
-  socket.emit("on-connect", { userInfo: userInfo[0] });
+    
+    userInfo[0].contacts?.map((contact) => {
+      const client = clients.get(contact.number);
+      if (client) {
+        client.emit("user-online", number);
+        contact.onlineStatus = true;
+      } else {
+        contact.onlineStatus = false;
+      }
+      return contact;
+    });
 
-  socket.on("send-message", async ({ to, text }) => {
-    const client = clients.find((client) => client.user.number === to);
+    socket.user.contacts = userInfo[0].contacts;
 
-    const messsage = { from: number, to, text, date: new Date() };
+    socket.emit("on-connect", { userInfo: userInfo[0] });
 
-    if (client) {
-      client.emit("recieve-message", messsage);
-    }
-  });
+    socket.on("send-message", async ({ to, text }) => {
+      const client = clients.get(to);
 
-  socket.on("disconnect", () => {
-    console.log(`${number} Discoected`);
-    const userIndex = clients.findIndex((user) => user === socket);
-    clients.splice(userIndex, 1);
-  });
+      const messsage = { from: number, to, text, date: new Date() };
+
+      if (client) {
+        client.emit("recieve-message", messsage);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log(`${number} Discoected`);
+      clients.delete(number);
+
+      contacts?.forEach(({ number }) => {
+        const contact = clients.get(number);
+        if (contact) {
+          contact.emit("user-offline", number);
+        }
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -1,24 +1,30 @@
-import axios from "../../helper/axios";
+import { axiosRequest } from "../../helper/axios";
 import React, { FormEvent, useState } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";
+
 function index() {
   const router = useRouter();
 
+  const [error, setError] = useState<string>("");
   const [number, setNumber] = useState("1234567890");
   const [counteryCode, setCounteryCode] = useState();
   const [otp, sentOtp] = useState(new Array(4).fill(""));
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { data } = await axios.post("/auth/login", {
+
+    const response = await axiosRequest("POST", "/auth/login", {
       number,
       counteryCode,
       otp,
     });
-    if (data.status === "ok") {
-      localStorage.setItem("auth_token", data.token);
+
+    if (response) {
+      localStorage.setItem("auth_token", response.token);
       router.replace("/");
+    } else {
+      alert(response.error);
     }
   };
 

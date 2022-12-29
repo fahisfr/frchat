@@ -3,6 +3,7 @@ import axios from "axios";
 export const baseURL = "http://localhost:4000";
 
 export const profileUrl = `${baseURL}/profiles/`;
+export const getProfileUrl = (image: String) => profileUrl + image;
 
 const instance = axios.create({
   baseURL: `${baseURL}/api`,
@@ -37,10 +38,47 @@ instance.interceptors.response.use(
       }
 
       localStorage.removeItem("auth_token");
-
       return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );
+
+type Method = "POST" | "GET" | "DELETE";
+
+export const axiosRequest = (method: Method, path: string, body?: any): any => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response;
+      switch (method) {
+        case "POST":
+          response = await instance.post(path, body);
+          break;
+        case "GET":
+          response = await instance.get(path);
+          break;
+        case "DELETE":
+          response = await instance.delete(path);
+          break;
+        default:
+          throw new Error(`Invalid method: ${method}`);
+      }
+
+      const { data } = response;
+
+      if (response.status === 200) {
+        if (data.status === "ok") {
+          resolve(data);
+        } else if (data.status === "error") {
+          reject(data);
+        }
+      } else {
+        reject({ status: "error", error: response.message });
+      }
+    } catch (error: any) {
+      reject({ status: "error", error: error.message });
+    }
+  });
+};
 
 export default instance;

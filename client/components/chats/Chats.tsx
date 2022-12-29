@@ -5,12 +5,20 @@ import { FiArrowLeft } from "react-icons/fi";
 import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
 import { getContext } from "../../helper/context";
-
+import getDate from "../../helper/getDate";
+import { BsThreeDotsVertical } from "react-icons";
 function Chats() {
   const { state } = getContext();
 
   if (!state.selectedContact) {
-    return <div></div>;
+    return (
+      <div>
+        <div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    );
   }
 
   const contact = state.contacts.find(
@@ -34,16 +42,18 @@ function Chats() {
         <div className={styles.chat_contact_info}>
           <span>{contact?.name}</span>
         </div>
+       
       </div>
 
       <div className={styles.messages}>
-        {contact?.messages?.map((message, index) => {
-          return message.from == state.number ? (
+        {contact?.messages?.reverse().map((message, index) => {
+          console.log(message.from , state.number);
+          return message.from === state.number ? (
             <div className={`${styles.own_message}`} key={index}>
               <div className={styles.message_wrapper}>
                 <div className={styles.message_details}>
                   <div>
-                    <span className={styles.message_date}>2015-01-05</span>
+                    <span className={styles.message_date}>{message.date}</span>
                   </div>
                 </div>
                 <div className={`${styles.own_message_text_wrapper}`}>
@@ -64,7 +74,9 @@ function Chats() {
                     />
                   </div>
                   <div>
-                    <span className={styles.message_date}>2015-01-05</span>
+                    <span className={styles.message_date}>
+                      {getDate(message.date)}
+                    </span>
                   </div>
                 </div>
                 <div
@@ -78,7 +90,7 @@ function Chats() {
         })}
       </div>
 
-      <SendMessage to={contact?.number} />
+      <SendMessage />
     </div>
   );
 }
