@@ -48,6 +48,7 @@ const Context = createContext<ContextProps>({
 });
 
 const reducer = (state: User, { type, payload }: ReducerAction) => {
+  
   switch (type) {
     case reducerActionTypes.LOGIN:
       return { ...state, ...payload };
@@ -59,6 +60,8 @@ const reducer = (state: User, { type, payload }: ReducerAction) => {
           if (!contact.messages) {
             contact.messages = [];
           }
+
+
           return {
             ...contact,
             messages: [...contact.messages, payload],
@@ -66,6 +69,7 @@ const reducer = (state: User, { type, payload }: ReducerAction) => {
         }
         return contact;
       });
+      console.log(state);
       return { ...state, contacts: updatedContacts };
     }
     case reducerActionTypes.CHANGE_USER_ONLINE_STATUS: {
@@ -86,7 +90,7 @@ const reducer = (state: User, { type, payload }: ReducerAction) => {
 };
 
 function ContextProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer,InitionsState);
+  const [state, dispatch] = useReducer(reducer, InitionsState);
   return (
     <Context.Provider value={{ state, dispatch, reducerActionTypes }}>
       {children}

@@ -24,7 +24,7 @@ function index() {
       localStorage.setItem("auth_token", response.token);
       router.replace("/");
     } else {
-      alert(response.error);
+      setError(response.error);
     }
   };
 

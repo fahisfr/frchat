@@ -28,6 +28,8 @@ function SendMessage() {
     if (socket === null) return;
 
     socket.emit("send-message", { text, to: selectedContact });
+    
+
     dispatch({
       type: reducerActionTypes.ADD_MESSAGE,
       payload: {

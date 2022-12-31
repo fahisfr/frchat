@@ -37,7 +37,7 @@ function Contacts() {
             const messages = contact?.messages;
             const lastMessage = messages
               .reverse()
-              .find((message) => (message.from = contact.number));
+              .find((message) => (message.from === contact.number));
             return (
               <div
                 className={styles.contact}

@@ -2,13 +2,16 @@ import styles from "./css.module.css";
 import { FiArrowLeft } from "react-icons/fi";
 import { faker } from "@faker-js/faker";
 import Image from "next/image";
-function ContactProfile() {
+import { Trigger } from "../../helper/interfaces";
+function ContactProfile({ trigger, setTrigger }: Trigger) {
   return (
-    <div className={styles.profile}>
+    <div
+      className={`${styles.contact_profile} ${
+        trigger ? styles.con_open : styles.con_close
+      } `}
+    >
       <div className={styles.pf_top}>
-        <div>
-          <FiArrowLeft size={30} />
-        </div>
+        <FiArrowLeft size={30} onClick={() => setTrigger((state) => !state)} />
         <div>
           <span className={styles.pf_title}>Contact Profile</span>
         </div>

@@ -6,7 +6,7 @@ const createTokens = (info) => {
       expiresIn: "40d",
     }),
     accessToken: jwt.sign(info, process.env.ACCESS_TOKEN_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "33d",
     }),
   };
 };

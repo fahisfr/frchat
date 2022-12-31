@@ -1,6 +1,5 @@
 .contacts_container {
-  width: 20rem;
-  height: 100%;
+  
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -47,8 +46,6 @@
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   cursor: pointer;
 }
-
-
 
 .contact_profile {
   width: 3.3rem;

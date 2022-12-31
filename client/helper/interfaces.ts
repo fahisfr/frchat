@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 
 export interface Message {
@@ -23,4 +24,9 @@ export interface User {
   contacts: Contact[];
   selectedContact: number;
   isAuth: boolean;
+}
+
+export interface Trigger {
+  trigger: boolean;
+  setTrigger: Dispatch<SetStateAction<boolean>>;
 }

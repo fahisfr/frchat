@@ -1,6 +1,21 @@
 .profile {
-  width: 20rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: margin 0.5s;
+  background-color: white;
   border-right: 1px solid var(--border-primary);
+}
+.contact_profile {
+  width: 20rem;
+  transition: all 0.5s;
+}
+.con_open {
+  margin-right: 0;
+}
+.con_close {
+  margin-right: -20rem;
 }
 
 .pf_top {
@@ -50,4 +65,7 @@
   padding-left: 10px;
   font-size: 15px;
   outline: none;
+}
+.pf_icon {
+  cursor: pointer;
 }

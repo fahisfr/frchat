@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "./css.module.css";
 import { FiSettings } from "react-icons/fi";
 import { AiOutlineHome, AiOutlineUserAdd } from "react-icons/ai";
@@ -8,7 +8,11 @@ import AddContact from "../addContact/AddContact";
 import { profileUrl } from "../../helper/axios";
 import { getContext } from "../../helper/context";
 
-function SideBar() {
+interface SideBarProps {
+  setProfileTrigger: Dispatch<SetStateAction<boolean>>;
+}
+
+function SideBar({ setProfileTrigger }: SideBarProps) {
   const { state } = getContext();
   const [addContact, setAddContact] = useState(false);
 
@@ -22,11 +26,11 @@ function SideBar() {
         <div className={styles.group}>
           <AiOutlineHome className={styles.icons} />
         </div>
-        <div className={styles.group}>
+        <div
+          className={styles.group}
+          onClick={() => setProfileTrigger((state) => !state)}
+        >
           <CgProfile className={styles.icons} />
-        </div>{" "}
-        <div className={styles.group}>
-          <FiSettings className={styles.icons} />
         </div>
         <div className={styles.group}>
           <AiOutlineUserAdd

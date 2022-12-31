@@ -2,7 +2,7 @@ import { use, useContext } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import SideBar from "../components/sideBar/SideBar";
+import SideBar from "../components/navBar/navBar";
 import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
 import Profile from "../components/profile/Profile";
@@ -14,6 +14,7 @@ import { User } from "../helper/interfaces";
 
 function Index() {
   const { state, dispatch, reducerActionTypes } = getContext();
+  const [profile, setProfile] = useState<boolean>(false);
 
   useEffect(() => {
     const socket = io(`http://localhost:4000`, {
@@ -59,10 +60,15 @@ function Index() {
 
   return (
     <div className={styles.container}>
-      <SideBar />
-      <Contacts />
-      {/* <Profile /> */}
-      <Chats />
+      <SideBar setProfileTrigger={setProfile} />
+      <main className={styles.main}>
+        <div className={styles.center_div}>
+          <Contacts />
+          <Profile setTrigger={setProfile} trigger={profile} />
+        </div>
+        <Chats />
+      </main>
+
       {/* <ContactProfile /> */}
     </div>
   );

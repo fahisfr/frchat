@@ -5,16 +5,23 @@ import { FiArrowLeft } from "react-icons/fi";
 import Image from "next/image";
 import { getContext } from "../../helper/context";
 import { getProfileUrl } from "../../helper/axios";
+import { Trigger } from "../../helper/interfaces";
 
-function Profile() {
+function Profile({ trigger, setTrigger }: Trigger) {
   const { state } = getContext();
 
   return (
-    <div className={styles.profile}>
+    <div
+      className={`${styles.profile} ${
+        trigger ? "margin-left-0" : "margin-left-full"
+      }`}
+    >
       <div className={styles.pf_top}>
-        <div>
-          <FiArrowLeft size={30} />
-        </div>
+        <FiArrowLeft
+          size={30}
+          className={styles.pf_icon}
+          onClick={() => setTrigger(!trigger)}
+        />
         <div>
           <span className={styles.pf_title}>Profile</span>
         </div>

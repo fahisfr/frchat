@@ -37,6 +37,14 @@ h1 {
 * {
   box-sizing: border-box;
 }
+
+.margin-left-full {
+  margin-left: -100%;
+}
+.margin-left-0 {
+  margin-left: 0;
+}
+
 .contact_border {
   border: 1px solid green;
 }
@@ -65,7 +73,10 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
+.theme-bg-text {
+  background-color: var(--color-blue) !important;
+  color: #ffffff;
+}
 @keyframes just-loading {
   0% {
     transform: rotate(0deg);
