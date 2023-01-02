@@ -1,12 +1,10 @@
-import { use, useContext } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import SideBar from "../components/navBar/navBar";
+import NavBar from "../components/navBar/navBar";
 import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
 import Profile from "../components/profile/Profile";
-import ContactProfile from "../components/profile/ContactProfile";
+
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
@@ -23,11 +21,12 @@ function Index() {
       },
     });
 
-    socket.on("on-connect", ({ userInfo }: { userInfo: User }) => {
+    socket.on("on-connect", (info) => {
       dispatch({
         type: "LOGIN",
-        payload: { ...userInfo, isAuth: true, socket },
+        payload: { ...info.userInfo, isAuth: true, socket },
       });
+      console.log(info);
     });
 
     socket.on("connect_error", (err) => {});
@@ -46,7 +45,6 @@ function Index() {
       });
     });
     socket.on("user-oofline", (number) => {
-      alert("yse");
       dispatch({
         type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
         payload: { status: false, number },
@@ -60,16 +58,14 @@ function Index() {
 
   return (
     <div className={styles.container}>
-      <SideBar setProfileTrigger={setProfile} />
+      <NavBar setProfileTrigger={setProfile} />
       <main className={styles.main}>
-        <div className={styles.center_div}>
+        <div className={styles.contacts_info}>
           <Contacts />
           <Profile setTrigger={setProfile} trigger={profile} />
         </div>
         <Chats />
       </main>
-
-      {/* <ContactProfile /> */}
     </div>
   );
 }

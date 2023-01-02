@@ -8,16 +8,16 @@ import AddContact from "../addContact/AddContact";
 import { profileUrl } from "../../helper/axios";
 import { getContext } from "../../helper/context";
 
-interface SideBarProps {
+interface navBarProps {
   setProfileTrigger: Dispatch<SetStateAction<boolean>>;
 }
 
-function SideBar({ setProfileTrigger }: SideBarProps) {
+function NavBar({ setProfileTrigger }: navBarProps) {
   const { state } = getContext();
   const [addContact, setAddContact] = useState(false);
 
   return (
-    <div className={styles.sidebar_container}>
+    <div className={styles.navbar_container}>
       {addContact && <AddContact setTrigger={setAddContact} />}
       <div className={styles.wb_logo}>
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
@@ -51,4 +51,4 @@ function SideBar({ setProfileTrigger }: SideBarProps) {
   );
 }
 
-export default SideBar;
+export default NavBar;

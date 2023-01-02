@@ -1,6 +1,5 @@
 import styles from "./css.module.scss";
 import React, { useRef, useState } from "react";
-import { faker } from "@faker-js/faker";
 import { FiArrowLeft } from "react-icons/fi";
 import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
@@ -11,7 +10,7 @@ import { getProfileUrl } from "../../helper/axios";
 import { BsThreeDotsVertical } from "react-icons/bs";
 function Chats() {
   const [contactProfile, setContactProfile] = useState<boolean>(false);
-  const { state } = getContext();
+  const { state, dispatch, reducerActionTypes } = getContext();
   const bottomRef = useRef<HTMLDivElement>(null);
   if (!state.selectedContact) {
     return (
@@ -24,6 +23,15 @@ function Chats() {
     );
   }
 
+  const backToContacts = () => {
+    dispatch({
+      type: reducerActionTypes.SELECTEDCONTACT,
+      payload: {
+        number: 0,
+      },
+    });
+  };
+
   if (bottomRef.current) {
     bottomRef.current.scrollIntoView({ behavior: "smooth" });
   }
@@ -35,25 +43,29 @@ function Chats() {
     <div className={styles.chats}>
       <div className={styles.contact_chats}>
         <div className={styles.top}>
-          <div className={styles.back_icon}>
-            <FiArrowLeft size={2} />
+          <div className={styles.top_left}>
+            <div className={styles.back_icon} onClick={backToContacts}>
+              <FiArrowLeft size={30} />
+            </div>
+            <div className={styles.chat_contact_profile}>
+              <Image
+                fill
+                alt=""
+                className="rounded-full"
+                src={getProfileUrl(contact?.profile)}
+              />
+            </div>
+            <div className={styles.chat_contact_info}>
+              <span>{contact?.name}</span>
+            </div>
           </div>
-          <div
-            className={styles.chat_contact_profile}
-          
-          >
-            <Image
-              fill
-              alt=""
-              className="rounded-full"
-              src={getProfileUrl(contact?.profile)}
-            />
-          </div>
-          <div className={styles.chat_contact_info}>
-            <span>{contact?.name}</span>
-          </div>
-          <div className={styles.contact_menu}  onClick={() => setContactProfile(!contactProfile)}>
-            <BsThreeDotsVertical />
+          <div className={styles.top_right}>
+            <div
+              className={styles.contact_menu}
+              onClick={() => setContactProfile(!contactProfile)}
+            >
+              <BsThreeDotsVertical size={25} />
+            </div>
           </div>
         </div>
 
@@ -100,7 +112,11 @@ function Chats() {
         </div>
         <SendMessage />
       </div>
-      <ContactProfile trigger={contactProfile} setTrigger={setContactProfile} />
+      <ContactProfile
+        trigger={contactProfile}
+        setTrigger={setContactProfile}
+        contact={contact}
+      />
     </div>
   );
 }

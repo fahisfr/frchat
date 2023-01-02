@@ -6,6 +6,7 @@ const user = new mongoose.Schema({
   number: Number,
   profile: { type: String, default: "default_profile.jpg" },
   refreshToken: String,
+  about: { type: String, default: "i am new here" },
   contacts: [
     {
       name: String,

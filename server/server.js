@@ -26,4 +26,6 @@ app.use("/api/message", require("./routes/message"));
 app.use("/api/contact", auth, require("./routes/contact"));
 app.use(require("./config/errorHandler"));
 
+
+
 server.listen(port, () => console.log(`server running port ${port}`));

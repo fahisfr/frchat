@@ -21,7 +21,8 @@ const InitionsState = {
   number: 111111,
   profile: "",
   contacts: [],
-  selectedContact: 1234567899,
+  about: "",
+  selectedContact: 0,
   isAuth: false,
 };
 
@@ -48,19 +49,18 @@ const Context = createContext<ContextProps>({
 });
 
 const reducer = (state: User, { type, payload }: ReducerAction) => {
-  
   switch (type) {
     case reducerActionTypes.LOGIN:
       return { ...state, ...payload };
     case reducerActionTypes.SELECTEDCONTACT:
       return { ...state, selectedContact: payload.number };
+
     case reducerActionTypes.ADD_MESSAGE: {
       const updatedContacts = state.contacts.map((contact) => {
         if (contact.number === payload.number) {
           if (!contact.messages) {
             contact.messages = [];
           }
-
 
           return {
             ...contact,
@@ -69,7 +69,6 @@ const reducer = (state: User, { type, payload }: ReducerAction) => {
         }
         return contact;
       });
-      console.log(state);
       return { ...state, contacts: updatedContacts };
     }
     case reducerActionTypes.CHANGE_USER_ONLINE_STATUS: {
@@ -84,6 +83,7 @@ const reducer = (state: User, { type, payload }: ReducerAction) => {
       });
       return { ...state, contacts: updatedContacts };
     }
+
     default:
       throw new Error();
   }

@@ -7,13 +7,18 @@ function index() {
   const router = useRouter();
 
   const [error, setError] = useState<string>("");
-  const [number, setNumber] = useState("1234567890");
+  const [number, setNumber] = useState<number>(123456790);
   const [counteryCode, setCounteryCode] = useState();
   const [otp, sentOtp] = useState(new Array(4).fill(""));
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (number.toString.length === 10) {
+      console.log(number.toString.length);
+      setError("Plase enter a valid number");
+      return;
+    }
     const response = await axiosRequest("POST", "/auth/login", {
       number,
       counteryCode,
@@ -31,6 +36,7 @@ function index() {
   return (
     <div className={styles.login_container}>
       <div className={styles.lg_body}>
+        {error && <span>{error}</span>}
         <div className={styles.lg_title}>
           <h1 className={styles.lg_title_text}>Enter Your Phone Number</h1>
         </div>
@@ -47,10 +53,11 @@ function index() {
             <input
               placeholder="00 00 00 00 00"
               className={styles.number_input}
-              onChange={(e) => setNumber(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setNumber(e.target.value);
+              }}
               value={number}
-              type="text"
-              maxLength={10}
+              type="number"
               id="number"
             />
           </div>{" "}

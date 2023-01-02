@@ -1,5 +1,4 @@
 .contacts_container {
-  
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -11,7 +10,7 @@
   border-bottom: 1px solid var(--border-primary);
   padding: 5px 10px;
   display: flex;
-  flex-shrink: 0;
+
   align-items: center;
 }
 .search {
@@ -84,4 +83,11 @@
   text-overflow: ellipsis;
   color: var(--gray_500);
   font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .contacts_container {
+    width: 100%;
+    flex-grow: 1;
+  }
 }

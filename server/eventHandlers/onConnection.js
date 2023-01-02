@@ -32,10 +32,12 @@ module.exports = async (socket) => {
         $project: {
           number: 1,
           profile: 1,
+          about: 1,
           contacts: {
             name: 1,
             number: 1,
-            messages:1,
+            messages: 1,
+            about:"$contactInfo.about",
             profile: {
               $arrayElemAt: ["$contactInfo.profile", 0],
             },
@@ -54,7 +56,6 @@ module.exports = async (socket) => {
       },
     ]);
 
-    
     userInfo[0].contacts?.map((contact) => {
       const client = clients.get(contact.number);
       if (client) {

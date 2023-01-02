@@ -1,14 +1,44 @@
-import React from "react";
-import styles from "./css.module.css";
+import React, { useRef, useState } from "react";
+import styles from "./css.module.scss";
 import { FiArrowLeft } from "react-icons/fi";
+import { AiFillCamera } from "react-icons/ai";
 
 import Image from "next/image";
 import { getContext } from "../../helper/context";
 import { getProfileUrl } from "../../helper/axios";
 import { Trigger } from "../../helper/interfaces";
 
+interface ProfilePhoto {
+  file: File | null;
+  preview: string;
+}
+
 function Profile({ trigger, setTrigger }: Trigger) {
   const { state } = getContext();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState<string>("");
+  const [about, setAbout] = useState<string>("");
+  const [profielPhoto, setProfilePhoto] = useState<ProfilePhoto>({
+    file: null,
+    preview: "",
+  });
+
+  const editProfile = () => {
+    if (inputRef.current != null) {
+      inputRef.current.click();
+    }
+  };
+
+  const handleInputRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      setProfilePhoto({ file, preview: reader.result });
+    };
+
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div
@@ -28,12 +58,23 @@ function Profile({ trigger, setTrigger }: Trigger) {
       </div>
       <div className={styles.pf_body}>
         <div className={styles.pf_info}>
-          <div className={styles.pf_profile}>
+          <div className={styles.pf_profile} onClick={editProfile}>
             <Image
               fill
               alt=""
               className="rounded-full"
-              src={getProfileUrl(state.profile)}
+              src={
+                profielPhoto.preview === " "
+                  ? profielPhoto.preview
+                  : getProfileUrl(state.profile)
+              }
+            />
+            <AiFillCamera className={styles.camera_icon} />
+            <input
+              type="file"
+              onChange={handleInputRefChange}
+              style={{ display: "none" }}
+              ref={inputRef}
             />
           </div>
           <div className={styles.pf_number}>
@@ -41,13 +82,41 @@ function Profile({ trigger, setTrigger }: Trigger) {
           </div>
         </div>
       </div>
-      <div className={styles.pf_edit}>
-        <label className={styles.pf_label}>Name</label>
-        <input
-          className={styles.pf_name_input}
-          placeholder="Enter your name"
-        ></input>
-      </div>
+      <form className={styles.pf_form}>
+        <div className={styles.pf_form_group}>
+          <label htmlFor="name" className={styles.pf_label}>
+            Name
+          </label>
+          <input
+            className={styles.pf_input}
+            placeholder="Enter your name"
+            value={name ?? state.name}
+            onChange={(e) => setName(e.target.value)}
+            id={styles.pf_name}
+          />
+        </div>
+        <div className={styles.pf_form_group}>
+          <label htmlFor="about" className={styles.pf_label}>
+            About
+          </label>
+          <textarea
+            rows={4}
+            value={about ?? state.number}
+            onChange={(e) => setAbout(e.target.value)}
+            id={styles.pf_about}
+            className={styles.pf_input}
+            placeholder=""
+          ></textarea>
+        </div>
+        <div className={styles.pf_form_bottom}>
+          <button
+            disabled={!name && !about}
+            className={`${styles.pf_form_button} theme-bg-text`}
+          >
+            Save Edite
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

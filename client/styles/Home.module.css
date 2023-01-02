@@ -7,16 +7,20 @@
 .main {
   display: flex;
   flex-grow: 1;
+  position: relative;
 }
-.center_div {
+.contacts_info {
   min-width: 20rem;
   overflow: hidden;
   position: relative;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
     flex-direction: column;
+  }
+  .contacts_info {
+    width: 100%;
   }
   .main {
     order: 1;

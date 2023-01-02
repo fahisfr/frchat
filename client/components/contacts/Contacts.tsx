@@ -9,9 +9,8 @@ import getDate from "../../helper/getDate";
 
 function Contacts() {
   const { state, dispatch, reducerActionTypes } = getContext();
-
   const [search, setSearch] = useState<string>("");
-
+  
   return (
     <div className={styles.contacts_container}>
       <div className={styles.top}>
@@ -37,7 +36,7 @@ function Contacts() {
             const messages = contact?.messages;
             const lastMessage = messages
               .reverse()
-              .find((message) => (message.from === contact.number));
+              .find((message) => message.from === contact.number);
             return (
               <div
                 className={styles.contact}

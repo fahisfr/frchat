@@ -1,4 +1,4 @@
-.sidebar_container {
+.navbar_container {
   height: 100%;
   background-color: var(--gray_100);
   padding: 10px;
@@ -49,8 +49,8 @@
   /* color: rgb(0, 140, 255); */
 }
 
-@media (max-width: 600px) {
-  .sidebar_container {
+@media (max-width: 768px) {
+  .navbar_container {
     order: 2;
     flex-direction: row;
     padding: 0;

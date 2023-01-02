@@ -1,9 +1,15 @@
-import styles from "./css.module.css";
+import styles from "./css.module.scss";
 import { FiArrowLeft } from "react-icons/fi";
-import { faker } from "@faker-js/faker";
 import Image from "next/image";
-import { Trigger } from "../../helper/interfaces";
-function ContactProfile({ trigger, setTrigger }: Trigger) {
+import { Trigger, Contact } from "../../helper/interfaces";
+import { getProfileUrl } from "../../helper/axios";
+
+interface ContactProfileProps extends Trigger {
+  contact: Contact;
+}
+
+function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
+
   return (
     <div
       className={`${styles.contact_profile} ${
@@ -23,14 +29,17 @@ function ContactProfile({ trigger, setTrigger }: Trigger) {
               fill
               alt=""
               className="rounded-full"
-              src={faker.image.avatar()}
+              src={getProfileUrl(contact.profile)}
             />
           </div>
           <div className={styles.pf_number}>
-            <span>{faker.phone.phoneNumber("+91 ##########")}</span>
+            <span>{contact.number}</span>
           </div>
           <div className={styles.pf_name}>
-            <span>Random name</span>
+            <span>{contact.name}</span>
+          </div>
+          <div>
+            <span>{contact.about}</span>
           </div>
         </div>
       </div>

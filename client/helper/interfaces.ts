@@ -12,6 +12,7 @@ export interface Contact {
   name: string;
   number: number;
   profile: string;
+  about: string;
   onlineStatus: boolean;
   messages: Message[];
 }
@@ -21,6 +22,7 @@ export interface User {
   name: string;
   number: number;
   profile: string;
+  about: string;
   contacts: Contact[];
   selectedContact: number;
   isAuth: boolean;
