@@ -13,7 +13,7 @@ interface navBarProps {
 }
 
 function NavBar({ setProfileTrigger }: navBarProps) {
-  const { state } = getContext();
+  const { state, reducerActionTypes, dispatch } = getContext();
   const [addContact, setAddContact] = useState(false);
 
   return (
@@ -23,7 +23,14 @@ function NavBar({ setProfileTrigger }: navBarProps) {
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
       </div>
       <div className={styles.options}>
-        <div className={styles.group}>
+        <div
+          className={styles.group}
+          onClick={() =>
+            dispatch({
+              type: reducerActionTypes.CHANGE_THEME,
+            })
+          }
+        >
           <AiOutlineHome className={styles.icons} />
         </div>
         <div

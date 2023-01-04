@@ -1,36 +1,37 @@
 .send_message {
-  padding: 20px ;
+  padding: 20px;
   display: flex;
-  background-color: #edf0f9;
+  background-color: var(--bg-secondary);
 }
 
 .input_wrappe {
   position: relative;
   display: flex;
   width: 100%;
-  background: none;
-  background-color: #ffffff;
   border: 1px solid #ffffff3d;
   border-radius: 5px;
   padding-top: 15px;
   padding-bottom: 10px;
   padding-left: 8px;
+  background-color: var(--bg-primary);
   padding-right: 10px;
-  box-shadow: var(----box-shadow);
+  /* box-shadow: var(----box-shadow); */
 }
 .message_input {
   flex-grow: 1;
   border: none;
   outline: none;
+  background-color: initial;
   border-radius: 10px;
   font-size: 15px;
   overflow: hidden;
   resize: none;
+  color: var(--color-primary);
   font-family: inherit;
 }
 .ap_types {
   position: relative;
-  background: none;
+
   align-items: flex-end;
 }
 .emoji_picker {

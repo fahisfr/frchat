@@ -1,19 +1,8 @@
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useReducer,
-  Dispatch,
-} from "react";
+import { createContext, useContext, ReactNode, useReducer } from "react";
 
 import { User } from "./interfaces";
+import reducer, { reducerActionTypes } from "./reducerActions";
 
-const reducerActionTypes = {
-  LOGIN: "LOGIN",
-  SELECTEDCONTACT: "SELECTED_CONTACT",
-  ADD_MESSAGE: "ADD_MESSAGE",
-  CHANGE_USER_ONLINE_STATUS: "CHANGE_USER_ONLINE_STATUS",
-};
 
 const InitionsState = {
   socket: null,
@@ -24,6 +13,7 @@ const InitionsState = {
   about: "",
   selectedContact: 0,
   isAuth: false,
+  darkTheme: "true",
 };
 
 interface ContextProps {
@@ -32,62 +22,11 @@ interface ContextProps {
   reducerActionTypes: typeof reducerActionTypes;
 }
 
-interface Payload {
-  number: number;
-  status: boolean;
-}
-
-interface ReducerAction extends User {
-  type: string;
-  payload: Payload;
-}
-
 const Context = createContext<ContextProps>({
   state: InitionsState,
   dispatch: (action: any) => {},
   reducerActionTypes: reducerActionTypes,
 });
-
-const reducer = (state: User, { type, payload }: ReducerAction) => {
-  switch (type) {
-    case reducerActionTypes.LOGIN:
-      return { ...state, ...payload };
-    case reducerActionTypes.SELECTEDCONTACT:
-      return { ...state, selectedContact: payload.number };
-
-    case reducerActionTypes.ADD_MESSAGE: {
-      const updatedContacts = state.contacts.map((contact) => {
-        if (contact.number === payload.number) {
-          if (!contact.messages) {
-            contact.messages = [];
-          }
-
-          return {
-            ...contact,
-            messages: [...contact.messages, payload],
-          };
-        }
-        return contact;
-      });
-      return { ...state, contacts: updatedContacts };
-    }
-    case reducerActionTypes.CHANGE_USER_ONLINE_STATUS: {
-      const updatedContacts = state.contacts.map((contact) => {
-        if (contact.number === payload.number) {
-          return {
-            ...contact,
-            onlineStatus: payload.status,
-          };
-        }
-        return contact;
-      });
-      return { ...state, contacts: updatedContacts };
-    }
-
-    default:
-      throw new Error();
-  }
-};
 
 function ContextProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, InitionsState);

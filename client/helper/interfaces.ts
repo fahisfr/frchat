@@ -26,6 +26,7 @@ export interface User {
   contacts: Contact[];
   selectedContact: number;
   isAuth: boolean;
+  darkTheme: string;
 }
 
 export interface Trigger {

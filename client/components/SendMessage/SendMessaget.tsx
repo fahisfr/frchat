@@ -1,17 +1,23 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./css.module.css";
 import dynamic from "next/dynamic";
 
-import { BsEmojiSmile } from "react-icons/bs";
+import { BsEmojiSmile, BsFillArrowDownCircleFill } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
 import { getContext } from "../../helper/context";
+
 const Picker = dynamic(
   () => {
     return import("emoji-picker-react");
   },
   { ssr: false }
 );
-function SendMessage() {
+
+interface SendMessageProps {
+  scrollToBottom: () => void;
+}
+
+function SendMessage({ scrollToBottom }: SendMessageProps) {
   const {
     state: { socket, number, selectedContact },
     dispatch,
@@ -22,13 +28,14 @@ function SendMessage() {
   const [text, setText] = useState("");
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
+
+
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (socket === null) return;
 
     socket.emit("send-message", { text, to: selectedContact });
-    
 
     dispatch({
       type: reducerActionTypes.ADD_MESSAGE,
@@ -40,6 +47,7 @@ function SendMessage() {
       },
     });
     setText("");
+    scrollToBottom();
   };
 
   const onEmojiClick = (emojiObject: unknown) => {
@@ -60,6 +68,9 @@ function SendMessage() {
   };
   return (
     <form className={styles.send_message} onSubmit={sendMessage}>
+      {/* <div onClick={() => scrollToBottom()}>
+        <BsFillArrowDownCircleFill />
+      </div> */}
       <div className={styles.input_wrappe}>
         <textarea
           ref={messageInputRef}
@@ -71,8 +82,6 @@ function SendMessage() {
           className={styles.message_input}
         />
         <div className={styles.ap_types}>
-          {/* <input ref={fileInputRef} type="file" className={styles.file_input} />
-          <AiOutlineFileImage className={styles.icon} /> */}
           <BsEmojiSmile
             className={styles.icon}
             onClick={() => setEmojiPicker(!emojiPicker)}

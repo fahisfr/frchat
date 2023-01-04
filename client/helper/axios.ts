@@ -44,9 +44,9 @@ instance.interceptors.response.use(
   }
 );
 
-type Method = "POST" | "GET" | "DELETE";
+type Method = "POST" | "GET" | "DELETE" | "PUT";
 
-export const axiosRequest = (method: Method, path: string, body?: any): any => {
+export default (method: Method, path: string, body?: any): any => {
   return new Promise(async (resolve, reject) => {
     try {
       let response;
@@ -59,6 +59,9 @@ export const axiosRequest = (method: Method, path: string, body?: any): any => {
           break;
         case "DELETE":
           response = await instance.delete(path);
+          break;
+        case "PUT":
+          response = instance.put(path);
           break;
         default:
           throw new Error(`Invalid method: ${method}`);
@@ -80,5 +83,3 @@ export const axiosRequest = (method: Method, path: string, body?: any): any => {
     }
   });
 };
-
-export default instance;

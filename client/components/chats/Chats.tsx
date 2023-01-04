@@ -1,5 +1,5 @@
 import styles from "./css.module.scss";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
@@ -7,17 +7,38 @@ import { getContext } from "../../helper/context";
 import getDate from "../../helper/getDate";
 import ContactProfile from "../profile/ContactProfile";
 import { getProfileUrl } from "../../helper/axios";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical, BsFillArrowDownCircleFill } from "react-icons/bs";
+
 function Chats() {
   const [contactProfile, setContactProfile] = useState<boolean>(false);
   const { state, dispatch, reducerActionTypes } = getContext();
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const endMessageRef = useRef<HTMLDivElement>(null);
+  const downArrowRef = useRef<HTMLHRElement>(null);
+  const [showButton, setShowButton] = useState(true);
+
+  const handleScroll = () => {
+    if (downArrowRef.current != null) {
+      const div = downArrowRef.current;
+      const isAtBottom = div.scrollHeight - div.scrollTop === div.clientHeight;
+      setShowButton(!isAtBottom);
+    }
+  };
+  const scrollToBottom = () => {
+    if (endMessageRef.current) {
+      endMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   if (!state.selectedContact) {
     return (
-      <div>
-        <div>
-          <div></div>
-          <div></div>
+      <div className={styles.ch}>
+        <div className={styles.ch_container}>
+          <div className={styles.ch_web_logo}>
+            <Image src="/frlogo.png" fill alt="" />
+          </div>
+          <div>
+            <span> Select Contact to Chat </span>
+          </div>
         </div>
       </div>
     );
@@ -32,9 +53,6 @@ function Chats() {
     });
   };
 
-  if (bottomRef.current) {
-    bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  }
   const contact = state.contacts.find(
     (contact) => contact.number === state.selectedContact
   );
@@ -69,8 +87,12 @@ function Chats() {
           </div>
         </div>
 
-        <div className={styles.messages}>
-          {contact?.messages.reverse().map((message, index) => {
+        <div
+          className={styles.messages}
+          ref={downArrowRef}
+          onScroll={handleScroll}
+        >
+          {contact?.messages.map((message, index) => {
             return message.from === state.number ? (
               <div className={`${styles.user_message} ${styles.message}`}>
                 <div className={styles.message_wrapper}>
@@ -106,12 +128,13 @@ function Chats() {
                 </div>
               </div>
             );
-          })}
-
-          <div ref={bottomRef}></div>
+          })}{" "}
+          <div ref={endMessageRef}></div>
         </div>
-        <SendMessage />
+
+        <SendMessage scrollToBottom={scrollToBottom} />
       </div>
+
       <ContactProfile
         trigger={contactProfile}
         setTrigger={setContactProfile}

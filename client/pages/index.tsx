@@ -57,7 +57,7 @@ function Index() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-theme={state.darkTheme.toString()}>
       <NavBar setProfileTrigger={setProfile} />
       <main className={styles.main}>
         <div className={styles.contacts_info}>

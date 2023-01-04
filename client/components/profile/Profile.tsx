@@ -5,7 +5,7 @@ import { AiFillCamera } from "react-icons/ai";
 
 import Image from "next/image";
 import { getContext } from "../../helper/context";
-import { getProfileUrl } from "../../helper/axios";
+import axios, { getProfileUrl } from "../../helper/axios";
 import { Trigger } from "../../helper/interfaces";
 
 interface ProfilePhoto {
@@ -16,14 +16,15 @@ interface ProfilePhoto {
 function Profile({ trigger, setTrigger }: Trigger) {
   const { state } = getContext();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [name, setName] = useState<string>("");
-  const [about, setAbout] = useState<string>("");
+  const [newAbout, setAbout] = useState<string>("");
   const [profielPhoto, setProfilePhoto] = useState<ProfilePhoto>({
     file: null,
     preview: "",
   });
 
-  const editProfile = () => {
+ 
+
+  const changeProfiel = () => {
     if (inputRef.current != null) {
       inputRef.current.click();
     }
@@ -58,7 +59,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
       </div>
       <div className={styles.pf_body}>
         <div className={styles.pf_info}>
-          <div className={styles.pf_profile} onClick={editProfile}>
+          <div className={styles.pf_profile} onClick={changeProfiel}>
             <Image
               fill
               alt=""
@@ -84,24 +85,12 @@ function Profile({ trigger, setTrigger }: Trigger) {
       </div>
       <form className={styles.pf_form}>
         <div className={styles.pf_form_group}>
-          <label htmlFor="name" className={styles.pf_label}>
-            Name
-          </label>
-          <input
-            className={styles.pf_input}
-            placeholder="Enter your name"
-            value={name ?? state.name}
-            onChange={(e) => setName(e.target.value)}
-            id={styles.pf_name}
-          />
-        </div>
-        <div className={styles.pf_form_group}>
           <label htmlFor="about" className={styles.pf_label}>
             About
           </label>
           <textarea
             rows={4}
-            value={about ?? state.number}
+            value={newAbout ? newAbout : state.about}
             onChange={(e) => setAbout(e.target.value)}
             id={styles.pf_about}
             className={styles.pf_input}
@@ -110,7 +99,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
         </div>
         <div className={styles.pf_form_bottom}>
           <button
-            disabled={!name && !about}
+            disabled={!newAbout}
             className={`${styles.pf_form_button} theme-bg-text`}
           >
             Save Edite

@@ -22,7 +22,7 @@ const addContact = async (req, res, next) => {
         },
       }
     );
-      console.log(addNewContact)
+    console.log(addNewContact);
     if (!addNewContact) {
       return res.json({ status: "error", error: "" });
     }
@@ -30,6 +30,28 @@ const addContact = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+const changeName = async (req, res, next) => {
+  try {
+    const dbRes = dbUser({ _id: req.user.id });
+  } catch (error) {}
+};
+
+const removeContact = async (req, res, next) => {
+  const dbRes = await dbUser.updateOne(
+    { id: req.user.id },
+    {
+      $pull: {
+        contact: req.body.number,
+      },
+    }
+  );
+
+  if (dbRes) {
+    res.json({ status: "ok" });
+  }
+  res.json({ status: "error", error: "cann't remove contact" });
 };
 
 module.exports = { addContact };

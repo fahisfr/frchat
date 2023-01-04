@@ -1,4 +1,4 @@
-import { axiosRequest } from "../../helper/axios";
+import axios from "../../helper/axios";
 import React, { FormEvent, useState } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ function index() {
       setError("Plase enter a valid number");
       return;
     }
-    const response = await axiosRequest("POST", "/auth/login", {
+    const response = await axios("POST", "/auth/login", {
       number,
       counteryCode,
       otp,

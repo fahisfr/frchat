@@ -3,12 +3,28 @@ import { FiArrowLeft } from "react-icons/fi";
 import Image from "next/image";
 import { Trigger, Contact } from "../../helper/interfaces";
 import { getProfileUrl } from "../../helper/axios";
+import { useState } from "react";
+import axios from "../../helper/axios";
 
 interface ContactProfileProps extends Trigger {
   contact: Contact;
 }
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
+  const [newName, setNewName] = useState<string>("");
+
+  const removeContact = async () => {
+    const res = await axios("PUT", "contact/remove", {
+      number: contact.number,
+    });
+  };
+
+  const changeName = async () => {
+    const res = await axios("PUT", "contact/change-name", {
+      number: contact.number,
+      newName,
+    });
+  };
 
   return (
     <div
@@ -35,12 +51,26 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
           <div className={styles.pf_number}>
             <span>{contact.number}</span>
           </div>
-          <div className={styles.pf_name}>
-            <span>{contact.name}</span>
-          </div>
           <div>
-            <span>{contact.about}</span>
+            <div>
+              <span>{contact.about}</span>
+            </div>
           </div>
+        </div>
+        <div className={styles.pf_contact_options}>
+          <div>
+            <label>Saved Name</label>
+            <input
+              className={styles.pf_input}
+              id={styles.pf_name}
+              value={newName === "" ? contact.name : newName}
+              onChange={(e) => setNewName(e.target.value)}
+            />
+          </div>
+          <button className={`${styles.pf_button} theme-bg-text`}>Save</button>
+          <button className={`${styles.pf_button} ${styles.remove_contact}`}>
+            Remove Contact
+          </button>
         </div>
       </div>
     </div>

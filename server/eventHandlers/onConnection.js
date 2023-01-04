@@ -37,7 +37,7 @@ module.exports = async (socket) => {
             name: 1,
             number: 1,
             messages: 1,
-            about:"$contactInfo.about",
+            about: { $arrayElemAt: ["$contactInfo.about", 0] },
             profile: {
               $arrayElemAt: ["$contactInfo.profile", 0],
             },
@@ -49,6 +49,7 @@ module.exports = async (socket) => {
           _id: null,
           number: { $first: "$number" },
           profile: { $first: "$profile" },
+          about: { $first: "$about" },
           contacts: {
             $push: "$contacts",
           },
@@ -68,7 +69,7 @@ module.exports = async (socket) => {
     });
 
     socket.user.contacts = userInfo[0].contacts;
-
+    console.log(userInfo[0]);
     socket.emit("on-connect", { userInfo: userInfo[0] });
 
     socket.on("send-message", async ({ to, text }) => {

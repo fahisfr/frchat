@@ -1,10 +1,10 @@
 .navbar_container {
   height: 100%;
-  background-color: var(--gray_100);
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: var(--bg-primary);
 }
 
 .wb_logo {
@@ -12,7 +12,6 @@
   height: 2.5rem;
   border-radius: 50%;
   position: relative;
-  background-color: rgb(255, 255, 255);
 }
 
 .profile {
@@ -43,9 +42,8 @@
 }
 .icons {
   font-size: 2rem;
-  color: #0178ff;
+  color: var(--color-blue);
   cursor: pointer;
-
   /* color: rgb(0, 140, 255); */
 }
 
