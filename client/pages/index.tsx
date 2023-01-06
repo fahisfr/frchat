@@ -4,6 +4,7 @@ import NavBar from "../components/navBar/navBar";
 import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
 import Profile from "../components/profile/Profile";
+import SidePopUpMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
 
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
@@ -11,6 +12,9 @@ import { getContext } from "../helper/context";
 import { User } from "../helper/interfaces";
 
 function Index() {
+
+
+
   const { state, dispatch, reducerActionTypes } = getContext();
   const [profile, setProfile] = useState<boolean>(false);
 
@@ -26,10 +30,17 @@ function Index() {
         type: "LOGIN",
         payload: { ...info.userInfo, isAuth: true, socket },
       });
-      console.log(info);
     });
 
-    socket.on("connect_error", (err) => {});
+    socket.on("connect_error", (err) => {
+      dispatch({
+        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+        payload: {
+          error: true,
+          message: "faild to login to this website",
+        },
+      });
+    });
 
     socket.on("recieve-message", (message) => {
       dispatch({
@@ -58,6 +69,7 @@ function Index() {
 
   return (
     <div className={styles.container} data-theme={state.darkTheme.toString()}>
+      <SidePopUpMessage />
       <NavBar setProfileTrigger={setProfile} />
       <main className={styles.main}>
         <div className={styles.contacts_info}>

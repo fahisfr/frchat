@@ -5,14 +5,15 @@ import { Trigger, Contact } from "../../helper/interfaces";
 import { getProfileUrl } from "../../helper/axios";
 import { useState } from "react";
 import axios from "../../helper/axios";
-
+import { getContext } from "../../helper/context";
 interface ContactProfileProps extends Trigger {
   contact: Contact;
 }
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
-  const [newName, setNewName] = useState<string>("");
-
+  const [newName, setNewName] = useState<string>(contact.name);
+  const { state, dispatch, reducerActionTypes, triggerSidePopUpMessage } =
+    getContext();
   const removeContact = async () => {
     const res = await axios("PUT", "contact/remove", {
       number: contact.number,
@@ -20,10 +21,20 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
   };
 
   const changeName = async () => {
-    const res = await axios("PUT", "contact/change-name", {
+    const response = await axios("PUT", "contact/change-name", {
       number: contact.number,
-      newName,
+      name: newName,
     });
+
+    if (response) {
+      dispatch({
+        type: reducerActionTypes.CHANGE_CONTACT_NAME,
+        payload: { name: newName, number: contact.number },
+      });
+      triggerSidePopUpMessage({ error: false, message: response.message });
+    } else {
+      triggerSidePopUpMessage({ error: true, message: response.error });
+    }
   };
 
   return (
@@ -63,11 +74,17 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
             <input
               className={styles.pf_input}
               id={styles.pf_name}
-              value={newName === "" ? contact.name : newName}
+              value={newName}
               onChange={(e) => setNewName(e.target.value)}
             />
           </div>
-          <button className={`${styles.pf_button} theme-bg-text`}>Save</button>
+          <button
+            disabled={newName === contact.name}
+            onClick={changeName}
+            className={`${styles.pf_button} theme-bg-text`}
+          >
+            Save
+          </button>
           <button className={`${styles.pf_button} ${styles.remove_contact}`}>
             Remove Contact
           </button>

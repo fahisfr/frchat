@@ -22,7 +22,7 @@ const addContact = async (req, res, next) => {
         },
       }
     );
-    console.log(addNewContact);
+
     if (!addNewContact) {
       return res.json({ status: "error", error: "" });
     }
@@ -34,8 +34,26 @@ const addContact = async (req, res, next) => {
 
 const changeName = async (req, res, next) => {
   try {
-    const dbRes = dbUser({ _id: req.user.id });
-  } catch (error) {}
+
+    const dbRes = await dbUser.updateOne(
+      { _id: req.user.id },
+      {
+        $set: {
+          "contacts.$[ind].name": req.body.name,
+        },
+      },
+      {
+        arrayFilters: [{ "ind.number": req.body.number }],
+      }
+    );
+
+    if (dbRes) {
+      return res.json({ status: "ok", message: "Contact name changed" });
+    }
+    res.json({ status: "error" });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const removeContact = async (req, res, next) => {
@@ -54,4 +72,4 @@ const removeContact = async (req, res, next) => {
   res.json({ status: "error", error: "cann't remove contact" });
 };
 
-module.exports = { addContact };
+module.exports = { addContact, changeName };

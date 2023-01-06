@@ -10,23 +10,35 @@ import { Trigger } from "../../helper/interfaces";
 
 interface ProfilePhoto {
   file: File | null;
-  preview: string;
+  preview: string | ArrayBuffer | null;
 }
 
 function Profile({ trigger, setTrigger }: Trigger) {
-  const { state } = getContext();
+  const { state, triggerSidePopUpMessage } = getContext();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [newAbout, setAbout] = useState<string>("");
+  const [newAbout, setAbout] = useState<string>(state.about);
   const [profielPhoto, setProfilePhoto] = useState<ProfilePhoto>({
     file: null,
     preview: "",
   });
 
- 
+  const save = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    if (newAbout) {
+      formData.append("about", newAbout);
+    }
+    if (profielPhoto.file) {
+      formData.append("profile", profielPhoto.file);
+    }
 
-  const changeProfiel = () => {
-    if (inputRef.current != null) {
-      inputRef.current.click();
+    const response = await axios("PUT", "user/edit-profile", formData);
+
+    if (response) {
+      triggerSidePopUpMessage({ error: false, message: response.message });
+    } else {
+      console.log("this is a error");
+      triggerSidePopUpMessage({ error: true, message: response.error });
     }
   };
 
@@ -59,13 +71,16 @@ function Profile({ trigger, setTrigger }: Trigger) {
       </div>
       <div className={styles.pf_body}>
         <div className={styles.pf_info}>
-          <div className={styles.pf_profile} onClick={changeProfiel}>
+          <div
+            className={styles.pf_profile}
+            onClick={() => inputRef?.current?.click()}
+          >
             <Image
               fill
               alt=""
               className="rounded-full"
               src={
-                profielPhoto.preview === " "
+                profielPhoto.preview
                   ? profielPhoto.preview
                   : getProfileUrl(state.profile)
               }
@@ -90,7 +105,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
           </label>
           <textarea
             rows={4}
-            value={newAbout ? newAbout : state.about}
+            value={newAbout}
             onChange={(e) => setAbout(e.target.value)}
             id={styles.pf_about}
             className={styles.pf_input}
@@ -99,10 +114,11 @@ function Profile({ trigger, setTrigger }: Trigger) {
         </div>
         <div className={styles.pf_form_bottom}>
           <button
-            disabled={!newAbout}
-            className={`${styles.pf_form_button} theme-bg-text`}
+            onClick={save}
+            disabled={newAbout === state.about && !profielPhoto.file}
+            className={`${styles.pf_button} theme-bg-text`}
           >
-            Save Edite
+            Save
           </button>
         </div>
       </form>

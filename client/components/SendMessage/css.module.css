@@ -1,5 +1,6 @@
 .send_message {
   padding: 20px;
+  padding-top: 0;
   display: flex;
   background-color: var(--bg-secondary);
 }
@@ -36,6 +37,9 @@
 }
 .emoji_picker {
   position: absolute;
+  bottom: 100%;
+  right: 100%;
+  z-index: 10;
 }
 .icon {
   cursor: pointer;

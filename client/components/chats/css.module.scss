@@ -94,7 +94,18 @@
     color: var(--gray-500);
   }
 }
-
+.cs_arrow_down {
+  background-color: var(--bg-secondary);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+.icon_arrow_down {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--color-primary);
+}
 @media (max-width: 768px) {
   .ch {
     display: none;

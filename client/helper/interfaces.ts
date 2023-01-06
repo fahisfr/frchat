@@ -1,3 +1,4 @@
+import { Trigger } from "./interfaces";
 import { Dispatch, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 
@@ -16,6 +17,11 @@ export interface Contact {
   onlineStatus: boolean;
   messages: Message[];
 }
+export interface SidePopUpMessage {
+  trigger: boolean;
+  error: boolean;
+  message: string;
+}
 
 export interface User {
   socket: Socket | null;
@@ -26,10 +32,16 @@ export interface User {
   contacts: Contact[];
   selectedContact: number;
   isAuth: boolean;
-  darkTheme: string;
+  darkTheme: boolean;
+  sidePopUpMessage: SidePopUpMessage;
 }
 
 export interface Trigger {
   trigger: boolean;
   setTrigger: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface TriggerSidePopUpMessage {
+  error: boolean;
+  message: string;
 }

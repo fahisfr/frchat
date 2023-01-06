@@ -1,0 +1,36 @@
+.side_popup {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  max-width: 30rem;
+  border-radius: 5px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.sb_on {
+  transform: translate(0);
+}
+.sb_colse {
+  transform: translate(120%);
+}
+
+.sp_body {
+  height: 100%;
+  padding: 13px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  column-gap: 10px;
+  color: white;
+}
+.sp_icon_error {
+  font-size: 2.2rem;
+}
+.sp_icon_success {
+  font-size: 2rem;
+}
+.sp_message {
+  font-weight: 400;
+}

@@ -5,15 +5,16 @@
   overflow: hidden;
   background-color: var(--bg-primary);
   color: var(--color-primary);
+  position: relative;
 }
 .main {
   display: flex;
   flex-grow: 1;
+  overflow: hidden;
   position: relative;
 }
 .contacts_info {
   min-width: 20rem;
-  overflow: hidden;
   position: relative;
 }
 

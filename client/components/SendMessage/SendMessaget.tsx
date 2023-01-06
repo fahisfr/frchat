@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./css.module.css";
 import dynamic from "next/dynamic";
 
 import { BsEmojiSmile, BsFillArrowDownCircleFill } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
 import { getContext } from "../../helper/context";
+import clickOutside from "../../helper/clickOutSide";
 
 const Picker = dynamic(
   () => {
@@ -24,11 +25,12 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
     reducerActionTypes,
   } = getContext();
 
-  const [emojiPicker, setEmojiPicker] = useState(false);
-  const [text, setText] = useState("");
+  const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
+  const [text, setText] = useState<string>("");
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const emojiPickerRef = useRef(null);
 
-
+  clickOutside(emojiPickerRef, () => setEmojiPicker(false));
 
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,11 +49,11 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
       },
     });
     setText("");
-    scrollToBottom();
+    // scrollToBottom();
   };
 
   const onEmojiClick = (emojiObject: unknown) => {
-    setText(`${text}${emojiObject}`);
+    setText(`${text}${emojiObject.emoji}`);
   };
 
   const messageInputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -68,9 +70,6 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
   };
   return (
     <form className={styles.send_message} onSubmit={sendMessage}>
-      {/* <div onClick={() => scrollToBottom()}>
-        <BsFillArrowDownCircleFill />
-      </div> */}
       <div className={styles.input_wrappe}>
         <textarea
           ref={messageInputRef}
@@ -87,13 +86,12 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
             onClick={() => setEmojiPicker(!emojiPicker)}
           />
           {emojiPicker && (
-            <div className={styles.emoji_picker}>
+            <div ref={emojiPickerRef} className={styles.emoji_picker}>
               <Picker onEmojiClick={onEmojiClick} />
             </div>
           )}
-        </div>
-      </div>
-
+        </div>{" "}
+      </div>{" "}
       <button type="submit" className={styles.send_btn}>
         <BiSend />
       </button>

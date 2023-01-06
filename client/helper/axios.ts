@@ -23,26 +23,26 @@ instance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-instance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const prevRequest = error?.config;
-    if (error.response.status === 403 && !prevRequest.sent) {
-      prevRequest.sent = true;
-      const { data } = await instance.get("/auth/refresh", {
-        withCredentials: true,
-      });
-      if (data.status == "ok") {
-        localStorage.setItem("auth_token", data.token);
-        return instance.request(prevRequest);
-      }
+// instance.interceptors.response.use(
+//   (response) => response,
+//   async (error) => {
+//     const prevRequest = error?.config;
+//     if (error.response.status === 403 && !prevRequest.sent) {
+//       prevRequest.sent = true;
+//       const { data } = await instance.get("/auth/refresh", {
+//         withCredentials: true,
+//       });
+//       if (data.status == "ok") {
+//         localStorage.setItem("auth_token", data.token);
+//         return instance.request(prevRequest);
+//       }
 
-      localStorage.removeItem("auth_token");
-      return Promise.reject(error);
-    }
-    return Promise.reject(error);
-  }
-);
+//       localStorage.removeItem("auth_token");
+//       return Promise.reject(error);
+//     }
+//     return Promise.reject(error);
+//   }
+// );
 
 type Method = "POST" | "GET" | "DELETE" | "PUT";
 
@@ -58,10 +58,10 @@ export default (method: Method, path: string, body?: any): any => {
           response = await instance.get(path);
           break;
         case "DELETE":
-          response = await instance.delete(path);
+          response = await instance.delete(path, body);
           break;
         case "PUT":
-          response = instance.put(path);
+          response = await instance.put(path, body);
           break;
         default:
           throw new Error(`Invalid method: ${method}`);
@@ -74,6 +74,8 @@ export default (method: Method, path: string, body?: any): any => {
           resolve(data);
         } else if (data.status === "error") {
           reject(data);
+        } else {
+  
         }
       } else {
         reject({ status: "error", error: response.message });

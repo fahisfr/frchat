@@ -1,5 +1,6 @@
 const dbUser = require("../dbSChemas/user");
 const jwt = require("jsonwebtoken");
+
 const createTokens = (info) => {
   return {
     refreshToken: jwt.sign(info, process.env.REFRESH_TOKEN_SECRET, {
@@ -41,6 +42,15 @@ const login = async (req, res, next) => {
   }
 };
 
+const editProfile = (req, res, next) => {
+  try {
+   
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   login,
+  editProfile,
 };
