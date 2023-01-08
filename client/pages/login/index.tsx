@@ -2,11 +2,13 @@ import axios from "../../helper/axios";
 import React, { FormEvent, useState } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";
+import { getContext } from "../../helper/context";
 
 function index() {
   const router = useRouter();
 
-  const [error, setError] = useState<string>("");
+  const { triggerSidePopUpMessage } = getContext();
+
   const [number, setNumber] = useState<number>(123456790);
   const [counteryCode, setCounteryCode] = useState();
   const [otp, sentOtp] = useState(new Array(4).fill(""));
@@ -16,10 +18,10 @@ function index() {
 
     if (number.toString.length === 10) {
       console.log(number.toString.length);
-      setError("Plase enter a valid number");
+
       return;
     }
-    const response = await axios("POST", "/auth/login", {
+    const response = await axios.post("/auth/login", {
       number,
       counteryCode,
       otp,
@@ -29,14 +31,13 @@ function index() {
       localStorage.setItem("auth_token", response.token);
       router.replace("/");
     } else {
-      setError(response.error);
+      triggerSidePopUpMessage({ error: true, message: response.error });
     }
   };
 
   return (
     <div className={styles.login_container}>
       <div className={styles.lg_body}>
-        {error && <span>{error}</span>}
         <div className={styles.lg_title}>
           <h1 className={styles.lg_title_text}>Enter Your Phone Number</h1>
         </div>

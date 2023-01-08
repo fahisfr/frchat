@@ -29,6 +29,7 @@ body {
   --border-secondary: #f3f4f6;
   --box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
     rgba(27, 31, 35, 0.055) 0px 0px 0px 1px;
+  --just-loading: just-loading;
 }
 
 [data-theme="true"] {
@@ -107,4 +108,42 @@ input[type="number"]::-webkit-outer-spin-button {
 ::-webkit-scrollbar-thumb {
   background-color: #007ce834;
   border-radius: 10px;
+}
+
+.btn {
+  background-color: var(--color-blue);
+  color: #ffffff;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  border: 1px solid var(--gray_300);
+}
+
+.btn_text {
+  visibility: visible;
+  opacity: 1;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #ffffff;
+  transition: all 0.3s ease-in;
+}
+
+.btn_loading .btn::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: var(--just-loading) 0.4s linear infinite;
+}
+.btn_loading .btn_text {
+  visibility: hidden;
+  opacity: 0;
 }

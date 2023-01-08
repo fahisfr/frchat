@@ -1,5 +1,5 @@
 import styles from "./css.module.scss";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
@@ -9,13 +9,14 @@ import ContactProfile from "../profile/ContactProfile";
 import { getProfileUrl } from "../../helper/axios";
 import { BsThreeDotsVertical, BsFillArrowDownCircleFill } from "react-icons/bs";
 
-
 function Chats() {
   const [contactProfile, setContactProfile] = useState<boolean>(false);
   const { state, dispatch, reducerActionTypes } = getContext();
   const endMessageRef = useRef<HTMLDivElement>(null);
   const downArrowRef = useRef<HTMLHRElement>(null);
   const [showButton, setShowButton] = useState(false);
+
+  useEffect(() => scrollToBottom());
 
   if (!state.selectedContact) {
     return (
@@ -47,15 +48,17 @@ function Chats() {
   const handleScroll = () => {
     if (downArrowRef.current != null) {
       const div = downArrowRef.current;
-      const isAtBottom = div.scrollHeight - div.scrollTop === div.clientHeight;
+
+      const isAtBottom =
+        div.scrollHeight - div.scrollTop === div.clientHeight ;
       setShowButton(!isAtBottom);
     }
   };
-  const scrollToBottom = () => {
+  function scrollToBottom() {
     if (endMessageRef.current) {
       endMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }
   return (
     <div className={styles.chats}>
       <div className={styles.contact_chats}>
@@ -132,7 +135,10 @@ function Chats() {
                 </div>
               );
             })}
-          <div className={styles.cs_arrow_down} ref={endMessageRef}></div>
+          <div
+            style={{ height: "1rem", backgroundColor: "blue" }}
+            ref={endMessageRef}
+          ></div>
         </div>
         <div className={styles.cs_arrow_down}>
           {showButton && (

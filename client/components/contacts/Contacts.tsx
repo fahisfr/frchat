@@ -35,7 +35,7 @@ function Contacts() {
           .map((contact, index) => {
             const messages = contact?.messages;
             const lastMessage = messages
-              .reverse()
+              ?.reverse()
               .find((message) => message.from === contact.number);
             return (
               <div

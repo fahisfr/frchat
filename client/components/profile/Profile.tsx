@@ -22,8 +22,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
     preview: "",
   });
 
-  const save = async (e) => {
-    e.preventDefault();
+  const save = async () => {
     const formData = new FormData();
     if (newAbout) {
       formData.append("about", newAbout);
@@ -32,25 +31,26 @@ function Profile({ trigger, setTrigger }: Trigger) {
       formData.append("profile", profielPhoto.file);
     }
 
-    const response = await axios("PUT", "user/edit-profile", formData);
+    const response = await axios.put("user/edit-profile", formData);
 
     if (response) {
       triggerSidePopUpMessage({ error: false, message: response.message });
     } else {
-      console.log("this is a error");
       triggerSidePopUpMessage({ error: true, message: response.error });
     }
   };
 
   const handleInputRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
+    if (e.target?.files) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
 
-    reader.onload = () => {
-      setProfilePhoto({ file, preview: reader.result });
-    };
+      reader.onload = () => {
+        setProfilePhoto({ file, preview: reader.result });
+      };
 
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
+    }
   };
 
   return (

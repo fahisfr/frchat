@@ -10,16 +10,18 @@ type AddContactProps = {
 function AddContact({ setTrigger }: AddContactProps) {
   const { triggerSidePopUpMessage } = getContext();
 
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const res = await axios("POST", "/contact/add-contact", {
+    setBtnLoading(true);
+    const res = await axios.post("/contact/add-contact", {
       name,
       number,
     });
+    setBtnLoading(false);
     if (res) {
       triggerSidePopUpMessage({ error: false, message: res.message });
     } else {
@@ -51,10 +53,11 @@ function AddContact({ setTrigger }: AddContactProps) {
               onChange={(e) => setNumber(e.target.value)}
             />
           </div>
-
-          <div className={styles.ac_bottom}>
-            <button type="submit">
-              <span>Add Contact</span>
+          <div
+            className={`${styles.ac_bottom}  ${btnLoading && "btn_loading"}`}
+          >
+            <button className={`${styles.ac_btn} btn`} type="submit">
+              <span className="btn_text">Add Contact</span>
             </button>
           </div>
         </form>

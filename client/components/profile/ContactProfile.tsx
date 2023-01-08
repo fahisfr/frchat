@@ -14,24 +14,41 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
   const [newName, setNewName] = useState<string>(contact.name);
   const { state, dispatch, reducerActionTypes, triggerSidePopUpMessage } =
     getContext();
+  const number = contact?.number;
+
+  const [saveBtnLoading, setSaveBtnLoading] = useState<boolean>(false);
+  const [remvoeBtnLoading, setRemoveBtnLoading] = useState<boolean>(false);
+
   const removeContact = async () => {
-    const res = await axios("PUT", "contact/remove", {
-      number: contact.number,
-    });
+    setRemoveBtnLoading(true);
+    const response = await axios("PUT", "contact/remove-contact", { number });
+    setRemoveBtnLoading(false);
+    if (response) {
+      dispatch({
+        type: reducerActionTypes.REMOVE_CONTACT,
+        payload: {
+          number,
+          message: response.message,
+        },
+      });
+    } else {
+      triggerSidePopUpMessage({ error: true, message: response.error });
+    }
   };
 
   const changeName = async () => {
-    const response = await axios("PUT", "contact/change-name", {
-      number: contact.number,
+    setSaveBtnLoading(true);
+    const response = await axios.put("contact/change-name", {
+      number: number,
       name: newName,
     });
-
+    setSaveBtnLoading(false);
     if (response) {
       dispatch({
         type: reducerActionTypes.CHANGE_CONTACT_NAME,
-        payload: { name: newName, number: contact.number },
+        payload: { name: newName, number },
       });
-      triggerSidePopUpMessage({ error: false, message: response.message });
+ 
     } else {
       triggerSidePopUpMessage({ error: true, message: response.error });
     }
@@ -60,7 +77,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
             />
           </div>
           <div className={styles.pf_number}>
-            <span>{contact.number}</span>
+            <span>{number}</span>
           </div>
           <div>
             <div>
@@ -78,16 +95,23 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
               onChange={(e) => setNewName(e.target.value)}
             />
           </div>
-          <button
-            disabled={newName === contact.name}
-            onClick={changeName}
-            className={`${styles.pf_button} theme-bg-text`}
-          >
-            Save
-          </button>
-          <button className={`${styles.pf_button} ${styles.remove_contact}`}>
-            Remove Contact
-          </button>
+          <div className={`${saveBtnLoading && "btn_loading"}`}>
+            <button
+              disabled={newName === contact.name}
+              onClick={changeName}
+              className={`${styles.pf_button} btn`}
+            >
+              <span className="btn_text">Save</span>
+            </button>
+          </div>
+          <div className={`${saveBtnLoading && "btn_loading"}`}>
+            <button
+              onClick={removeContact}
+              className={`${styles.pf_button} ${styles.remove_contact}`}
+            >
+              Remove Contact
+            </button>
+          </div>
         </div>
       </div>
     </div>

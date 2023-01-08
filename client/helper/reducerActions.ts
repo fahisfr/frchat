@@ -91,6 +91,20 @@ export default (state: User, { type, payload }: ReducerAction) => {
       };
     }
 
+    case reducerActionTypes.REMOVE_CONTACT: {
+      return {
+        ...state,
+        contacts: state.contacts.filter(
+          (contact) => contact.number !== payload.number
+        ),
+        sidePopUpMessage: {
+          trigger: true,
+          error: false,
+          message: payload?.message,
+        },
+      };
+    }
+
     default:
       throw new Error();
   }

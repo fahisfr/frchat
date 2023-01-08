@@ -2,11 +2,12 @@ const dbUser = require("../dbSChemas/user");
 
 const addContact = async (req, res, next) => {
   try {
+    res.send("hello")
     const {
       body: { name, number },
       user: { id },
     } = req;
-    console.log(req.body);
+
     const user = await dbUser.findOne({ number });
     if (!user) {
       return res.json({ status: "error", error: "user not found" });
@@ -34,7 +35,6 @@ const addContact = async (req, res, next) => {
 
 const changeName = async (req, res, next) => {
   try {
-
     const dbRes = await dbUser.updateOne(
       { _id: req.user.id },
       {
@@ -47,7 +47,7 @@ const changeName = async (req, res, next) => {
       }
     );
 
-    if (dbRes) {
+    if (dbRes.modifiedCount > 0) {
       return res.json({ status: "ok", message: "Contact name changed" });
     }
     res.json({ status: "error" });
@@ -61,12 +61,14 @@ const removeContact = async (req, res, next) => {
     { id: req.user.id },
     {
       $pull: {
-        contact: req.body.number,
+        contact: {
+          number: "",
+        },
       },
     }
   );
 
-  if (dbRes) {
+  if (dbRes.modifiedCount > 0) {
     res.json({ status: "ok" });
   }
   res.json({ status: "error", error: "cann't remove contact" });

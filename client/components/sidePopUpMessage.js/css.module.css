@@ -4,7 +4,7 @@
   top: 10px;
   max-width: 30rem;
   border-radius: 5px;
-  z-index: 10;
+  z-index: 99;
   transition: all 0.3s ease;
 }
 

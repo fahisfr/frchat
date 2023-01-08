@@ -23,7 +23,6 @@
   padding: 2rem;
   position: relative;
   background-color: var(--bg-primary);
-  
 }
 
 .ac_form {
@@ -51,18 +50,11 @@
     color: red;
   }
 }
+
 .ac_bottom {
   align-self: center;
-  button {
-    height: 2.5rem;
-    width: 15rem;
-    align-self: center;
-    border-radius: 8px;
-    border: 1px solid var(--gray_300);
-    font-size: 1rem;
-    font-weight: 500;
-    color: #ffffff;
-    background-color: var(--color-blue);
-    cursor: pointer;
-  }
+}
+.ac_btn {
+  height: 2.5rem;
+  width: 15rem;
 }

@@ -23,65 +23,47 @@ instance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-// instance.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     const prevRequest = error?.config;
-//     if (error.response.status === 403 && !prevRequest.sent) {
-//       prevRequest.sent = true;
-//       const { data } = await instance.get("/auth/refresh", {
-//         withCredentials: true,
-//       });
-//       if (data.status == "ok") {
-//         localStorage.setItem("auth_token", data.token);
-//         return instance.request(prevRequest);
-//       }
-
-//       localStorage.removeItem("auth_token");
-//       return Promise.reject(error);
-//     }
-//     return Promise.reject(error);
-//   }
-// );
-
-type Method = "POST" | "GET" | "DELETE" | "PUT";
-
-export default (method: Method, path: string, body?: any): any => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let response;
-      switch (method) {
-        case "POST":
-          response = await instance.post(path, body);
-          break;
-        case "GET":
-          response = await instance.get(path);
-          break;
-        case "DELETE":
-          response = await instance.delete(path, body);
-          break;
-        case "PUT":
-          response = await instance.put(path, body);
-          break;
-        default:
-          throw new Error(`Invalid method: ${method}`);
-      }
-
-      const { data } = response;
-
-      if (response.status === 200) {
-        if (data.status === "ok") {
-          resolve(data);
-        } else if (data.status === "error") {
-          reject(data);
-        } else {
-  
-        }
-      } else {
-        reject({ status: "error", error: response.message });
-      }
-    } catch (error: any) {
-      reject({ status: "error", error: error.message });
+instance.interceptors.response.use(
+  ({ data }) => {
+    if (data.status == "ok") {
+      return Promise.resolve(data);
+    } else if (data.status === "error") {
+      return Promise.reject(data);
+    } else {
+      return Promise.reject({
+        status: "error",
+        error: "invalid response data.status",
+      });
     }
-  });
-};
+  },
+  async (error) => {
+    const prevRequest = error?.config;
+    if (error.response.status === 403 && !prevRequest.sent) {
+      prevRequest.sent = true;
+      const { data } = await instance.get("/auth/refresh", {
+        withCredentials: true,
+      });
+      if (data.status == "ok") {
+        localStorage.setItem("auth_token", data.token);
+        return instance.request(prevRequest);
+      }
+
+      localStorage.removeItem("auth_token");
+      return Promise.reject({
+        status: "error",
+        error: "failed to refresh access token",
+      });
+    }
+    return Promise.reject({ status: "error", error: error.message });
+  }
+);
+
+// type Method = "POST" | "GET" | "DELETE" | "PUT";
+
+// export default (method: Method, path: string, body?: any): any => {
+//   return instance({ method, url: path, data: body }).then(
+//     ({ data }) => data,
+//     (error) => Promise.resolve({ status: "error", error: error.message })
+//   );
+// };
+export default instance;

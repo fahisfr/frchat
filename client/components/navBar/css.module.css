@@ -15,8 +15,8 @@
 }
 
 .profile {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   position: relative;
 }
 .profile_img {
@@ -45,6 +45,10 @@
   color: var(--color-blue);
   cursor: pointer;
   /* color: rgb(0, 140, 255); */
+}
+.theme_icon {
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

@@ -69,7 +69,7 @@ module.exports = async (socket) => {
     });
 
     socket.user.contacts = userInfo[0].contacts;
-    console.log(userInfo[0]);
+
     socket.emit("on-connect", { userInfo: userInfo[0] });
 
     socket.on("send-message", async ({ to, text }) => {
@@ -84,7 +84,6 @@ module.exports = async (socket) => {
 
     socket.on("disconnect", () => {
       console.log(`${number} Discoected`);
-      clients.delete(number);
 
       contacts?.forEach(({ number }) => {
         const contact = clients.get(number);
@@ -92,6 +91,7 @@ module.exports = async (socket) => {
           contact.emit("user-offline", number);
         }
       });
+      clients.delete(number);
     });
   } catch (error) {
     console.log(error);

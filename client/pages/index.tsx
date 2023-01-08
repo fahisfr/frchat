@@ -9,7 +9,7 @@ import SidePopUpMessage from "../components/sidePopUpMessage.js/SidePopUPMessage
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
-import { User } from "../helper/interfaces";
+
 
 function Index() {
 

@@ -52,6 +52,8 @@
   flex-grow: 1;
   background-color: var(--bg-secondary);
   overflow: auto;
+  padding: 10px;
+
 }
 
 .message {
@@ -95,10 +97,11 @@
   }
 }
 .cs_arrow_down {
-  background-color: var(--bg-secondary);
+  display: flex;
+  background-color: none;
   padding-top: 10px;
   padding-bottom: 10px;
-  display: flex;
+  background-color: var(--bg-secondary);
   justify-content: center;
 }
 .icon_arrow_down {

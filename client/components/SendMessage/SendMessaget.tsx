@@ -48,11 +48,12 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
         date: new Date(),
       },
     });
+
     setText("");
-    // scrollToBottom();
+    scrollToBottom();
   };
 
-  const onEmojiClick = (emojiObject: unknown) => {
+  const onEmojiClick = (emojiObject: any) => {
     setText(`${text}${emojiObject.emoji}`);
   };
 
@@ -90,8 +91,8 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
               <Picker onEmojiClick={onEmojiClick} />
             </div>
           )}
-        </div>{" "}
-      </div>{" "}
+        </div>
+      </div>
       <button type="submit" className={styles.send_btn}>
         <BiSend />
       </button>
