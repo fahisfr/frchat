@@ -7,7 +7,7 @@
   right: 0;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  z-index: 80;
 }
 .ac_close {
   position: fixed;
@@ -23,6 +23,7 @@
   padding: 2rem;
   position: relative;
   background-color: var(--bg-primary);
+  box-shadow: rgba(255, 255, 255, 0.2) 0 0px 0px 1px;
 }
 
 .ac_form {
@@ -52,9 +53,17 @@
 }
 
 .ac_bottom {
-  align-self: center;
+  display: flex;
+  justify-content: center;
 }
 .ac_btn {
-  height: 2.5rem;
+  max-width: 90%;
   width: 15rem;
+  height: 2.5rem;
+}
+
+@media (max-widht: 460px) {
+  .ac_body {
+    padding: 10px;
+  }
 }

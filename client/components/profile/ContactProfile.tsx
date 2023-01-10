@@ -16,41 +16,41 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
     getContext();
   const number = contact?.number;
 
+  
+
   const [saveBtnLoading, setSaveBtnLoading] = useState<boolean>(false);
-  const [remvoeBtnLoading, setRemoveBtnLoading] = useState<boolean>(false);
 
   const removeContact = async () => {
-    setRemoveBtnLoading(true);
-    const response = await axios("PUT", "contact/remove-contact", { number });
-    setRemoveBtnLoading(false);
-    if (response) {
+   
+    const { data } = await axios.put("contact/remove-contact", { number });
+
+    if (data.status === "ok") {
       dispatch({
         type: reducerActionTypes.REMOVE_CONTACT,
         payload: {
           number,
-          message: response.message,
+          message: data.message,
         },
       });
     } else {
-      triggerSidePopUpMessage({ error: true, message: response.error });
+      triggerSidePopUpMessage({ error: true, message: data.error });
     }
   };
 
   const changeName = async () => {
     setSaveBtnLoading(true);
-    const response = await axios.put("contact/change-name", {
+    const {data} = await axios.put("contact/change-name", {
       number: number,
       name: newName,
     });
     setSaveBtnLoading(false);
-    if (response) {
+    if (data.status) {
       dispatch({
         type: reducerActionTypes.CHANGE_CONTACT_NAME,
         payload: { name: newName, number },
       });
- 
     } else {
-      triggerSidePopUpMessage({ error: true, message: response.error });
+      triggerSidePopUpMessage({ error: true, message: data.error });
     }
   };
 

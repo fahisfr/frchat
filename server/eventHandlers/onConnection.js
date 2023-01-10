@@ -6,7 +6,7 @@ module.exports = async (socket) => {
   try {
     const { _id, number, contacts } = socket.user;
     console.log(`${number} Conected`);
-    clients.set(number, socket);
+    clients.set(number, socket); 
 
     const userInfo = await dbUser.aggregate([
       {
@@ -84,9 +84,8 @@ module.exports = async (socket) => {
 
     socket.on("disconnect", () => {
       console.log(`${number} Discoected`);
-
-      contacts?.forEach(({ number }) => {
-        const contact = clients.get(number);
+      contacts?.forEach((con) => {
+        const contact = clients.get(con.number);
         if (contact) {
           contact.emit("user-offline", number);
         }

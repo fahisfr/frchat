@@ -88,6 +88,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
             <AiFillCamera className={styles.camera_icon} />
             <input
               type="file"
+              
               onChange={handleInputRefChange}
               style={{ display: "none" }}
               ref={inputRef}

@@ -2,7 +2,6 @@ const dbUser = require("../dbSChemas/user");
 
 const addContact = async (req, res, next) => {
   try {
-    res.send("hello")
     const {
       body: { name, number },
       user: { id },
@@ -57,21 +56,25 @@ const changeName = async (req, res, next) => {
 };
 
 const removeContact = async (req, res, next) => {
-  const dbRes = await dbUser.updateOne(
-    { id: req.user.id },
-    {
-      $pull: {
-        contact: {
-          number: "",
+  try {
+    return res.json({ status: "error", error: "cann't remove this contact" });
+    const dbRes = await dbUser.updateOne(
+      { _id: req.user.id },
+      {
+        $pull: {
+          contact: {
+            number: req.bod.number,
+          },
         },
-      },
+      }
+    );
+    if (dbRes.matchedCount > 0) {
+      return res.json({ status: "ok", message: "contact removed" });
     }
-  );
-
-  if (dbRes.modifiedCount > 0) {
-    res.json({ status: "ok" });
+    res.json({ status: "error", error: "" });
+  } catch (error) {
+    next(error);
   }
-  res.json({ status: "error", error: "cann't remove contact" });
 };
 
-module.exports = { addContact, changeName };
+module.exports = { addContact, changeName, removeContact };

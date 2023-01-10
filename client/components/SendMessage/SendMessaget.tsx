@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
 import styles from "./css.module.css";
 import dynamic from "next/dynamic";
-
-import { BsEmojiSmile, BsFillArrowDownCircleFill } from "react-icons/bs";
+import { BsEmojiSmile } from "react-icons/bs";
 import { BiSend } from "react-icons/bi";
 import { getContext } from "../../helper/context";
 import clickOutside from "../../helper/clickOutSide";
@@ -45,7 +44,7 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
         number: selectedContact,
         text,
         from: number,
-        date: new Date(),
+        date: new Date().toISOString(),
       },
     });
 

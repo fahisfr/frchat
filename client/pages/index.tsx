@@ -5,23 +5,25 @@ import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
 import Profile from "../components/profile/Profile";
 import SidePopUpMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
-
 import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
-
+import { useRouter } from "next/router";
+import axios from "../helper/axios";
 
 function Index() {
-
-
-
   const { state, dispatch, reducerActionTypes } = getContext();
   const [profile, setProfile] = useState<boolean>(false);
-
+  const [reloadPage, setReloadPage] = useState<boolean>(false);
+  const router = useRouter();
   useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      router.replace("/");
+    }
     const socket = io(`http://localhost:4000`, {
       auth: {
-        token: localStorage.getItem("auth_token"),
+        token: localStorage.getItem("access_token"),
       },
     });
 
@@ -32,14 +34,18 @@ function Index() {
       });
     });
 
-    socket.on("connect_error", (err) => {
-      dispatch({
-        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: {
-          error: true,
-          message: "faild to login to this website",
-        },
-      });
+    socket.on("connect_error", async (err) => {
+      if (err.message == "403") {
+        const { data } = await axios.get("/user/refresh-token");
+        if (data.status === "ok") {
+          localStorage.setItem("access_token", data.accessToken);
+          setReloadPage(!reloadPage);
+
+        } else {
+          localStorage.removeItem("access_token");
+          router.push("/login");
+        }
+      }
     });
 
     socket.on("recieve-message", (message) => {
@@ -55,15 +61,15 @@ function Index() {
         payload: { status: true, number },
       });
     });
-    socket.on("user-oofline", (number) => {
+    socket.on("user-offline", (number) => {
       dispatch({
         type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
         payload: { status: false, number },
       });
     });
-  }, []);
+  }, [reloadPage]);
 
-  if (!state.isAuth) {
+  if (!state.socket) {
     return <div className="loading"></div>;
   }
 

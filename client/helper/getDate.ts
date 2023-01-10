@@ -8,7 +8,7 @@ export default (date: string) => {
       Intl.DateTimeFormat().resolvedOptions().timeZone
     );
     if (isToday(formattedDate)) {
-      return format(formattedDate, "h:mm aa");
+      return format(formattedDate, "h:mm aa s");
     } else {
       return format(formattedDate, "MMM d, h:mm aa");
     }

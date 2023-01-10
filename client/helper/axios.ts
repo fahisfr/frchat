@@ -15,7 +15,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config: any) => {
-    const accessToken = localStorage.getItem("auth_token");
+    const accessToken = localStorage.getItem("access_token");
     if (accessToken) {
       config.headers["x-access-token"] = `${accessToken}`;
     }
@@ -24,31 +24,21 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 instance.interceptors.response.use(
-  ({ data }) => {
-    if (data.status == "ok") {
-      return Promise.resolve(data);
-    } else if (data.status === "error") {
-      return Promise.reject(data);
-    } else {
-      return Promise.reject({
-        status: "error",
-        error: "invalid response data.status",
-      });
-    }
-  },
+  (response) => response,
   async (error) => {
     const prevRequest = error?.config;
     if (error.response.status === 403 && !prevRequest.sent) {
       prevRequest.sent = true;
-      const { data } = await instance.get("/auth/refresh", {
-        withCredentials: true,
-      });
+      const { data } = await instance.get("/user/refresh-token");
+      
+      
       if (data.status == "ok") {
-        localStorage.setItem("auth_token", data.token);
+        console.log(data);
+        
+        localStorage.setItem("access_token", data.accessToken);
         return instance.request(prevRequest);
       }
-
-      localStorage.removeItem("auth_token");
+      localStorage.removeItem("access_token");
       return Promise.reject({
         status: "error",
         error: "failed to refresh access token",
@@ -58,7 +48,6 @@ instance.interceptors.response.use(
   }
 );
 
-// type Method = "POST" | "GET" | "DELETE" | "PUT";
 
 // export default (method: Method, path: string, body?: any): any => {
 //   return instance({ method, url: path, data: body }).then(

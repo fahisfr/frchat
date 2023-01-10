@@ -5,9 +5,12 @@ module.exports = (socket, next) => {
 
   if (token) {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, user) => {
-      console.log(err, user);
       if (err) {
-        next(new Error("token not vaild"));
+        if (err instanceof jwt.TokenExpiredError) {
+          next(new Error("403"));
+        } else {
+          next(new Error("token not vaild"));
+        }
       }
       const userInfo = await dbUser.findOne({ _id: user?.id });
       if (!userInfo) {

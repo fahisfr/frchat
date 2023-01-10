@@ -10,23 +10,22 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
 const auth = require("./middleware/auth");
+const cookieParser = require("cookie-parser");
 const dbUser = require("./dbSChemas/user");
-
 
 connectDb();
 
 io.use(require("./eventHandlers/handshake"));
 io.on("connection", require("./eventHandlers/onConnection"));
-
-
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors(require("./config/corsOptions")));
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
-app.use("/api/auth", require("./routes/auth"));
+
 app.use("/api/message", require("./routes/message"));
 app.use("/api/contact", auth, require("./routes/contact"));
-app.use("/api/user", auth, require("./routes/user"));
+app.use("/api/user", require("./routes/user"));
 app.use(require("./config/errorHandler"));
 
 server.listen(port, () => console.log(`server running port ${port}`));

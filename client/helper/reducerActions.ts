@@ -6,6 +6,7 @@ interface ReducerAction extends User {
 }
 
 export const reducerActionTypes = {
+ 
   LOGIN: "LOGIN",
   SELECTEDCONTACT: "SELECTED_CONTACT",
   ADD_MESSAGE: "ADD_MESSAGE",
@@ -70,9 +71,8 @@ export default (state: User, { type, payload }: ReducerAction) => {
       return {
         ...state,
         sidePopUpMessage: {
+          ...state.sidePopUpMessage,
           trigger: false,
-          error: false,
-          message: "",
         },
       };
     }
@@ -87,6 +87,11 @@ export default (state: User, { type, payload }: ReducerAction) => {
 
       return {
         ...state,
+        sidePopUpMessage: {
+          trigger: true,
+          error: false,
+          message:"Contact Changed"
+        },
         contacts: updatedContacts,
       };
     }
@@ -102,6 +107,8 @@ export default (state: User, { type, payload }: ReducerAction) => {
           error: false,
           message: payload?.message,
         },
+        selectedContact:
+          state.selectedContact === payload.number ? 0 : state.selectedContact,
       };
     }
 

@@ -49,14 +49,13 @@ function Chats() {
     if (downArrowRef.current != null) {
       const div = downArrowRef.current;
 
-      const isAtBottom =
-        div.scrollHeight - div.scrollTop === div.clientHeight ;
+      const isAtBottom = div.scrollHeight - div.scrollTop === div.clientHeight;
       setShowButton(!isAtBottom);
     }
   };
   function scrollToBottom() {
     if (endMessageRef.current) {
-      endMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      endMessageRef.current.scrollIntoView();
     }
   }
   return (
@@ -71,7 +70,9 @@ function Chats() {
               <Image
                 fill
                 alt=""
-                className="rounded-full"
+                className={`rounded-full ${
+                  contact.onlineStatus && "contact_is_online"
+                }`}
                 src={getProfileUrl(contact?.profile)}
               />
             </div>
@@ -95,7 +96,7 @@ function Chats() {
           onScroll={handleScroll}
         >
           {contact?.messages
-            .sort((a, b) => a.date - b.date)
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
             .map((message, index) => {
               return message.from === state.number ? (
                 <div className={`${styles.user_message} ${styles.message}`}>
@@ -135,10 +136,7 @@ function Chats() {
                 </div>
               );
             })}
-          <div
-            style={{ height: "1rem", backgroundColor: "blue" }}
-            ref={endMessageRef}
-          ></div>
+          <div ref={endMessageRef}></div>
         </div>
         <div className={styles.cs_arrow_down}>
           {showButton && (
