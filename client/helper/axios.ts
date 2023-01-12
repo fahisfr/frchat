@@ -30,11 +30,10 @@ instance.interceptors.response.use(
     if (error.response.status === 403 && !prevRequest.sent) {
       prevRequest.sent = true;
       const { data } = await instance.get("/user/refresh-token");
-      
-      
+
       if (data.status == "ok") {
         console.log(data);
-        
+
         localStorage.setItem("access_token", data.accessToken);
         return instance.request(prevRequest);
       }
@@ -47,7 +46,6 @@ instance.interceptors.response.use(
     return Promise.reject({ status: "error", error: error.message });
   }
 );
-
 
 // export default (method: Method, path: string, body?: any): any => {
 //   return instance({ method, url: path, data: body }).then(

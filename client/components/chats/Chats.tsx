@@ -14,11 +14,15 @@ function Chats() {
   const { state, dispatch, reducerActionTypes } = getContext();
   const endMessageRef = useRef<HTMLDivElement>(null);
   const downArrowRef = useRef<HTMLHRElement>(null);
-  const [showButton, setShowButton] = useState(false);
+  const [scrollDownButton, setScrollDownButton] = useState(false);
 
   useEffect(() => scrollToBottom());
 
-  if (!state.selectedContact) {
+  const contact = state.contacts?.find(
+    (contact) => contact.number === state.selectedContact
+  );
+
+  if (!contact) {
     return (
       <div className={styles.ch}>
         <div className={styles.ch_container}>
@@ -26,7 +30,7 @@ function Chats() {
             <Image src="/frlogo.png" fill alt="" />
           </div>
           <div>
-            <span> Select Contact to Chat </span>
+            <span> Please select a contact to start chatting</span>
           </div>
         </div>
       </div>
@@ -42,15 +46,12 @@ function Chats() {
     });
   };
 
-  const contact = state.contacts.find(
-    (contact) => contact.number === state.selectedContact
-  );
   const handleScroll = () => {
     if (downArrowRef.current != null) {
       const div = downArrowRef.current;
 
       const isAtBottom = div.scrollHeight - div.scrollTop === div.clientHeight;
-      setShowButton(!isAtBottom);
+      setScrollDownButton(!isAtBottom);
     }
   };
   function scrollToBottom() {
@@ -71,7 +72,7 @@ function Chats() {
                 fill
                 alt=""
                 className={`rounded-full ${
-                  contact.onlineStatus && "contact_is_online"
+                  contact?.onlineStatus && "contact_is_online"
                 }`}
                 src={getProfileUrl(contact?.profile)}
               />
@@ -89,70 +90,76 @@ function Chats() {
             </div>
           </div>
         </div>
-
         <div
-          className={styles.messages}
-          ref={downArrowRef}
-          onScroll={handleScroll}
+          className={`${styles.messages_container} ${
+            scrollDownButton && styles.show_scroll_down_btn
+          }`}
         >
-          {contact?.messages
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
-            .map((message, index) => {
-              return message.from === state.number ? (
-                <div className={`${styles.user_message} ${styles.message}`}>
-                  <div className={styles.message_wrapper}>
-                    <div className={styles.message_details}>
-                      <span className={styles.message_date}>
-                        {getDate(message.date)}
-                      </span>
-                    </div>
-                    <div className={styles.message_content}>
-                      <span className={styles.message_text}>
-                        {message.text}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.message}>
-                  <div className={styles.message_wrapper}>
-                    <div className={styles.message_details}>
-                      <div className={styles.user_profile}>
-                        <Image
-                          fill
-                          alt=""
-                          className="rounded-full"
-                          src={getProfileUrl(contact.profile)}
-                        />
+          <div
+            className={styles.messages}
+            ref={downArrowRef}
+            onScroll={handleScroll}
+          >
+            {contact?.messages
+              .sort((a, b) => a.date - b.date)
+              .map((message, index) => {
+                return message.from === state.number ? (
+                  <div className={`${styles.user_message} ${styles.message}`}>
+                    <div className={styles.message_wrapper}>
+                      <div className={styles.message_details}>
+                        <span className={styles.message_date}>
+                          {getDate(message.date)}
+                        </span>
                       </div>
-                      <span className={styles.message_date}>
-                        {getDate(message.date)}
-                      </span>
-                    </div>{" "}
-                    <div className={`${styles.message_content} theme-bg-text`}>
-                      <span>{message.text}</span>
+                      <div className={styles.message_content}>
+                        <span className={styles.message_text}>
+                          {message.text}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          <div ref={endMessageRef}></div>
+                ) : (
+                  <div className={styles.message}>
+                    <div className={styles.message_wrapper}>
+                      <div className={styles.message_details}>
+                        <div className={styles.user_profile}>
+                          <Image
+                            fill
+                            alt=""
+                            className="rounded-full"
+                            src={getProfileUrl(contact.profile)}
+                          />
+                        </div>
+                        <span className={styles.message_date}>
+                          {getDate(message.date)}
+                        </span>
+                      </div>{" "}
+                      <div
+                        className={`${styles.message_content} theme-bg-text`}
+                      >
+                        <span>{message.text}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+            <div ref={endMessageRef}></div>
+          </div>
+
+          <BsFillArrowDownCircleFill
+            onClick={() => scrollToBottom()}
+            className={styles.scroll_down_btn}
+          />
         </div>
-        <div className={styles.cs_arrow_down}>
-          {showButton && (
-            <BsFillArrowDownCircleFill
-              onClick={() => scrollToBottom()}
-              className={styles.icon_arrow_down}
-            />
-          )}
-        </div>
+
         <SendMessage scrollToBottom={scrollToBottom} />
       </div>
 
       <ContactProfile
+        contact={contact}
         trigger={contactProfile}
         setTrigger={setContactProfile}
-        contact={contact}
       />
     </div>
   );

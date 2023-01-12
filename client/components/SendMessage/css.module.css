@@ -1,6 +1,5 @@
 .send_message {
   padding: 20px;
-  padding-top: 0;
   display: flex;
   background-color: var(--bg-secondary);
 }

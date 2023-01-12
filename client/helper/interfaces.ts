@@ -1,9 +1,8 @@
-import { Trigger } from "./interfaces";
 import { Dispatch, SetStateAction } from "react";
 import { Socket } from "socket.io-client";
 
 export interface Message {
-  from: string;
+  from: number;
   text: string;
   date: string;
   number?: number;

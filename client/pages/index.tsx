@@ -16,6 +16,7 @@ function Index() {
   const [profile, setProfile] = useState<boolean>(false);
   const [reloadPage, setReloadPage] = useState<boolean>(false);
   const router = useRouter();
+
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (!token) {
@@ -35,12 +36,12 @@ function Index() {
     });
 
     socket.on("connect_error", async (err) => {
+      alert(err);
       if (err.message == "403") {
         const { data } = await axios.get("/user/refresh-token");
         if (data.status === "ok") {
           localStorage.setItem("access_token", data.accessToken);
           setReloadPage(!reloadPage);
-
         } else {
           localStorage.removeItem("access_token");
           router.push("/login");

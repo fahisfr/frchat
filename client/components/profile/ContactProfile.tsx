@@ -11,17 +11,15 @@ interface ContactProfileProps extends Trigger {
 }
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
+  
   const [newName, setNewName] = useState<string>(contact.name);
   const { state, dispatch, reducerActionTypes, triggerSidePopUpMessage } =
     getContext();
   const number = contact?.number;
 
-  
-
   const [saveBtnLoading, setSaveBtnLoading] = useState<boolean>(false);
 
   const removeContact = async () => {
-   
     const { data } = await axios.put("contact/remove-contact", { number });
 
     if (data.status === "ok") {
@@ -39,7 +37,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
 
   const changeName = async () => {
     setSaveBtnLoading(true);
-    const {data} = await axios.put("contact/change-name", {
+    const { data } = await axios.put("contact/change-name", {
       number: number,
       name: newName,
     });

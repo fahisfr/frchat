@@ -24,6 +24,7 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
     reducerActionTypes,
   } = getContext();
 
+
   const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
@@ -31,7 +32,9 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
 
   clickOutside(emojiPickerRef, () => setEmojiPicker(false));
 
-  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendMessage = (
+    e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent
+  ) => {
     e.preventDefault();
 
     if (socket === null) return;

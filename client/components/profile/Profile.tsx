@@ -10,7 +10,7 @@ import { Trigger } from "../../helper/interfaces";
 
 interface ProfilePhoto {
   file: File | null;
-  preview: string | ArrayBuffer | null;
+  preview: string;
 }
 
 function Profile({ trigger, setTrigger }: Trigger) {
@@ -22,21 +22,33 @@ function Profile({ trigger, setTrigger }: Trigger) {
     preview: "",
   });
 
-  const save = async () => {
+  const save = async (e: React.FormEvent) => {
+    e.preventDefault();
     const formData = new FormData();
+
     if (newAbout) {
       formData.append("about", newAbout);
     }
+
     if (profielPhoto.file) {
-      formData.append("profile", profielPhoto.file);
+      formData.append("profilePhoto", profielPhoto.file);
     }
 
-    const response = await axios.put("user/edit-profile", formData);
+    const { data } = await axios.put(
+      "user/edit-profile",
+      formData,
 
-    if (response) {
-      triggerSidePopUpMessage({ error: false, message: response.message });
-    } else {
-      triggerSidePopUpMessage({ error: true, message: response.error });
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    if (data.status === "ok") {
+      triggerSidePopUpMessage({ error: false, message: data.message });
+    } else if (data.status === "error") {
+      triggerSidePopUpMessage({ error: true, message: data.error });
     }
   };
 
@@ -44,11 +56,11 @@ function Profile({ trigger, setTrigger }: Trigger) {
     if (e.target?.files) {
       const file = e.target.files[0];
       const reader = new FileReader();
-
       reader.onload = () => {
-        setProfilePhoto({ file, preview: reader.result });
+        if (typeof reader.result === "string") {
+          setProfilePhoto({ file, preview: reader.result });
+        }
       };
-
       reader.readAsDataURL(file);
     }
   };
@@ -88,10 +100,10 @@ function Profile({ trigger, setTrigger }: Trigger) {
             <AiFillCamera className={styles.camera_icon} />
             <input
               type="file"
-              
               onChange={handleInputRefChange}
               style={{ display: "none" }}
               ref={inputRef}
+              accept="image/*"
             />
           </div>
           <div className={styles.pf_number}>
@@ -99,7 +111,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
           </div>
         </div>
       </div>
-      <form className={styles.pf_form}>
+      <form className={styles.pf_form} onSubmit={save}>
         <div className={styles.pf_form_group}>
           <label htmlFor="about" className={styles.pf_label}>
             About
@@ -115,7 +127,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
         </div>
         <div className={styles.pf_form_bottom}>
           <button
-            onClick={save}
+            type="submit"
             disabled={newAbout === state.about && !profielPhoto.file}
             className={`${styles.pf_button} theme-bg-text`}
           >

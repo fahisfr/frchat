@@ -6,7 +6,7 @@ import reducer, { reducerActionTypes } from "./reducerActions";
 const InitionsState = {
   socket: null,
   name: "",
-  number: 111111,
+  number: 0,
   profile: "",
   contacts: [],
   about: "",
@@ -41,7 +41,7 @@ function ContextProvider({ children }: { children: ReactNode }) {
     dispatch({
       type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
       payload: arg,
-    });
+    })
   };
 
   return (

@@ -17,15 +17,15 @@ function AddContact({ setTrigger }: AddContactProps) {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBtnLoading(true);
-    const res = await axios.post("/contact/add-contact", {
+    const { data } = await axios.post("/contact/add-contact", {
       name,
       number,
     });
     setBtnLoading(false);
-    if (res) {
-      triggerSidePopUpMessage({ error: false, message: res.message });
+    if (data) {
+      triggerSidePopUpMessage({ error: false, message: data.message });
     } else {
-      triggerSidePopUpMessage({ error: true, message: res.error });
+      triggerSidePopUpMessage({ error: true, message: data.error });
     }
   };
 

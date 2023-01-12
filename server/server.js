@@ -11,12 +11,14 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, { cors: { origin: "*" } });
 const auth = require("./middleware/auth");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 const dbUser = require("./dbSChemas/user");
 
 connectDb();
 
 io.use(require("./eventHandlers/handshake"));
 io.on("connection", require("./eventHandlers/onConnection"));
+app.use(fileUpload());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors(require("./config/corsOptions")));
