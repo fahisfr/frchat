@@ -35,9 +35,8 @@ function Profile({ trigger, setTrigger }: Trigger) {
     }
 
     const { data } = await axios.put(
-      "user/edit-profile",
+      "/user/edit-profile",
       formData,
-
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -123,13 +122,14 @@ function Profile({ trigger, setTrigger }: Trigger) {
             id={styles.pf_about}
             className={styles.pf_input}
             placeholder=""
+            maxLength={125}
           ></textarea>
         </div>
         <div className={styles.pf_form_bottom}>
           <button
             type="submit"
             disabled={newAbout === state.about && !profielPhoto.file}
-            className={`${styles.pf_button} theme-bg-text`}
+            className={`${styles.pf_button} btn`}
           >
             Save
           </button>

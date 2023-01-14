@@ -31,7 +31,7 @@ function Contacts() {
       <div className={styles.bottom}>
         {state.contacts?.length > 0 ? (
           state.contacts
-            .filter((contact) => contact.name.startsWith(search))
+            .filter((contact) => contact.name?.startsWith(search))
             .map((contact, index) => {
               const messages = contact?.messages;
               const lastMessage = messages
@@ -62,7 +62,7 @@ function Contacts() {
                   </div>
                   <div className={styles.contact_info}>
                     <div className={styles.contact_info_top}>
-                      <div>
+                      <div className={styles.contact_name}>
                         <span>{contact.name}</span>
                       </div>
                       <div>

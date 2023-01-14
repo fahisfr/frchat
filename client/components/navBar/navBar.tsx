@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import styles from "./css.module.css";
 
-import { AiOutlineHome, AiOutlineUserAdd } from "react-icons/ai";
+import { AiOutlineUserAdd } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import Image from "next/image";
 import AddContact from "../addContact/AddContact";
@@ -15,7 +15,7 @@ interface navBarProps {
 
 function NavBar({ setProfileTrigger }: navBarProps) {
   const { state, reducerActionTypes, dispatch } = getContext();
-  const [addContact, setAddContact] = useState(false);
+  const [addContact, setAddContact] = useState<boolean>(false);
 
   return (
     <div className={styles.navbar_container}>
@@ -46,7 +46,7 @@ function NavBar({ setProfileTrigger }: navBarProps) {
             })
           }
         >
-          {state.darkTheme ? (
+          {state.darkTheme === "true" ? (
             <BsSunFill className={styles.theme_icon} />
           ) : (
             <BsFillMoonFill className={styles.theme_icon} />

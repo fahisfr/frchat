@@ -36,17 +36,16 @@ function Index() {
     });
 
     socket.on("connect_error", async (err) => {
-      alert(err);
-      if (err.message == "403") {
+      if (err.message === "403") {
         const { data } = await axios.get("/user/refresh-token");
         if (data.status === "ok") {
           localStorage.setItem("access_token", data.accessToken);
           setReloadPage(!reloadPage);
-        } else {
-          localStorage.removeItem("access_token");
-          router.push("/login");
+          return;
         }
       }
+      localStorage.removeItem("access_token");
+      router.push("/login");
     });
 
     socket.on("recieve-message", (message) => {
@@ -71,7 +70,11 @@ function Index() {
   }, [reloadPage]);
 
   if (!state.socket) {
-    return <div className="loading"></div>;
+    return (
+      <div className="loadings">
+        <span className="loading">Contact</span>
+      </div>
+    );
   }
 
   return (

@@ -14,7 +14,7 @@ function Chats() {
   const { state, dispatch, reducerActionTypes } = getContext();
   const endMessageRef = useRef<HTMLDivElement>(null);
   const downArrowRef = useRef<HTMLHRElement>(null);
-  const [scrollDownButton, setScrollDownButton] = useState(false);
+  const [scrollDownButton, setScrollDownButton] = useState<boolean>(false);
 
   useEffect(() => scrollToBottom());
 
@@ -24,9 +24,9 @@ function Chats() {
 
   if (!contact) {
     return (
-      <div className={styles.ch}>
-        <div className={styles.ch_container}>
-          <div className={styles.ch_web_logo}>
+      <div className={styles.stc}>
+        <div className={styles.stc_container}>
+          <div className={styles.web_logo}>
             <Image src="/frlogo.png" fill alt="" />
           </div>
           <div>
@@ -101,7 +101,11 @@ function Chats() {
             onScroll={handleScroll}
           >
             {contact?.messages
-              .sort((a, b) => a.date - b.date)
+              .sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateA.getTime() - dateB.getTime();
+              })
               .map((message, index) => {
                 return message.from === state.number ? (
                   <div className={`${styles.user_message} ${styles.message}`}>

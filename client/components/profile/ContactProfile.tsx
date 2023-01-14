@@ -11,7 +11,6 @@ interface ContactProfileProps extends Trigger {
 }
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
-  
   const [newName, setNewName] = useState<string>(contact.name);
   const { state, dispatch, reducerActionTypes, triggerSidePopUpMessage } =
     getContext();
@@ -45,7 +44,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
     if (data.status) {
       dispatch({
         type: reducerActionTypes.CHANGE_CONTACT_NAME,
-        payload: { name: newName, number },
+        payload: { name: newName, number, message: data.message },
       });
     } else {
       triggerSidePopUpMessage({ error: true, message: data.error });
@@ -77,10 +76,8 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
           <div className={styles.pf_number}>
             <span>{number}</span>
           </div>
-          <div>
-            <div>
-              <span>{contact.about}</span>
-            </div>
+          <div className={styles.pf_about}>
+            <span>{contact.about}</span>
           </div>
         </div>
         <div className={styles.pf_contact_options}>
@@ -91,6 +88,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
               id={styles.pf_name}
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
+              maxLength={20}
             />
           </div>
           <div className={`${saveBtnLoading && "btn_loading"}`}>

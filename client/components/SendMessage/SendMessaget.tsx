@@ -24,7 +24,6 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
     reducerActionTypes,
   } = getContext();
 
-
   const [emojiPicker, setEmojiPicker] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
@@ -52,7 +51,6 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
     });
 
     setText("");
-    scrollToBottom();
   };
 
   const onEmojiClick = (emojiObject: any) => {

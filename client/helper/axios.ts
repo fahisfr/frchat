@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseURL = "http://localhost:4000";
+export const baseURL = process.env.BACKEND_URL;
 
 export const profileUrl = `${baseURL}/profiles/`;
 export const getProfileUrl = (image: String) => profileUrl + image;
@@ -8,9 +8,7 @@ export const getProfileUrl = (image: String) => profileUrl + image;
 const instance = axios.create({
   baseURL: `${baseURL}/api`,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+
 });
 
 instance.interceptors.request.use(
@@ -32,8 +30,6 @@ instance.interceptors.response.use(
       const { data } = await instance.get("/user/refresh-token");
 
       if (data.status == "ok") {
-        console.log(data);
-
         localStorage.setItem("access_token", data.accessToken);
         return instance.request(prevRequest);
       }

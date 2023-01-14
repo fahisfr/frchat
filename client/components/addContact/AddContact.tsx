@@ -8,11 +8,12 @@ type AddContactProps = {
 };
 
 function AddContact({ setTrigger }: AddContactProps) {
-  const { triggerSidePopUpMessage } = getContext();
+  const { dispatch, reducerActionTypes, triggerSidePopUpMessage } =
+    getContext();
 
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+  const [name, setName] = useState<string>("");
+  const [number, setNumber] = useState<string>("");
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,9 +23,15 @@ function AddContact({ setTrigger }: AddContactProps) {
       number,
     });
     setBtnLoading(false);
-    if (data) {
-      triggerSidePopUpMessage({ error: false, message: data.message });
-    } else {
+    if (data.status === "ok") {
+      dispatch({
+        type: reducerActionTypes.ADD_CONTACT,
+        payload: {
+          contact: data.contact,
+        },
+      });
+      setTrigger(false);
+    } else if (data.status === "error") {
       triggerSidePopUpMessage({ error: true, message: data.error });
     }
   };
@@ -41,6 +48,7 @@ function AddContact({ setTrigger }: AddContactProps) {
               placeholder=""
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
           <div className={styles.ac_group}>
@@ -51,6 +59,7 @@ function AddContact({ setTrigger }: AddContactProps) {
               type="text"
               value={number}
               onChange={(e) => setNumber(e.target.value)}
+              required
             />
           </div>
           <div

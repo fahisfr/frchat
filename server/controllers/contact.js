@@ -9,7 +9,10 @@ const addContact = async (req, res, next) => {
 
     const user = await dbUser.findOne({ number });
     if (!user) {
-      return res.json({ status: "error", error: "user not found" });
+      return res.json({
+        status: "error",
+        error: "Invalid contact number, please check and try again",
+      });
     }
     const addNewContact = await dbUser.updateOne(
       { _id: id },
@@ -23,10 +26,18 @@ const addContact = async (req, res, next) => {
       }
     );
 
-    if (!addNewContact) {
-      return res.json({ status: "error", error: "" });
+    if (addNewContact.modifiedCount > 0) {
+      return res.json({
+        status: "ok",
+        contact: {
+          name,
+          number,
+          profile: user.profile,
+          messages: [],
+        },
+      });
     }
-    res.json({ status: "ok" });
+    res.json({ status: "error", error: "Failed to add new contact" });
   } catch (error) {
     next(error);
   }
@@ -34,22 +45,26 @@ const addContact = async (req, res, next) => {
 
 const changeName = async (req, res, next) => {
   try {
+    const {
+      body: { name, number },
+      user: { id },
+    } = req;
     const dbRes = await dbUser.updateOne(
-      { _id: req.user.id },
+      { _id: id },
       {
         $set: {
-          "contacts.$[ind].name": req.body.name,
+          "contacts.$[ind].name": name,
         },
       },
       {
-        arrayFilters: [{ "ind.number": req.body.number }],
+        arrayFilters: [{ "ind.number": number }],
       }
     );
 
     if (dbRes.modifiedCount > 0) {
       return res.json({ status: "ok", message: "Contact name changed" });
     }
-    res.json({ status: "error" });
+    res.json({ status: "error", error: "Failed to change contact name" });
   } catch (error) {
     next(error);
   }
@@ -57,21 +72,24 @@ const changeName = async (req, res, next) => {
 
 const removeContact = async (req, res, next) => {
   try {
-    return res.json({ status: "error", error: "cann't remove this contact" });
+    const {
+      user: { id },
+      body: { number },
+    } = req;
     const dbRes = await dbUser.updateOne(
-      { _id: req.user.id },
+      { _id: id },
       {
         $pull: {
-          contact: {
-            number: req.bod.number,
+          contacts: {
+            number,
           },
         },
       }
     );
-    if (dbRes.matchedCount > 0) {
+    if (dbRes.modifiedCount > 0) {
       return res.json({ status: "ok", message: "contact removed" });
     }
-    res.json({ status: "error", error: "" });
+    res.json({ status: "error", error: "Failed to remove contact" });
   } catch (error) {
     next(error);
   }

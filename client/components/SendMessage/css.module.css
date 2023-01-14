@@ -15,19 +15,20 @@
   padding-left: 8px;
   background-color: var(--bg-primary);
   padding-right: 10px;
-  /* box-shadow: var(----box-shadow); */
 }
 .message_input {
   flex-grow: 1;
   border: none;
+  max-height: 10rem;
   outline: none;
   background-color: initial;
   border-radius: 10px;
   font-size: 15px;
-  overflow: hidden;
+  overflow: auto;
   resize: none;
   color: var(--color-primary);
   font-family: inherit;
+  transition: all 0.3s ease;
 }
 .ap_types {
   position: relative;
@@ -39,7 +40,6 @@
   bottom: 100%;
   right: 100%;
   z-index: 10;
-  
 }
 .icon {
   cursor: pointer;

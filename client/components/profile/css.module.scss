@@ -20,7 +20,10 @@
 .con_close {
   margin-right: -20rem;
 }
-
+.pf_about {
+  padding: 0 10px;
+  word-break: break-all;
+}
 .pf_top {
   display: flex;
   height: 64px;
@@ -36,10 +39,14 @@
 .pf_body {
   flex-direction: column;
   display: flex;
-  align-items: center;
   padding: 1rem 0;
 }
 .pf_info {
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
 }
 .pf_number {

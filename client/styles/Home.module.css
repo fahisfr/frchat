@@ -14,7 +14,8 @@
   position: relative;
 }
 .contacts_info {
-  min-width: 20rem;
+  width: 20rem;
+  flex-shrink: 0;
   position: relative;
 }
 

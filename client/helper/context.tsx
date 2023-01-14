@@ -41,7 +41,7 @@ function ContextProvider({ children }: { children: ReactNode }) {
     dispatch({
       type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
       payload: arg,
-    })
+    });
   };
 
   return (
