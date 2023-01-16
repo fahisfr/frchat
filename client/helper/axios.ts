@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseURL = process.env.BACKEND_URL;
+export const baseURL = "http://localhost:4010";
 
 export const profileUrl = `${baseURL}/profiles/`;
 export const getProfileUrl = (image: String) => profileUrl + image;
@@ -8,7 +8,6 @@ export const getProfileUrl = (image: String) => profileUrl + image;
 const instance = axios.create({
   baseURL: `${baseURL}/api`,
   withCredentials: true,
-
 });
 
 instance.interceptors.request.use(
@@ -25,7 +24,7 @@ instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const prevRequest = error?.config;
-    if (error.response.status === 403 && !prevRequest.sent) {
+    if (error?.response?.status === 403 && !prevRequest.sent) {
       prevRequest.sent = true;
       const { data } = await instance.get("/user/refresh-token");
 
@@ -43,10 +42,4 @@ instance.interceptors.response.use(
   }
 );
 
-// export default (method: Method, path: string, body?: any): any => {
-//   return instance({ method, url: path, data: body }).then(
-//     ({ data }) => data,
-//     (error) => Promise.resolve({ status: "error", error: error.message })
-//   );
-// };
 export default instance;

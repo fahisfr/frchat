@@ -1,18 +1,21 @@
 import { createContext, useContext, ReactNode, useReducer } from "react";
 
-import { TriggerSidePopUpMessage, User } from "./interfaces";
+import { User } from "./interfaces";
 import reducer, { reducerActionTypes } from "./reducerActions";
 
 const InitionsState = {
   socket: null,
-  name: "",
   number: 0,
   profile: "",
   contacts: [],
   about: "",
-  selectedContact: 0,
+  selectedContactNumber: 0,
   isAuth: false,
-  darkTheme: true,
+  darkTheme:
+    typeof window !== "undefined" &&
+    localStorage.getItem("darkTheme") === "true"
+      ? true
+      : false,
   sidePopUpMessage: {
     trigger: false,
     error: false,
@@ -24,25 +27,16 @@ interface ContextProps {
   state: User;
   dispatch: any;
   reducerActionTypes: typeof reducerActionTypes;
-  triggerSidePopUpMessage: (arg: TriggerSidePopUpMessage) => void;
 }
 
 const Context = createContext<ContextProps>({
   state: InitionsState,
   dispatch: (action: any) => {},
   reducerActionTypes: reducerActionTypes,
-  triggerSidePopUpMessage: () => {},
 });
 
 function ContextProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, InitionsState);
-
-  const triggerSidePopUpMessage = (arg: TriggerSidePopUpMessage) => {
-    dispatch({
-      type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-      payload: arg,
-    });
-  };
 
   return (
     <Context.Provider
@@ -50,7 +44,6 @@ function ContextProvider({ children }: { children: ReactNode }) {
         state,
         dispatch,
         reducerActionTypes,
-        triggerSidePopUpMessage,
       }}
     >
       {children}

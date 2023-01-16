@@ -15,7 +15,6 @@ module.exports = (socket, next) => {
       const userInfo = await dbUser.findOne({ _id: user?.id });
       if (!userInfo) {
         next(new Error("user not found"));
-      
       }
 
       socket.user = userInfo;

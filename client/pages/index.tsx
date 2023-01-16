@@ -22,7 +22,7 @@ function Index() {
     if (!token) {
       router.replace("/");
     }
-    const socket = io(`http://localhost:4000`, {
+    const socket = io("https://frchatbackend.fahis.live/", {
       auth: {
         token: localStorage.getItem("access_token"),
       },
@@ -48,11 +48,32 @@ function Index() {
       router.push("/login");
     });
 
-    socket.on("recieve-message", (message) => {
-      dispatch({
-        type: reducerActionTypes.ADD_MESSAGE,
-        payload: { number: message.from, ...message },
-      });
+    socket.on("recieve-message", async (message) => {
+      const contactIn = state.contacts.find(
+        (contact) => contact.number === message.from
+      );
+      if (contactIn) {
+        dispatch({
+          type: reducerActionTypes.ADD_MESSAGE,
+          payload: { number: message.from, ...message },
+        });
+      } else {
+        const { data } = await axios.post("/contact/add-contact", {
+          number: message.from,
+        });
+
+        if (data.status === "ok") {
+          dispatch({
+            type: reducerActionTypes.ADD_CONTACT,
+            payload: {
+              contact: {
+                ...data.contact,
+                messages: [message],
+              },
+            },
+          });
+        }
+      }
     });
 
     socket.on("user-online", (number) => {
@@ -69,26 +90,38 @@ function Index() {
     });
   }, [reloadPage]);
 
-  if (!state.socket) {
-    return (
-      <div className="loadings">
-        <span className="loading">Contact</span>
-      </div>
-    );
-  }
-
   return (
-    <div className={styles.container} data-theme={state.darkTheme.toString()}>
-      <SidePopUpMessage />
-      <NavBar setProfileTrigger={setProfile} />
-      <main className={styles.main}>
-        <div className={styles.contacts_info}>
-          <Contacts />
-          <Profile setTrigger={setProfile} trigger={profile} />
+    <>
+      <Head>
+        <title>FrChat</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta
+          name="description"
+          content="FRChat is a simple and easy to use chat application for connecting with friends and family"
+        />
+        <meta name="keywords" content="chat, friends, family, FRChat" />
+      </Head>
+      {!state.socket ? (
+        <div className="loadings">
+          <span className="loading">Contact</span>
         </div>
-        <Chats />
-      </main>
-    </div>
+      ) : (
+        <div
+          className={styles.container}
+          data-theme={state.darkTheme.toString()}
+        >
+          <SidePopUpMessage />
+          <NavBar setProfileTrigger={setProfile} />
+          <main className={styles.main}>
+            <div className={styles.contacts_info}>
+              <Contacts />
+              <Profile setTrigger={setProfile} trigger={profile} />
+            </div>
+            <Chats />
+          </main>
+        </div>
+      )}
+    </>
   );
 }
 export default Index;

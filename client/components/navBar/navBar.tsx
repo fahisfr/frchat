@@ -46,7 +46,7 @@ function NavBar({ setProfileTrigger }: navBarProps) {
             })
           }
         >
-          {state.darkTheme === "true" ? (
+          {state.darkTheme ? (
             <BsSunFill className={styles.theme_icon} />
           ) : (
             <BsFillMoonFill className={styles.theme_icon} />

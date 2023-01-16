@@ -14,14 +14,14 @@ interface ProfilePhoto {
 }
 
 function Profile({ trigger, setTrigger }: Trigger) {
-  const { state, triggerSidePopUpMessage } = getContext();
+  const { state, reducerActionTypes, dispatch } = getContext();
   const inputRef = useRef<HTMLInputElement>(null);
   const [newAbout, setAbout] = useState<string>(state.about);
   const [profielPhoto, setProfilePhoto] = useState<ProfilePhoto>({
     file: null,
     preview: "",
   });
-
+  
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
@@ -34,20 +34,22 @@ function Profile({ trigger, setTrigger }: Trigger) {
       formData.append("profilePhoto", profielPhoto.file);
     }
 
-    const { data } = await axios.put(
-      "/user/edit-profile",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const { data } = await axios.put("/user/edit-profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     if (data.status === "ok") {
-      triggerSidePopUpMessage({ error: false, message: data.message });
+      dispatch({
+        type: reducerActionTypes.UPDATE_PROFILE,
+        payload: { message: data.message, profile: data.profile },
+      });
     } else if (data.status === "error") {
-      triggerSidePopUpMessage({ error: true, message: data.error });
+      dispatch({
+        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+        payload: { error: true, message: data.error },
+      });
     }
   };
 

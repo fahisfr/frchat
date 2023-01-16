@@ -31,7 +31,14 @@ function Contacts() {
       <div className={styles.bottom}>
         {state.contacts?.length > 0 ? (
           state.contacts
-            .filter((contact) => contact.name?.startsWith(search))
+            .filter((contact) => {
+              if (!search) {
+                return true;
+              }
+              return contact.name
+                ?.toLowerCase()
+                .startsWith(search.toLowerCase());
+            })
             .map((contact, index) => {
               const messages = contact?.messages;
               const lastMessage = messages
@@ -43,7 +50,7 @@ function Contacts() {
                   key={index}
                   onClick={() =>
                     dispatch({
-                      type: reducerActionTypes.SELECTEDCONTACT,
+                      type: reducerActionTypes.SELECT_CONTACT,
                       payload: { number: contact.number },
                     })
                   }
@@ -63,7 +70,7 @@ function Contacts() {
                   <div className={styles.contact_info}>
                     <div className={styles.contact_info_top}>
                       <div className={styles.contact_name}>
-                        <span>{contact.name}</span>
+                        <span>{contact.name ?? contact.number}</span>
                       </div>
                       <div>
                         <span className={styles.contact_message_date}>

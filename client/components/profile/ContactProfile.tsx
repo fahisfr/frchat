@@ -12,7 +12,7 @@ interface ContactProfileProps extends Trigger {
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
   const [newName, setNewName] = useState<string>(contact.name);
-  const { state, dispatch, reducerActionTypes, triggerSidePopUpMessage } =
+  const { state, dispatch, reducerActionTypes } =
     getContext();
   const number = contact?.number;
 
@@ -29,8 +29,11 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
           message: data.message,
         },
       });
-    } else {
-      triggerSidePopUpMessage({ error: true, message: data.error });
+    } else if (data.status === "error") {
+      dispatch({
+        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+        payload: { error: true, message: data.error },
+      });
     }
   };
 
@@ -47,7 +50,10 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
         payload: { name: newName, number, message: data.message },
       });
     } else {
-      triggerSidePopUpMessage({ error: true, message: data.error });
+      dispatch({
+        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+        payload: { error: true, message: data.error },
+      });
     }
   };
 
@@ -82,7 +88,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
         </div>
         <div className={styles.pf_contact_options}>
           <div>
-            <label>Saved Name</label>
+            <label>Name</label>
             <input
               className={styles.pf_input}
               id={styles.pf_name}

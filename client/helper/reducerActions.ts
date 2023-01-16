@@ -1,5 +1,4 @@
 import { User } from "./interfaces";
-
 interface ReducerAction extends User {
   type: string;
   payload: any;
@@ -7,7 +6,7 @@ interface ReducerAction extends User {
 
 export const reducerActionTypes = {
   LOGIN: "LOGIN",
-  SELECTEDCONTACT: "SELECTED_CONTACT",
+  SELECT_CONTACT: "SELECT_CONTACT",
   ADD_MESSAGE: "ADD_MESSAGE",
   CHANGE_USER_ONLINE_STATUS: "CHANGE_USER_ONLINE_STATUS",
   CHANGE_THEME: "CHANGE_THEME",
@@ -24,14 +23,16 @@ export const reducerActionTypes = {
 export default (state: User, { type, payload }: ReducerAction) => {
   switch (type) {
     case reducerActionTypes.CHANGE_THEME:
+      const themeStatus = !state.darkTheme;
+      localStorage.setItem("darkTheme", themeStatus.toString());
       return {
         ...state,
-        darkTheme: !state.darkTheme,
+        darkTheme: themeStatus,
       };
     case reducerActionTypes.LOGIN:
       return { ...state, ...payload };
-    case reducerActionTypes.SELECTEDCONTACT:
-      return { ...state, selectedContact: payload.number };
+    case reducerActionTypes.SELECT_CONTACT:
+      return { ...state, selectedContactNumber: payload.number };
 
     case reducerActionTypes.ADD_MESSAGE: {
       const updatedContacts = state.contacts.map((contact) => {
@@ -107,16 +108,35 @@ export default (state: User, { type, payload }: ReducerAction) => {
           error: false,
           message: payload?.message,
         },
-        selectedContact:
-          state.selectedContact === payload.number ? 0 : state.selectedContact,
+        selectedContactNumber:
+          state.selectedContactNumber === payload.number
+            ? 0
+            : state.selectedContactNumber,
       };
     }
 
     case reducerActionTypes.ADD_CONTACT: {
+      if (payload.selectContact) {
+        return {
+          ...state,
+          selectedContactNumber: payload.contact.number,
+          contacts: [...state.contacts, payload.contact],
+        };
+      }
       return {
         ...state,
-        selectedContact: payload.contact.number,
         contacts: [...state.contacts, payload.contact],
+      };
+    }
+    case reducerActionTypes.UPDATE_PROFILE: {
+      return {
+        ...state,
+        ...payload.profile,
+        sidePopUpMessage: {
+          trigger: true,
+          error: false,
+          message: payload.message,
+        },
       };
     }
 

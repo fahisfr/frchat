@@ -19,7 +19,7 @@ interface SendMessageProps {
 
 function SendMessage({ scrollToBottom }: SendMessageProps) {
   const {
-    state: { socket, number, selectedContact },
+    state: { socket, number, selectedContactNumber },
     dispatch,
     reducerActionTypes,
   } = getContext();
@@ -38,12 +38,12 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
 
     if (socket === null) return;
 
-    socket.emit("send-message", { text, to: selectedContact });
+    socket.emit("send-message", { text, to: selectedContactNumber });
 
     dispatch({
       type: reducerActionTypes.ADD_MESSAGE,
       payload: {
-        number: selectedContact,
+        number: selectedContactNumber,
         text,
         from: number,
         date: new Date().toISOString(),

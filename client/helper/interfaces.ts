@@ -24,12 +24,11 @@ export interface SidePopUpMessage {
 
 export interface User {
   socket: Socket | null;
-  name: string;
   number: number;
   profile: string;
   about: string;
   contacts: Contact[];
-  selectedContact: number;
+  selectedContactNumber: number;
   isAuth: boolean;
   darkTheme: boolean;
   sidePopUpMessage: SidePopUpMessage;

@@ -19,7 +19,7 @@ function Chats() {
   useEffect(() => scrollToBottom());
 
   const contact = state.contacts?.find(
-    (contact) => contact.number === state.selectedContact
+    (contact) => contact.number === state.selectedContactNumber
   );
 
   if (!contact) {
@@ -39,7 +39,7 @@ function Chats() {
 
   const backToContacts = () => {
     dispatch({
-      type: reducerActionTypes.SELECTEDCONTACT,
+      type: reducerActionTypes.SELECT_CONTACT,
       payload: {
         number: 0,
       },
@@ -59,6 +59,9 @@ function Chats() {
       endMessageRef.current.scrollIntoView();
     }
   }
+  console.log(state);
+  
+
   return (
     <div className={styles.chats}>
       <div className={styles.contact_chats}>
@@ -108,7 +111,10 @@ function Chats() {
               })
               .map((message, index) => {
                 return message.from === state.number ? (
-                  <div className={`${styles.user_message} ${styles.message}`}>
+                  <div
+                    className={`${styles.user_message} ${styles.message}`}
+                    key={index}
+                  >
                     <div className={styles.message_wrapper}>
                       <div className={styles.message_details}>
                         <span className={styles.message_date}>

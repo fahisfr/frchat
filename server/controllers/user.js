@@ -13,11 +13,9 @@ const createTokens = (info) => {
 };
 
 const login = async (req, res, next) => {
-  try {
+  
     res.json({ status: "ok" });
-  } catch (error) {
-    next(error);
-  }
+
 };
 
 
@@ -65,7 +63,9 @@ const editProfile = async (req, res, next) => {
     );
 
     if (dbRes.modifiedCount > 0) {
-      return res.json({ status: "ok" });
+      return res.json({
+        status: "ok", profile: updatedInfo
+      });
     }
     res.json({ status: "error", error: "Failed to update profile" });
   } catch (error) {

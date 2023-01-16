@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const http = require("http");
-const port = 4000;
+const port = 4010;
 const connectDb = require("./config/dbConn");
 const morgan = require("morgan");
 const cors = require("cors");
@@ -16,8 +16,6 @@ const dbUser = require("./dbSChemas/user");
 
 connectDb();
 
-io.use(require("./eventHandlers/handshake"));
-io.on("connection", require("./eventHandlers/onConnection"));
 app.use(fileUpload());
 app.use(cookieParser());
 app.use(morgan("dev"));
@@ -25,7 +23,9 @@ app.use(cors(require("./config/corsOptions")));
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 
-app.use("/api/message", require("./routes/message"));
+io.use(require("./wsControllers/handshake"));
+io.on("connection", require("./wsControllers/eventsHandler"));
+
 app.use("/api/contact", auth, require("./routes/contact"));
 app.use("/api/user", require("./routes/user"));
 app.use(require("./config/errorHandler"));

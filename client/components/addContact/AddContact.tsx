@@ -8,8 +8,7 @@ type AddContactProps = {
 };
 
 function AddContact({ setTrigger }: AddContactProps) {
-  const { dispatch, reducerActionTypes, triggerSidePopUpMessage } =
-    getContext();
+  const { dispatch, reducerActionTypes } = getContext();
 
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -28,11 +27,15 @@ function AddContact({ setTrigger }: AddContactProps) {
         type: reducerActionTypes.ADD_CONTACT,
         payload: {
           contact: data.contact,
+          selectContact: true,
         },
       });
       setTrigger(false);
     } else if (data.status === "error") {
-      triggerSidePopUpMessage({ error: true, message: data.error });
+      dispatch({
+        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+        payload: { error: true, message: data.error },
+      });
     }
   };
 
