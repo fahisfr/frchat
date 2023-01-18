@@ -9,9 +9,11 @@
 }
 
 .sb_on {
+
   transform: translate(0);
 }
 .sb_colse {
+
   transform: translate(120%);
 }
 

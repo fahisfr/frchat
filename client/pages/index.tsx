@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
 import { useRouter } from "next/router";
 import axios from "../helper/axios";
+import SidePopUPMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
 
 function Index() {
   const { state, dispatch, reducerActionTypes } = getContext();
@@ -17,12 +18,14 @@ function Index() {
   const [reloadPage, setReloadPage] = useState<boolean>(false);
   const router = useRouter();
 
+
+
   useEffect(() => {
     const token = localStorage.getItem("auth_token");
     if (!token) {
       router.replace("/");
     }
-    const socket = io("https://frchatbackend.fahis.live/", {
+    const socket = io("http://localhost:4010", {
       auth: {
         token: localStorage.getItem("access_token"),
       },
@@ -49,31 +52,11 @@ function Index() {
     });
 
     socket.on("recieve-message", async (message) => {
-      const contactIn = state.contacts.find(
-        (contact) => contact.number === message.from
-      );
-      if (contactIn) {
-        dispatch({
-          type: reducerActionTypes.ADD_MESSAGE,
-          payload: { number: message.from, ...message },
-        });
-      } else {
-        const { data } = await axios.post("/contact/add-contact", {
-          number: message.from,
-        });
-
-        if (data.status === "ok") {
-          dispatch({
-            type: reducerActionTypes.ADD_CONTACT,
-            payload: {
-              contact: {
-                ...data.contact,
-                messages: [message],
-              },
-            },
-          });
-        }
-      }
+   
+       dispatch({
+         type: reducerActionTypes.ADD_MESSAGE,
+         payload: { number: message.from, ...message },
+       });
     });
 
     socket.on("user-online", (number) => {
@@ -110,7 +93,7 @@ function Index() {
           className={styles.container}
           data-theme={state.darkTheme.toString()}
         >
-          <SidePopUpMessage />
+
           <NavBar setProfileTrigger={setProfile} />
           <main className={styles.main}>
             <div className={styles.contacts_info}>

@@ -48,7 +48,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
     } else if (data.status === "error") {
       dispatch({
         type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: { error: true, message: data.error },
+        payload: { error: true, message: data.message },
       });
     }
   };

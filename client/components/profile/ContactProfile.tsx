@@ -32,7 +32,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
     } else if (data.status === "error") {
       dispatch({
         type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: { error: true, message: data.error },
+        payload: { error: true, message: data.message },
       });
     }
   };
@@ -52,7 +52,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
     } else {
       dispatch({
         type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: { error: true, message: data.error },
+        payload: { error: true, message: data.message },
       });
     }
   };

@@ -11,7 +11,7 @@ const addContact = async (req, res, next) => {
     if (!user) {
       return res.json({
         status: "error",
-        error: "Invalid contact number, please check and try again",
+        message: "Invalid contact number, please check and try again",
       });
     }
     const addNewContact = await dbUser.updateOne(
@@ -37,7 +37,7 @@ const addContact = async (req, res, next) => {
         },
       });
     }
-    res.json({ status: "error", error: "Failed to add new contact" });
+    res.json({ status: "error", message: "Failed to add new contact" });
   } catch (error) {
     next(error);
   }
@@ -64,7 +64,7 @@ const changeName = async (req, res, next) => {
     if (dbRes.modifiedCount > 0) {
       return res.json({ status: "ok", message: "Contact name changed" });
     }
-    res.json({ status: "error", error: "Failed to change contact name" });
+    res.json({ status: "error", message: "Failed to change contact name" });
   } catch (error) {
     next(error);
   }
@@ -89,7 +89,7 @@ const removeContact = async (req, res, next) => {
     if (dbRes.modifiedCount > 0) {
       return res.json({ status: "ok", message: "contact removed" });
     }
-    res.json({ status: "error", error: "Failed to remove contact" });
+    res.json({ status: "error", message: "Failed to remove contact" });
   } catch (error) {
     next(error);
   }

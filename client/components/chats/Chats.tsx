@@ -59,7 +59,7 @@ function Chats() {
       endMessageRef.current.scrollIntoView();
     }
   }
-  console.log(state);
+
   
 
   return (

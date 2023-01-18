@@ -1,63 +1,77 @@
 import axios from "../../helper/axios";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useState, useRef, useEffect } from "react";
 import styles from "./css.module.css";
 import { useRouter } from "next/router";
 import { getContext } from "../../helper/context";
 import Head from "next/head";
-import { reducerActionTypes } from "../../helper/reducerActions";
+
+let currentOtpIndex: number = 0;
 
 function Index() {
   const router = useRouter();
+  const { dispatch, reducerActionTypes } = getContext();
 
-  const { dispatch } = getContext();
+  const [number, setNumber] = useState<string>("9633062570");
+  const [countryCode, setCountryCode] = useState<string>("91");
 
-  const [number, setNumber] = useState<number>(1234567890);
-  const [counteryCode, setCounteryCode] = useState();
-  const [otp, setOtp] = useState(new Array(4).fill(""));
+  const [otp, setOtp] = useState<string[]>(new Array(4).fill(""));
+  const [activeOtpIndex, setActiveOtpIndex] = useState<number>(0);
 
-  const [verifyOtp, setVerifyOpt] = useState(false);
+  const [verifyOtp, setVerifyOpt] = useState<boolean>(false);
+  const otpInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    otpInputRef.current?.focus();
+  }, [activeOtpIndex]);
+
+  const otpOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const newArray = [...otp];
+    newArray[currentOtpIndex] = value.substring(value.length - 1);
+    if (value) setActiveOtpIndex(currentOtpIndex + 1);
+    else setActiveOtpIndex(currentOtpIndex - 1);
+
+    setOtp(newArray);
+  };
+  const handleOnKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    currentOtpIndex = index;
+    if (e.key === "Backspace") setActiveOtpIndex(currentOtpIndex - 1);
+  };
+  const triggerPopUpMessage = (arg: { error: boolean; message: string }) => {
+    dispatch({
+      type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+      payload: arg,
+    });
+  };
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (verifyOtp) {
-      const { data } = await axios.post("/user/verify-otp", { otp, number });
+      const { data } = await axios.post("/user/verify-otp", {
+        otp: otp.join(""),
+        number,
+        countryCode,
+      });
       if (data.status === "ok") {
         localStorage.setItem("access_token", data.token);
         router.replace("/");
       } else if (data.status === "error") {
-        dispatch({
-          type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-          payload: { error: true, message: data.error },
-        });
+        triggerPopUpMessage({ error: true, message: data.message });
       }
     } else {
       const { data } = await axios.post("/user/login", {
         number,
-        counteryCode,
-        otp,
+        countryCode,
       });
 
       if (data.status === "ok") {
         setVerifyOpt(true);
       } else if (data.status === "error") {
-        dispatch({
-          type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-          payload: { error: true, message: data.error },
-        });
+        triggerPopUpMessage({ error: true, message: data.message });
       }
     }
-  };
-
-  const otpOnChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    setOtp((prevArray) => {
-      const newArray = [...prevArray];
-      newArray[index] = e.target.value;
-      return newArray;
-    });
   };
 
   return (
@@ -84,12 +98,13 @@ function Index() {
                 {otp.map((otp, index) => {
                   return (
                     <input
+                      ref={index === activeOtpIndex ? otpInputRef : null}
                       key={index}
                       value={otp}
                       type="number"
                       placeholder="0"
-                      onChange={(e) => otpOnChange(e, index)}
-                      maxLength={1}
+                      onChange={otpOnChange}
+                      onKeyDown={(e) => handleOnKeyDown(e, index)}
                       className={styles.otp_input}
                     />
                   );
@@ -104,7 +119,7 @@ function Index() {
                   placeholder="00 00 00 00 00"
                   className={styles.number_input}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setNumber(parseInt(e.target.value));
+                    setNumber(e.target.value);
                   }}
                   value={number}
                   type="number"

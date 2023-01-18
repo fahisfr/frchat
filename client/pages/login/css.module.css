@@ -43,6 +43,7 @@
   font-size: 1.3rem;
   border-bottom: 1px solid var(--gray-400);
 }
+
 .country_code {
   width: min(7rem, 5rem);
   font-size: 1.3rem;

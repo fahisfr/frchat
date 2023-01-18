@@ -19,7 +19,7 @@ function AddContact({ setTrigger }: AddContactProps) {
     setBtnLoading(true);
     const { data } = await axios.post("/contact/add-contact", {
       name,
-      number,
+      number: Number(number),
     });
     setBtnLoading(false);
     if (data.status === "ok") {
@@ -34,7 +34,7 @@ function AddContact({ setTrigger }: AddContactProps) {
     } else if (data.status === "error") {
       dispatch({
         type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: { error: true, message: data.error },
+        payload: { error: true, message: data.message },
       });
     }
   };
@@ -61,7 +61,12 @@ function AddContact({ setTrigger }: AddContactProps) {
               placeholder=""
               type="text"
               value={number}
-              onChange={(e) => setNumber(e.target.value)}
+              onChange={(e) => {
+                const { value } = e.target;
+                if (value.length <= 10) {
+                  setNumber(value);
+                }
+              }}
               required
             />
           </div>
