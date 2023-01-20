@@ -54,6 +54,13 @@ module.exports = async (socket) => {
           },
         },
       },
+      {
+        $set: {
+          contacts: {
+            $cond: [{ $eq: ["$contacts", [{}]] }, [], "$contacts"],
+          },
+        },
+      },
     ]);
 
     const userInfo = userInfoFromDb[0];

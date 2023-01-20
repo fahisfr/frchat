@@ -10,8 +10,9 @@ import { getProfileUrl } from "../../helper/axios";
 import { BsThreeDotsVertical, BsFillArrowDownCircleFill } from "react-icons/bs";
 
 function Chats() {
-  const [contactProfile, setContactProfile] = useState<boolean>(false);
+  
   const { state, dispatch, reducerActionTypes } = getContext();
+  const [contactProfile, setContactProfile] = useState<boolean>(false);
   const endMessageRef = useRef<HTMLDivElement>(null);
   const downArrowRef = useRef<HTMLHRElement>(null);
   const [scrollDownButton, setScrollDownButton] = useState<boolean>(false);
@@ -59,8 +60,6 @@ function Chats() {
       endMessageRef.current.scrollIntoView();
     }
   }
-
-  
 
   return (
     <div className={styles.chats}>
@@ -163,7 +162,7 @@ function Chats() {
           />
         </div>
 
-        <SendMessage scrollToBottom={scrollToBottom} />
+        <SendMessage  />
       </div>
 
       <ContactProfile

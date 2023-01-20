@@ -16,7 +16,7 @@ function SidePopUPMessage() {
 
   useEffect(() => {
     if (sidePopUpMessage.trigger) {
-      timerRef.current = setTimeout(closePopUpMessage, 5000);
+      timerRef.current = setTimeout(closePopUpMessage, 5500);
     }
     return () => {
       if (timerRef.current) {

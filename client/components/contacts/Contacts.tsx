@@ -9,7 +9,7 @@ import getDate from "../../helper/getDate";
 function Contacts() {
   const { state, dispatch, reducerActionTypes } = getContext();
   const [search, setSearch] = useState<string>("");
-
+ 
   return (
     <div className={styles.contacts_container}>
       <div className={styles.top}>

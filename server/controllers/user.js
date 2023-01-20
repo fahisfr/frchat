@@ -20,12 +20,11 @@ const createTokens = (info) => {
 
 const login = async (req, res, next) => {
   try {
-    const { countryCode, number } = req.body;
-
+    const { number } = req.body;
     const otpSended = await twilio.verify
       .services(process.env.TWILIO_SERVICE_ID)
       .verifications.create({
-        to: `+${countryCode}${number}`,
+        to: `+${number}`,
         channel: "sms",
       });
 
@@ -37,32 +36,37 @@ const login = async (req, res, next) => {
       message: "Sorry, we were unable to send the OTP to your phone number",
     });
   } catch (error) {
-    if (error?.status == 429) {
-      res.json({
+    if (error?.status == 429 || error.code === 60410) {
+      return res.json({
         status: "error",
         message:
           "Too many OTP requests have been made. Please wait before requesting another one.",
       });
-    } else {
-      next(error);
+    } else if (error?.code === 60200) {
+      return res.json({
+        status: "error",
+        message: "Invalid phone number. Please check the number and try again",
+      });
     }
+    next(error);
   }
 };
 
 const verifyOtp = async (req, res, next) => {
   try {
-    const { number, countryCode, otp } = req.body;
+    console.log(req.body);
+    const { number, otp } = req.body;
 
     if (otp !== "9999") {
       //for test
       const verificationCheck = await twilio.verify
         .services(process.env.TWILIO_SERVICE_ID)
         .verificationChecks.create({
-          to: `+${countryCode}${number}`,
+          to: `+${number}`,
           code: otp,
         });
 
-      if (verificationCheck.status !== "approved" || opt == "9999") {
+      if (verificationCheck.status !== "approved") {
         return res.json({
           status: "error",
           message:
@@ -144,6 +148,7 @@ const editProfile = async (req, res, next) => {
     if (dbRes.modifiedCount > 0) {
       return res.json({
         status: "ok",
+        message: "Profile updated",
         profile: updatedInfo,
       });
     }

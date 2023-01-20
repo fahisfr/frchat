@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseURL = "http://localhost:4010";
+export const baseURL = process.env.BACKEND_URL;
 
 export const profileUrl = `${baseURL}/profiles/`;
 export const getProfileUrl = (image: String) => profileUrl + image;
@@ -35,10 +35,10 @@ instance.interceptors.response.use(
       localStorage.removeItem("access_token");
       return Promise.reject({
         status: "error",
-        error: "failed to refresh access token",
+        message: "failed to refresh access token",
       });
     }
-    return Promise.reject({ status: "error", error: error.message });
+    return Promise.reject({ status: "error", message: error.message });
   }
 );
 

@@ -4,33 +4,31 @@ import NavBar from "../components/navBar/navBar";
 import Contacts from "../components/contacts/Contacts";
 import Chats from "../components/chats/Chats";
 import Profile from "../components/profile/Profile";
-import SidePopUpMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
+import axios from "../helper/axios";
 import io from "socket.io-client";
+import SidePopUPMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
 import { useEffect, useState } from "react";
 import { getContext } from "../helper/context";
 import { useRouter } from "next/router";
-import axios from "../helper/axios";
-import SidePopUPMessage from "../components/sidePopUpMessage.js/SidePopUPMessage";
+import { TbPlugConnectedX } from "react-icons/tb";
+
+const wsUrl = "https://frchat.fahis.live/";
 
 function Index() {
   const { state, dispatch, reducerActionTypes } = getContext();
   const [profile, setProfile] = useState<boolean>(false);
-  const [reloadPage, setReloadPage] = useState<boolean>(false);
+  const [wsReRequest, SetWsReRequest] = useState<boolean>(false);
+  const [wsError, setWsError] = useState<string>("");
   const router = useRouter();
 
-
-
   useEffect(() => {
-    const token = localStorage.getItem("auth_token");
+    const token = localStorage.getItem("access_token");
     if (!token) {
-      router.replace("/");
+      router.push("/login");
+      return;
     }
-    const socket = io("http://localhost:4010", {
-      auth: {
-        token: localStorage.getItem("access_token"),
-      },
-    });
 
+    const socket = io(wsUrl, { auth: { token } });
     socket.on("on-connect", (info) => {
       dispatch({
         type: "LOGIN",
@@ -43,20 +41,17 @@ function Index() {
         const { data } = await axios.get("/user/refresh-token");
         if (data.status === "ok") {
           localStorage.setItem("access_token", data.accessToken);
-          setReloadPage(!reloadPage);
+          SetWsReRequest(!wsReRequest);
           return;
         }
+      } else if (err.message === "401") {
+        localStorage.removeItem("access_token");
+        router.push("/login");
+      } else {
+        setWsError(
+          "We apologize for the inconvenience, the server is currently unavailable. Please check back later"
+        );
       }
-      localStorage.removeItem("access_token");
-      router.push("/login");
-    });
-
-    socket.on("recieve-message", async (message) => {
-   
-       dispatch({
-         type: reducerActionTypes.ADD_MESSAGE,
-         payload: { number: message.from, ...message },
-       });
     });
 
     socket.on("user-online", (number) => {
@@ -71,7 +66,7 @@ function Index() {
         payload: { status: false, number },
       });
     });
-  }, [reloadPage]);
+  }, [wsReRequest]);
 
   return (
     <>
@@ -84,16 +79,21 @@ function Index() {
         />
         <meta name="keywords" content="chat, friends, family, FRChat" />
       </Head>
-      {!state.socket ? (
-        <div className="loadings">
-          <span className="loading">Contact</span>
+      {wsError ? (
+        <div className="full_center">
+          <TbPlugConnectedX className={styles.icon_plug} />
+          <span>{wsError}</span>
+        </div>
+      ) : !state.socket ? (
+        <div className="full_center">
+          <span className="loading"></span>
         </div>
       ) : (
         <div
           className={styles.container}
           data-theme={state.darkTheme.toString()}
         >
-
+          <SidePopUPMessage />
           <NavBar setProfileTrigger={setProfile} />
           <main className={styles.main}>
             <div className={styles.contacts_info}>

@@ -17,9 +17,9 @@ interface SendMessageProps {
   scrollToBottom: () => void;
 }
 
-function SendMessage({ scrollToBottom }: SendMessageProps) {
+function SendMessage() {
   const {
-    state: { socket, number, selectedContactNumber },
+    state: { socket, number, selectedContactNumber, darkTheme },
     dispatch,
     reducerActionTypes,
   } = getContext();
@@ -88,7 +88,11 @@ function SendMessage({ scrollToBottom }: SendMessageProps) {
           />
           {emojiPicker && (
             <div ref={emojiPickerRef} className={styles.emoji_picker}>
-              <Picker onEmojiClick={onEmojiClick} />
+              <Picker
+                onEmojiClick={onEmojiClick}
+                // theme={darkTheme ? "dark" : "light"}
+                width="auto"
+              />
             </div>
           )}
         </div>

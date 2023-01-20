@@ -5,9 +5,15 @@ const {
   validateRequestBody,
   login,
   verifyOtp,
+  editProfile,
 } = require("../middleware/apiValidation");
 
-router.put("/edit-profile", user.editProfile);
+router.put(
+  "/edit-profile",
+  validateRequestBody(editProfile),
+  auth,
+  user.editProfile
+);
 router.post("/login", auth, validateRequestBody(login), user.login);
 router.post("/verify-otp", validateRequestBody(verifyOtp), user.verifyOtp);
 router.get("/refresh-token", user.verifyRefrshToken);

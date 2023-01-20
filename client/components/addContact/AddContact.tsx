@@ -8,6 +8,7 @@ type AddContactProps = {
 };
 
 function AddContact({ setTrigger }: AddContactProps) {
+  
   const { dispatch, reducerActionTypes } = getContext();
 
   const [btnLoading, setBtnLoading] = useState<boolean>(false);

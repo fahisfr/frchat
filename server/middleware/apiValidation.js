@@ -1,12 +1,9 @@
-
 const joi = require("joi");
 
 const login = joi.object({
-  countryCode: joi.string().required(),
   number: joi.string().required(),
 });
 const verifyOtp = joi.object({
-  countryCode: joi.string().required(),
   number: joi.string().required(),
   otp: joi.string().required(),
 });
@@ -18,6 +15,13 @@ const contactNameAndNumber = joi.object({
 
 const removeContact = joi.object({
   number: joi.number().required(),
+});
+const editProfile = joi.object({
+  about: joi.string().allow(""),
+  profilePhoto: joi.object().keys({
+    name: joi.string().required(),
+    data: joi.binary().required(),
+  }),
 });
 
 const validateRequestBody = (schema) => async (req, res, next) => {
@@ -41,4 +45,5 @@ module.exports = {
   verifyOtp,
   removeContact,
   contactNameAndNumber,
+  editProfile,
 };

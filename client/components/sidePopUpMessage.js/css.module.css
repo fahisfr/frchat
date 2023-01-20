@@ -9,11 +9,9 @@
 }
 
 .sb_on {
-
   transform: translate(0);
 }
 .sb_colse {
-
   transform: translate(120%);
 }
 
@@ -34,6 +32,7 @@
   font-size: 2rem;
 }
 .sp_message {
+  text-align: center;
   word-break: break-all;
   font-weight: 400;
 }

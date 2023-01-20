@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const dbUser = require("../dbSChemas/user");
+
 module.exports = (socket, next) => {
   const token = socket.handshake.auth?.token;
 
@@ -9,18 +10,18 @@ module.exports = (socket, next) => {
         if (err instanceof jwt.TokenExpiredError) {
           next(new Error("403"));
         } else {
-          next(new Error("token not vaild"));
+          next(new Error("401"));
         }
       }
       const userInfo = await dbUser.findOne({ _id: user?.id });
       if (!userInfo) {
-        next(new Error("user not found"));
+        next(new Error("401"));
       }
 
       socket.user = userInfo;
       next();
     });
   } else {
-    next(new Error("token not found"));
+    next(new Error("401"));
   }
 };

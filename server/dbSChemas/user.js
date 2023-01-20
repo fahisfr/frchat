@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const user = new mongoose.Schema({
   name: String,
   number: Number,
+  countryCode: Number,
   profile: { type: String, default: "default_profile.jpg" },
   refreshToken: String,
   about: { type: String, default: "i am new here" },

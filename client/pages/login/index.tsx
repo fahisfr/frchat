@@ -1,3 +1,4 @@
+
 import axios from "../../helper/axios";
 import React, { FormEvent, useState, useRef, useEffect } from "react";
 import styles from "./css.module.css";
@@ -5,15 +6,18 @@ import { useRouter } from "next/router";
 import { getContext } from "../../helper/context";
 import Head from "next/head";
 
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import SidePopUPMessage from "../../components/sidePopUpMessage.js/SidePopUPMessage";
 let currentOtpIndex: number = 0;
 
 function Index() {
+
   const router = useRouter();
+
   const { dispatch, reducerActionTypes } = getContext();
-
-  const [number, setNumber] = useState<string>("9633062570");
-  const [countryCode, setCountryCode] = useState<string>("91");
-
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
+  const [number, setNumber] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(new Array(4).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState<number>(0);
 
@@ -48,11 +52,11 @@ function Index() {
   };
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setBtnLoading(true);
     if (verifyOtp) {
       const { data } = await axios.post("/user/verify-otp", {
         otp: otp.join(""),
         number,
-        countryCode,
       });
       if (data.status === "ok") {
         localStorage.setItem("access_token", data.token);
@@ -63,7 +67,6 @@ function Index() {
     } else {
       const { data } = await axios.post("/user/login", {
         number,
-        countryCode,
       });
 
       if (data.status === "ok") {
@@ -72,6 +75,7 @@ function Index() {
         triggerPopUpMessage({ error: true, message: data.message });
       }
     }
+    setBtnLoading(false);
   };
 
   return (
@@ -83,13 +87,13 @@ function Index() {
         <meta name="keywords" content="chat, friends, family, login, FRChat" />
       </Head>
       <div className={styles.login_container}>
+        <SidePopUPMessage />
         <div className={styles.lg_body}>
           <div className={styles.lg_title}>
-            <h1
-              className={styles.lg_title_text}
-              onClick={() => setVerifyOpt(!verifyOtp)}
-            >
-              Enter Your Phone Number
+            <h1 className={styles.lg_title_text}>
+              {verifyOtp
+                ? `Please enter the OTP sent to +${number}`
+                : "Enter Your Phone Number"}
             </h1>
           </div>
           <form onSubmit={onSubmit}>
@@ -112,25 +116,21 @@ function Index() {
               </div>
             ) : (
               <div className={styles.lg_number_wrapper}>
-                <select className={styles.country_code}>
-                  <option value="91">+91</option>
-                </select>
-                <input
-                  placeholder="00 00 00 00 00"
-                  className={styles.number_input}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setNumber(e.target.value);
-                  }}
+                <PhoneInput
+                  placeholder="Enter phone number"
+                  enableSearch={true}
                   value={number}
-                  type="number"
-                  id="number"
+                  onChange={setNumber}
+                  inputClass={styles.number_input}
                 />
               </div>
             )}
 
-            <div className={styles.lg_bottom}>
-              <button type="submit" className={styles.lg_next_btn}>
-                Next
+            <div
+              className={`${styles.lg_bottom}  ${btnLoading && "btn_loading"}`}
+            >
+              <button type="submit" className={`${styles.lg_next_btn} btn`}>
+                <span className="btn_text">Next</span>
               </button>
             </div>
           </form>
