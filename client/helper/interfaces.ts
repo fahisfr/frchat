@@ -14,6 +14,7 @@ export interface Contact {
   profile: string;
   about: string;
   onlineStatus: boolean;
+  typingStatus: boolean;
   messages: Message[];
 }
 export interface SidePopUpMessage {
@@ -43,3 +44,10 @@ export interface TriggerSidePopUpMessage {
   error: boolean;
   message: string;
 }
+
+export interface Message {
+  from: number;
+  text: string;
+  date: string;
+}
+

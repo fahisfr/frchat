@@ -12,7 +12,7 @@ import { getContext } from "../helper/context";
 import { useRouter } from "next/router";
 import { TbPlugConnectedX } from "react-icons/tb";
 
-const wsUrl = "https://frchat.fahis.live/";
+const wsUrl = `${process.env.BACKEND_URL}/`;
 
 function Index() {
   const { state, dispatch, reducerActionTypes } = getContext();
@@ -27,46 +27,41 @@ function Index() {
       router.push("/login");
       return;
     }
-
     const socket = io(wsUrl, { auth: { token } });
+    
     socket.on("on-connect", (info) => {
       dispatch({
-        type: "LOGIN",
+        type: reducerActionTypes.LOGIN,
         payload: { ...info.userInfo, isAuth: true, socket },
       });
     });
 
-    socket.on("connect_error", async (err) => {
-      if (err.message === "403") {
-        const { data } = await axios.get("/user/refresh-token");
-        if (data.status === "ok") {
-          localStorage.setItem("access_token", data.accessToken);
-          SetWsReRequest(!wsReRequest);
-          return;
-        }
-      } else if (err.message === "401") {
-        localStorage.removeItem("access_token");
-        router.push("/login");
-      } else {
-        setWsError(
-          "We apologize for the inconvenience, the server is currently unavailable. Please check back later"
-        );
-      }
-    });
+    socket.on("connect_error", handleConnectError);
 
-    socket.on("user-online", (number) => {
-      dispatch({
-        type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
-        payload: { status: true, number },
-      });
-    });
-    socket.on("user-offline", (number) => {
-      dispatch({
-        type: reducerActionTypes.CHANGE_USER_ONLINE_STATUS,
-        payload: { status: false, number },
-      });
-    });
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
   }, [wsReRequest]);
+
+  const handleConnectError = async (err: any) => {
+    if (err.message === "403") {
+      const { data } = await axios.get("/user/refresh-token");
+      if (data.status === "ok") {
+        localStorage.setItem("access_token", data.accessToken);
+        SetWsReRequest(!wsReRequest);
+        return;
+      }
+    } else if (err.message === "401") {
+      localStorage.removeItem("access_token");
+      router.push("/login");
+    } else {
+      setWsError(
+        "We apologize for the inconvenience, the server is currently unavailable. Please check back later"
+      );
+    }
+  };
 
   return (
     <>

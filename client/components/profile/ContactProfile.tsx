@@ -11,11 +11,9 @@ interface ContactProfileProps extends Trigger {
 }
 
 function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
+  const { dispatch, reducerActionTypes } = getContext();
   const [newName, setNewName] = useState<string>(contact.name);
-  const { state, dispatch, reducerActionTypes } =
-    getContext();
   const number = contact?.number;
-
   const [saveBtnLoading, setSaveBtnLoading] = useState<boolean>(false);
 
   const removeContact = async () => {
@@ -75,6 +73,7 @@ function ContactProfile({ trigger, setTrigger, contact }: ContactProfileProps) {
             <Image
               fill
               alt=""
+              objectFit="cover"
               className="rounded-full"
               src={getProfileUrl(contact.profile)}
             />

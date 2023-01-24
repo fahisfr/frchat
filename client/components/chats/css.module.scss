@@ -37,14 +37,13 @@
   padding: 0 10px;
   align-items: center;
   justify-content: space-between;
-
-  .top_left {
-    display: flex;
-    column-gap: 5px;
-    align-items: center;
-  }
 }
 
+.top_left {
+  display: flex;
+  column-gap: 5px;
+  align-items: center;
+}
 .chat_contact_profile {
   width: 3rem;
   height: 3rem;
@@ -53,76 +52,7 @@
 .back_icon {
   display: none;
 }
-.messages_container {
-  position: relative;
-  flex-grow: 1;
-  overflow: auto;
-}
 
-.messages {
-  height: 100%;
-  background-color: var(--bg-secondary);
-  position: relative;
-  overflow: auto;
-  padding: 10px;
-}
-
-.message {
-  cursor: pointer;
-  display: flex;
-  margin-bottom: 15px;
-}
-
-.user_message {
-  justify-content: flex-end;
-}
-
-.message_wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 70%;
-  row-gap: 3px;
-
-  .message_content {
-    padding: 10px;
-    border-radius: 8px;
-    background-color: var(--bg-primary);
-    word-break: break-all;
-  }
-}
-
-.message_details {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  column-gap: 4px;
-  .user_profile {
-    width: 2.5rem;
-    height: 2.5rem;
-    position: relative;
-  }
-  .message_date {
-    font-size: 13px;
-    font-family: inherit;
-    color: var(--gray-500);
-  }
-}
-
-.show_scroll_down_btn .scroll_down_btn {
-  visibility: visible;
-  opacity: 1;
-}
-.scroll_down_btn {
-  visibility: hidden;
-  opacity: 0;
-  transition: all 0.3s ease;
-  position: absolute;
-  right: 50%;
-  bottom: 0;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--color-primary);
-}
 @media (max-width: 768px) {
   .stc {
     display: none;

@@ -16,14 +16,16 @@ interface ProfilePhoto {
 function Profile({ trigger, setTrigger }: Trigger) {
   const { state, reducerActionTypes, dispatch } = getContext();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [newAbout, setAbout] = useState<string>(state.about);
+  const [newAbout, setNewAbout] = useState<string>(state.about);
+  const [saveBtnLoading, setSaveBtnLoading] = useState<boolean>(false);
   const [profielPhoto, setProfilePhoto] = useState<ProfilePhoto>({
     file: null,
     preview: "",
   });
-  
+
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSaveBtnLoading(true);
     const formData = new FormData();
 
     if (newAbout) {
@@ -51,6 +53,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
         payload: { error: true, message: data.message },
       });
     }
+    setSaveBtnLoading(false);
   };
 
   const handleInputRefChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,6 +94,7 @@ function Profile({ trigger, setTrigger }: Trigger) {
             <Image
               fill
               alt=""
+              objectFit="cover"
               className="rounded-full"
               src={
                 profielPhoto.preview
@@ -119,21 +123,27 @@ function Profile({ trigger, setTrigger }: Trigger) {
           </label>
           <textarea
             rows={4}
-            value={newAbout}
-            onChange={(e) => setAbout(e.target.value)}
+            value={newAbout ?? state.about}
+            onChange={(e) => setNewAbout(e.target.value)}
             id={styles.pf_about}
             className={styles.pf_input}
             placeholder=""
             maxLength={125}
           ></textarea>
         </div>
-        <div className={styles.pf_form_bottom}>
+        <div
+          className={`${styles.pf_form_bottom} ${
+            saveBtnLoading && "btn_loading"
+          }`}
+        >
           <button
             type="submit"
-            disabled={newAbout === state.about && !profielPhoto.file}
+            disabled={
+              (newAbout === state.about && !profielPhoto.file) || saveBtnLoading
+            }
             className={`${styles.pf_button} btn`}
           >
-            Save
+            <span className="btn_text">Save</span>
           </button>
         </div>
       </form>

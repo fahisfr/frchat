@@ -1,108 +1,64 @@
-const dbUser = require("../dbSChemas/user");
+const getUserInfo = require("../controllers/getUserInfo");
 const clients = new Map();
 
 module.exports = async (socket) => {
   try {
     const { _id, number, contacts } = socket.user;
-    console.log(`${number} Conected`);
     clients.set(number, socket);
-
-    const userInfoFromDb = await dbUser.aggregate([
-      {
-        $match: {
-          _id,
-        },
-      },
-      {
-        $unwind: {
-          preserveNullAndEmptyArrays: true,
-          path: "$contacts",
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          foreignField: "number",
-          localField: "contacts.number",
-          as: "contactInfo",
-        },
-      },
-      {
-        $project: {
-          number: 1,
-          profile: 1,
-          about: 1,
-          contacts: {
-            name: 1,
-            number: 1,
-            messages: 1,
-            about: { $arrayElemAt: ["$contactInfo.about", 0] },
-            profile: {
-              $arrayElemAt: ["$contactInfo.profile", 0],
-            },
-          },
-        },
-      },
-      {
-        $group: {
-          _id: null,
-          number: { $first: "$number" },
-          profile: { $first: "$profile" },
-          about: { $first: "$about" },
-          contacts: {
-            $push: "$contacts",
-          },
-        },
-      },
-      {
-        $set: {
-          contacts: {
-            $cond: [{ $eq: ["$contacts", [{}]] }, [], "$contacts"],
-          },
-        },
-      },
-    ]);
-
-    const userInfo = userInfoFromDb[0];
-
-    if (userInfo.contacts.length > 0) {
-      userInfo.contacts?.map((contact) => {
-        const client = clients.get(contact.number);
-        if (client) {
-          client.emit("user-online", number);
-          contact.onlineStatus = true;
-        } else {
-          contact.onlineStatus = false;
-        }
-        return contact;
-      });
-    }
+    const userInfo = await handleUserOnconnect(_id, number);
 
     socket.user.contacts = userInfo.contacts;
-
     socket.emit("on-connect", { userInfo });
 
     socket.on("send-message", async ({ to, text }) => {
-      const client = clients.get(to);
-
-      const messsage = { from: number, to, text, date: new Date() };
-
-      if (client) {
-        client.emit("recieve-message", messsage);
-      }
+      const message = { from: number, text, date: new Date() };
+      socketEmit("recieve-message", to, message);
     });
 
-    socket.on("disconnect", () => {
-      console.log(`${number} Discoected`);
-      contacts?.forEach((con) => {
-        const contact = clients.get(con.number);
-        if (contact) {
-          contact.emit("user-offline", number);
-        }
-      });
-      clients.delete(number);
+    socket.on("user-start-typing-message", ({ to }) => {
+      socketEmit("contact-start-typing-message", to, { from: number });
     });
+
+    socket.on("user-stop-typing-message", ({ to }) => {
+      socketEmit("contact-stop-typing-message", to, { from: number });
+    });
+
+    socket.on("disconnect", () => handleUserDisconnect(contacts, number));
   } catch (error) {
     console.log(error);
+  }
+};
+const handleUserOnconnect = async (id, number) => {
+  const userInfoDb = await getUserInfo(id);
+  console.log(`${number} Conected`);
+  const userInfo = userInfoDb[0];
+
+  if (userInfo.contacts.length > 0) {
+    userInfo.contacts?.map((contact) => {
+      const client = clients.get(contact.number);
+      if (client) {
+        client.emit("contact-online", number);
+        contact.onlineStatus = true;
+      } else {
+        contact.onlineStatus = false;
+      }
+      return contact;
+    });
+  }
+
+  return userInfo;
+};
+
+const handleUserDisconnect = (contacts, number) => {
+  console.log(`${number} Discoected`);
+  contacts?.forEach((contact) => {
+    socketEmit("contact-offline", contact.number, number);
+  });
+  clients.delete(number);
+};
+const socketEmit = (emitName, to, data) => {
+  const client = clients.get(to);
+  if (client) {
+    client.emit(emitName, data);
   }
 };

@@ -1,6 +1,5 @@
 .navbar_container {
-  height: 100%;
-  padding: 10px;
+  padding: 10px ;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -44,7 +43,6 @@
   font-size: 2rem;
   color: var(--color-blue);
   cursor: pointer;
-  /* color: rgb(0, 140, 255); */
 }
 .theme_icon {
   font-size: 1.5rem;

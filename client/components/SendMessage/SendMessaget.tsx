@@ -13,13 +13,9 @@ const Picker = dynamic(
   { ssr: false }
 );
 
-interface SendMessageProps {
-  scrollToBottom: () => void;
-}
-
 function SendMessage() {
   const {
-    state: { socket, number, selectedContactNumber, darkTheme },
+    state: { socket, number, selectedContactNumber },
     dispatch,
     reducerActionTypes,
   } = getContext();
@@ -36,7 +32,7 @@ function SendMessage() {
   ) => {
     e.preventDefault();
 
-    if (socket === null) return;
+    if (socket === null || text.length === 0) return;
 
     socket.emit("send-message", { text, to: selectedContactNumber });
 
@@ -51,6 +47,9 @@ function SendMessage() {
     });
 
     setText("");
+    if (messageInputRef.current != null) {
+      messageInputRef.current.style.height = "auto";
+    }
   };
 
   const onEmojiClick = (emojiObject: any) => {
@@ -80,6 +79,16 @@ function SendMessage() {
           onChange={messageInputOnChange}
           placeholder="Send a message"
           className={styles.message_input}
+          onFocus={() => {
+            socket?.emit("user-start-typing-message", {
+              to: selectedContactNumber,
+            });
+          }}
+          onBlur={() => {
+            socket?.emit("user-stop-typing-message", {
+              to: selectedContactNumber,
+            });
+          }}
         />
         <div className={styles.ap_types}>
           <BsEmojiSmile
@@ -88,11 +97,7 @@ function SendMessage() {
           />
           {emojiPicker && (
             <div ref={emojiPickerRef} className={styles.emoji_picker}>
-              <Picker
-                onEmojiClick={onEmojiClick}
-                // theme={darkTheme ? "dark" : "light"}
-                width="auto"
-              />
+              <Picker onEmojiClick={onEmojiClick} width="auto" />
             </div>
           )}
         </div>

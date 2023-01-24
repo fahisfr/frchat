@@ -8,8 +8,7 @@ type AddContactProps = {
 };
 
 function AddContact({ setTrigger }: AddContactProps) {
-  
-  const { dispatch, reducerActionTypes } = getContext();
+  const { dispatch, reducerActionTypes, state } = getContext();
 
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -17,10 +16,25 @@ function AddContact({ setTrigger }: AddContactProps) {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const newConNumber = Number(number);
+    const contactIn = state.contacts.find(
+      (contact) => contact.number === newConNumber
+    );
+    if (state.number === newConNumber) {
+      triggerSidePopUp(
+        "We're sorry, but it is not possible to save your own number"
+      );
+      return;
+    } else if (contactIn) {
+      triggerSidePopUp(
+        "This number is already saved in your contacts. No need to save it again"
+      );
+      return;
+    }
     setBtnLoading(true);
     const { data } = await axios.post("/contact/add-contact", {
       name,
-      number: Number(number),
+      number: newConNumber,
     });
     setBtnLoading(false);
     if (data.status === "ok") {
@@ -33,11 +47,15 @@ function AddContact({ setTrigger }: AddContactProps) {
       });
       setTrigger(false);
     } else if (data.status === "error") {
-      dispatch({
-        type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-        payload: { error: true, message: data.message },
-      });
+      triggerSidePopUp(data.message);
     }
+  };
+
+  const triggerSidePopUp = (message: string) => {
+    dispatch({
+      type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+      payload: { error: true, message },
+    });
   };
 
   return (
@@ -62,19 +80,18 @@ function AddContact({ setTrigger }: AddContactProps) {
               placeholder=""
               type="text"
               value={number}
-              onChange={(e) => {
-                const { value } = e.target;
-                if (value.length <= 10) {
-                  setNumber(value);
-                }
-              }}
+              onChange={(e) => setNumber(e.target.value)}
               required
             />
           </div>
           <div
             className={`${styles.ac_bottom}  ${btnLoading && "btn_loading"}`}
           >
-            <button className={`${styles.ac_btn} btn`} type="submit">
+            <button
+              disabled={btnLoading}
+              className={`${styles.ac_btn} btn`}
+              type="submit"
+            >
               <span className="btn_text">Add Contact</span>
             </button>
           </div>

@@ -24,9 +24,6 @@ function NavBar({ setProfileTrigger }: navBarProps) {
         <Image fill alt="" className="rounded-full" src="/frlogo.png" />
       </div>
       <div className={styles.options}>
-        {/* <div className={styles.group}>
-          <AiOutlineHome className={styles.icons} />
-        </div> */}
         <div
           className={styles.group}
           onClick={() => setProfileTrigger((state) => !state)}
@@ -59,6 +56,7 @@ function NavBar({ setProfileTrigger }: navBarProps) {
           fill
           alt=""
           className="rounded-full"
+          objectFit="cover"
           src={`${profileUrl}/${state.profile}`}
         />
       </div>

@@ -14,7 +14,7 @@ router.put(
   auth,
   user.editProfile
 );
-router.post("/login", auth, validateRequestBody(login), user.login);
+router.post("/login", validateRequestBody(login), user.login);
 router.post("/verify-otp", validateRequestBody(verifyOtp), user.verifyOtp);
 router.get("/refresh-token", user.verifyRefrshToken);
 

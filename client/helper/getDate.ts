@@ -1,4 +1,4 @@
-import { isToday, format, formatDistanceToNowStrict } from "date-fns";
+import { isToday, format } from "date-fns";
 import { zonedTimeToUtc } from "date-fns-tz";
 
 export default (date: string) => {

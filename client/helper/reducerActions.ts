@@ -8,14 +8,13 @@ export const reducerActionTypes = {
   LOGIN: "LOGIN",
   SELECT_CONTACT: "SELECT_CONTACT",
   ADD_MESSAGE: "ADD_MESSAGE",
-  CHANGE_USER_ONLINE_STATUS: "CHANGE_USER_ONLINE_STATUS",
+  CHANGE_CONTACT_ONLINE_STATUS: "CHANGE_CONTACT_ONLINE_STATUS",
+  CHANGE_CONTACT_TYPING_STATUS: "CHANGE_CONTACT_TYPING_STATSU",
   CHANGE_THEME: "CHANGE_THEME",
-
   CHANGE_CONTACT_NAME: "CHANGE_CONTACT_NAME",
   REMOVE_CONTACT: "REMOVE_CONTACT",
   ADD_CONTACT: "ADD_CONTACT",
   UPDATE_PROFILE: "UPDATE_PROFILE",
-
   TRIGGER_SIDE_POPUP_MESSAGE: "TRIGGER_SUCCESS_SIDE_POPUP_MESSAGE",
   CLOSE_SIDE_POPUP_MESSAGE: "CLOSE_SIDE_POPUP_MESSAGE",
 };
@@ -35,8 +34,10 @@ export default (state: User, { type, payload }: ReducerAction) => {
       return { ...state, selectedContactNumber: payload.number };
 
     case reducerActionTypes.ADD_MESSAGE: {
+      let contactIn;
       const updatedContacts = state.contacts.map((contact) => {
         if (contact.number === payload.number) {
+          contactIn = true;
           return {
             ...contact,
             messages: [...contact.messages, payload],
@@ -44,13 +45,28 @@ export default (state: User, { type, payload }: ReducerAction) => {
         }
         return contact;
       });
-      return { ...state, contacts: updatedContacts };
+      if (contactIn) {
+        return { ...state, contacts: updatedContacts };
+      }
+      return {
+        ...state,
+        contacts: [
+          ...state.contacts,
+          {
+            number: payload.number,
+            profile: "default_profile.jpg",
+            onlineStatus: true,
+            messages: [payload],
+          },
+        ],
+      };
     }
-    case reducerActionTypes.CHANGE_USER_ONLINE_STATUS: {
+    case reducerActionTypes.CHANGE_CONTACT_ONLINE_STATUS: {
       const updatedContacts = state.contacts.map((contact) => {
         if (contact.number === payload.number) {
           return {
             ...contact,
+            typingStatus: false,
             onlineStatus: payload.status,
           };
         }
@@ -138,6 +154,19 @@ export default (state: User, { type, payload }: ReducerAction) => {
           message: payload.message,
         },
       };
+    }
+
+    case reducerActionTypes.CHANGE_CONTACT_TYPING_STATUS: {
+      const updatedContacts = state.contacts.map((contact) => {
+        if (contact.number === payload.number) {
+          return {
+            ...contact,
+            typingStatus: payload.status,
+          };
+        }
+        return contact;
+      });
+      return { ...state, contacts: updatedContacts };
     }
 
     default:

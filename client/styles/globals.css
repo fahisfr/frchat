@@ -30,6 +30,7 @@ body {
   --border-secondary: #f3f4f6;
 
   --just-loading: just-loading;
+  --dots: dots;
 }
 
 [data-theme="true"] {
@@ -106,14 +107,6 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: var(--color-blue) !important;
   color: #ffffff;
 }
-@keyframes just-loading {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 ::-webkit-scrollbar {
   width: 4px;
@@ -130,6 +123,7 @@ input[type="number"]::-webkit-outer-spin-button {
   cursor: pointer;
   position: relative;
   outline: none;
+  border-radius: 5px;
   border: 1px solid var(--gray_300);
 }
 .btn:disabled {
@@ -142,7 +136,7 @@ input[type="number"]::-webkit-outer-spin-button {
   font-size: 1rem;
   font-weight: 500;
   color: #ffffff;
-  transition: all 0.3s ease-in;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn_loading .btn::after {
@@ -163,4 +157,19 @@ input[type="number"]::-webkit-outer-spin-button {
 .btn_loading .btn_text {
   visibility: hidden;
   opacity: 0;
+}
+
+@keyframes just-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dots {
+  50% {
+    opacity: 0;
+    transform: scale(0.7) translateY(5px);
+  }
 }

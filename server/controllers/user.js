@@ -148,11 +148,15 @@ const editProfile = async (req, res, next) => {
     if (dbRes.modifiedCount > 0) {
       return res.json({
         status: "ok",
-        message: "Profile updated",
+        message: "Profile updated successfully",
         profile: updatedInfo,
       });
     }
-    res.json({ status: "error", message: "Failed to update profile" });
+    res.json({
+      status: "error",
+      message:
+        "Sorry, we were unable to update your profile at this time. Please try again later",
+    });
   } catch (error) {
     next(error);
   }
@@ -166,7 +170,10 @@ const verifyRefrshToken = (req, res, next) => {
     }
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, result) => {
       if (err) {
-        return res.json({ status: "error", message: "token not valid" });
+        return res.json({
+          status: "error",
+          message: "Invalid token. Please login again to continue.",
+        });
       }
       const { accessToken } = createTokens({ id: result.id });
       res.json({ status: "ok", accessToken });

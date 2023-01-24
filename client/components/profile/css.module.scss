@@ -42,7 +42,6 @@
   padding: 1rem 0;
 }
 .pf_info {
-  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,11 +127,10 @@
 }
 .remove_contact {
   background: none;
-
   border: 1px solid red;
   color: red;
   transition: all 200ms ease;
-
+  border-radius: 7px;
   &:hover {
     background-color: red;
     color: white;

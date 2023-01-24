@@ -1,23 +1,17 @@
 import styles from "./css.module.scss";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import SendMessage from "../SendMessage/SendMessaget";
 import Image from "next/image";
 import { getContext } from "../../helper/context";
-import getDate from "../../helper/getDate";
 import ContactProfile from "../profile/ContactProfile";
 import { getProfileUrl } from "../../helper/axios";
-import { BsThreeDotsVertical, BsFillArrowDownCircleFill } from "react-icons/bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import Messages from "../messages/Messages";
 
 function Chats() {
-  
   const { state, dispatch, reducerActionTypes } = getContext();
   const [contactProfile, setContactProfile] = useState<boolean>(false);
-  const endMessageRef = useRef<HTMLDivElement>(null);
-  const downArrowRef = useRef<HTMLHRElement>(null);
-  const [scrollDownButton, setScrollDownButton] = useState<boolean>(false);
-
-  useEffect(() => scrollToBottom());
 
   const contact = state.contacts?.find(
     (contact) => contact.number === state.selectedContactNumber
@@ -47,20 +41,6 @@ function Chats() {
     });
   };
 
-  const handleScroll = () => {
-    if (downArrowRef.current != null) {
-      const div = downArrowRef.current;
-
-      const isAtBottom = div.scrollHeight - div.scrollTop === div.clientHeight;
-      setScrollDownButton(!isAtBottom);
-    }
-  };
-  function scrollToBottom() {
-    if (endMessageRef.current) {
-      endMessageRef.current.scrollIntoView();
-    }
-  }
-
   return (
     <div className={styles.chats}>
       <div className={styles.contact_chats}>
@@ -80,7 +60,7 @@ function Chats() {
               />
             </div>
             <div className={styles.chat_contact_info}>
-              <span>{contact?.name}</span>
+              <span>{contact.name ?? contact.number}</span>
             </div>
           </div>
           <div className={styles.top_right}>
@@ -92,77 +72,8 @@ function Chats() {
             </div>
           </div>
         </div>
-        <div
-          className={`${styles.messages_container} ${
-            scrollDownButton && styles.show_scroll_down_btn
-          }`}
-        >
-          <div
-            className={styles.messages}
-            ref={downArrowRef}
-            onScroll={handleScroll}
-          >
-            {contact?.messages
-              .sort((a, b) => {
-                const dateA = new Date(a.date);
-                const dateB = new Date(b.date);
-                return dateA.getTime() - dateB.getTime();
-              })
-              .map((message, index) => {
-                return message.from === state.number ? (
-                  <div
-                    className={`${styles.user_message} ${styles.message}`}
-                    key={index}
-                  >
-                    <div className={styles.message_wrapper}>
-                      <div className={styles.message_details}>
-                        <span className={styles.message_date}>
-                          {getDate(message.date)}
-                        </span>
-                      </div>
-                      <div className={styles.message_content}>
-                        <span className={styles.message_text}>
-                          {message.text}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={styles.message}>
-                    <div className={styles.message_wrapper}>
-                      <div className={styles.message_details}>
-                        <div className={styles.user_profile}>
-                          <Image
-                            fill
-                            alt=""
-                            className="rounded-full"
-                            src={getProfileUrl(contact.profile)}
-                          />
-                        </div>
-                        <span className={styles.message_date}>
-                          {getDate(message.date)}
-                        </span>
-                      </div>{" "}
-                      <div
-                        className={`${styles.message_content} theme-bg-text`}
-                      >
-                        <span>{message.text}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-            <div ref={endMessageRef}></div>
-          </div>
-
-          <BsFillArrowDownCircleFill
-            onClick={() => scrollToBottom()}
-            className={styles.scroll_down_btn}
-          />
-        </div>
-
-        <SendMessage  />
+        <Messages contact={contact} />
+        <SendMessage />
       </div>
 
       <ContactProfile

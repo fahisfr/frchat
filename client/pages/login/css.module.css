@@ -4,10 +4,11 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
   background-color: #edf0f9;
-  background-image: url("https://img.freepik.com/free-vector/white-abstract-background-design_23-2148825582.jpg?w=826&t=st=1673454503~exp=1673455103~hmac=542c2b19cc12711d3b7a1d4144da722d655ad3c92f2433747743aab5cfc9671d");
 }
 .lg_body {
+  position: absolute;
   width: min(27rem, 95%);
   display: flex;
   background-color: white;

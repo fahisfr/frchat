@@ -12,7 +12,6 @@ const io = require("socket.io")(server, { cors: { origin: "*" } });
 const auth = require("./middleware/auth");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
-const dbUser = require("./dbSChemas/user");
 
 connectDb();
 

@@ -1,4 +1,3 @@
-
 import axios from "../../helper/axios";
 import React, { FormEvent, useState, useRef, useEffect } from "react";
 import styles from "./css.module.css";
@@ -9,15 +8,15 @@ import Head from "next/head";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import SidePopUPMessage from "../../components/sidePopUpMessage.js/SidePopUPMessage";
+import Image from "next/image";
 let currentOtpIndex: number = 0;
 
 function Index() {
-
   const router = useRouter();
 
   const { dispatch, reducerActionTypes } = getContext();
   const [btnLoading, setBtnLoading] = useState<boolean>(false);
-  const [number, setNumber] = useState<string>("");
+  const [number, setNumber] = useState<string>("91");
   const [otp, setOtp] = useState<string[]>(new Array(4).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState<number>(0);
 
@@ -37,6 +36,52 @@ function Index() {
 
     setOtp(newArray);
   };
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (verifyOtp) {
+      verifyOtpNow();
+    } else {
+      login();
+    }
+  };
+
+  const verifyOtpNow = async () => {
+    setBtnLoading(true);
+    const { data } = await axios.post("/user/verify-otp", {
+      otp: otp.join(""),
+      number,
+    });
+    if (data.status === "ok") {
+      localStorage.setItem("access_token", data.token);
+      router.replace("/");
+    } else if (data.status === "error") {
+      triggerPopUpMessage({ error: true, message: data.message });
+    }
+    setBtnLoading(false);
+  };
+
+  const login = async () => {
+    setBtnLoading(true);
+    const { data } = await axios.post("/user/login", {
+      number,
+    });
+
+    if (data.status === "ok") {
+      setVerifyOpt(true);
+    } else if (data.status === "error") {
+      triggerPopUpMessage({ error: true, message: data.message });
+    }
+    setBtnLoading(false);
+  };
+
+  const triggerPopUpMessage = (arg: { error: boolean; message: string }) => {
+    dispatch({
+      type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
+      payload: arg,
+    });
+  };
+
   const handleOnKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
     index: number
@@ -44,40 +89,6 @@ function Index() {
     currentOtpIndex = index;
     if (e.key === "Backspace") setActiveOtpIndex(currentOtpIndex - 1);
   };
-  const triggerPopUpMessage = (arg: { error: boolean; message: string }) => {
-    dispatch({
-      type: reducerActionTypes.TRIGGER_SIDE_POPUP_MESSAGE,
-      payload: arg,
-    });
-  };
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setBtnLoading(true);
-    if (verifyOtp) {
-      const { data } = await axios.post("/user/verify-otp", {
-        otp: otp.join(""),
-        number,
-      });
-      if (data.status === "ok") {
-        localStorage.setItem("access_token", data.token);
-        router.replace("/");
-      } else if (data.status === "error") {
-        triggerPopUpMessage({ error: true, message: data.message });
-      }
-    } else {
-      const { data } = await axios.post("/user/login", {
-        number,
-      });
-
-      if (data.status === "ok") {
-        setVerifyOpt(true);
-      } else if (data.status === "error") {
-        triggerPopUpMessage({ error: true, message: data.message });
-      }
-    }
-    setBtnLoading(false);
-  };
-
   return (
     <>
       <Head>
@@ -87,6 +98,7 @@ function Index() {
         <meta name="keywords" content="chat, friends, family, login, FRChat" />
       </Head>
       <div className={styles.login_container}>
+        <Image fill src="/lgbg.webp" alt="" />
         <SidePopUPMessage />
         <div className={styles.lg_body}>
           <div className={styles.lg_title}>

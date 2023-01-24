@@ -66,7 +66,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .contact_info_top {
@@ -101,6 +100,22 @@
   flex-direction: column;
   row-gap: 10px;
   font-size: 1.2rem;
+}
+.dots_loading div {
+  width: 8px;
+  height: 8px;
+  margin: 0 4px;
+  background-color: var(--color-blue);
+  border-radius: 50%;
+  display: inline-block;
+  animation: var(--dots) 0.9s infinite ease-in-out;
+}
+
+.dots_loading div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dots_loading div:nth-child(3) {
+  animation-delay: 0.4s;
 }
 
 @media (max-width: 768px) {
